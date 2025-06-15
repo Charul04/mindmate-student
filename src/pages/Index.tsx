@@ -1,4 +1,3 @@
-
 import AppLogo from "@/components/AppLogo";
 import HeroIllustration from "@/components/HeroIllustration";
 import FeatureCard from "@/components/FeatureCard";
@@ -7,6 +6,12 @@ import { Book, Brain, Star, HeartPulse, Smile, Wind, Quote, PenLine, Sun, Target
 import { Button } from "@/components/ui/button";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import React from "react";
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "@/components/ui/tabs";
 
 type DashboardFeature = {
   icon: React.ReactNode;
@@ -193,32 +198,41 @@ export default function Index() {
         <h2 className="text-3xl font-bold text-center text-indigo-900 mb-7 animate-fade-in">
           Your MindMate+ Dashboard
         </h2>
-        {/* MENTAL HEALTH */}
-        <div className="mb-8">
-          <h3 className="text-lg font-bold text-indigo-800 mb-3">🧠 Mental Health</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-2">
-            {mentalHealthFeatures.map((f) => (
-              <DashboardCard key={f.title} {...f} />
-            ))}
-          </div>
-        </div>
-        {/* STUDY SUPPORT */}
-        <div className="mb-8">
-          <h3 className="text-lg font-bold text-indigo-800 mb-3">📚 Study Support</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-2">
-            {studySupportFeatures.map((f) => (
-              <DashboardCard key={f.title} {...f} />
-            ))}
-          </div>
-        </div>
-        {/* BONUS */}
-        <div>
-          <h3 className="text-lg font-bold text-indigo-800 mb-3">🌟 Bonus Features</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {bonusFeatures.map((f) => (
-              <DashboardCard key={f.title} {...f} />
-            ))}
-          </div>
+        <div className="max-w-4xl mx-auto bg-sky-50/60 rounded-2xl shadow-md p-0 mb-6 animate-fade-in">
+          <Tabs defaultValue="mental" className="w-full">
+            <TabsList className="w-full flex justify-between items-center rounded-t-2xl border-b border-indigo-100 bg-gradient-to-r from-sky-100 via-indigo-50 to-white px-3 py-1">
+              <TabsTrigger value="mental" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700">
+                🧠 Mental Health
+              </TabsTrigger>
+              <TabsTrigger value="study" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700">
+                📚 Study Support
+              </TabsTrigger>
+              <TabsTrigger value="bonus" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700">
+                🌟 Bonus Features
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="mental" className="px-6 py-7">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+                {mentalHealthFeatures.map((f) => (
+                  <DashboardCard key={f.title} {...f} />
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="study" className="px-6 py-7">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+                {studySupportFeatures.map((f) => (
+                  <DashboardCard key={f.title} {...f} />
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="bonus" className="px-6 py-7">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+                {bonusFeatures.map((f) => (
+                  <DashboardCard key={f.title} {...f} />
+                ))}
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </section>
       {/* FEATURES */}
