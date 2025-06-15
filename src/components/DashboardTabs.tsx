@@ -16,6 +16,7 @@ import BreakWithMeDialog from "@/components/BreakWithMeDialog";
 import FocusMusicDialog from "@/components/FocusMusicDialog";
 import StudyTipsDialog from "@/components/StudyTipsDialog";
 import VoiceAiCompanionDialog from "@/components/VoiceAiCompanionDialog";
+import ScreenTimeTrackerDialog from "@/components/ScreenTimeTrackerDialog";
 import { Smile, Wind, Quote, PenLine, CalendarDays, Clock, Book, ChartLine, Music, Lightbulb, ChevronRight } from "lucide-react";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import React from "react";
@@ -209,6 +210,9 @@ export default function DashboardTabs() {
                 triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
               />
               <FlashcardsDialog
+                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+              />
+              <ScreenTimeTrackerDialog
                 triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
               />
             </div>
