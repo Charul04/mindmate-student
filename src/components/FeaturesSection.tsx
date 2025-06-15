@@ -9,11 +9,6 @@ const features = [
     description: "Pomodoro timers, habit streaks, and daily focus boosts designed for students.",
   },
   {
-    icon: HeartPulse,
-    title: "Self-Care Check-Ins",
-    description: "Built-in wellness prompts and mood tracking for mind and body.",
-  },
-  {
     icon: Star,
     title: "Progress Insights",
     description: "Visualize learning goals, track time spent, and celebrate wins.",
