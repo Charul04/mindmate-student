@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { MessageSquare, Send, Bot } from "lucide-react";
@@ -30,8 +31,6 @@ export default function AIChatbotDialog({ triggerClassName }: { triggerClassName
   const [apiKeyInput, setApiKeyInput] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  // Chat history is preserved within dialog session for ChatGPT-like experience.
-  // Each message is sent with full chat history (minus opening prompt for Perplexity token efficiency).
   // Scroll to bottom on new message or dialog open
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -45,7 +44,6 @@ export default function AIChatbotDialog({ triggerClassName }: { triggerClassName
     setInput("");
     setError(null);
 
-    // Compose Perplexity API call
     if (!apiKey) {
       setLoading(false);
       setError("No Perplexity API key set.");
@@ -114,7 +112,6 @@ export default function AIChatbotDialog({ triggerClassName }: { triggerClassName
     }
   }
 
-  // Reset chat on dialog close
   function handleClose(openNow: boolean) {
     setOpen(openNow);
     if (!openNow) {
@@ -147,21 +144,21 @@ export default function AIChatbotDialog({ triggerClassName }: { triggerClassName
           </span>
         </button>
       </DialogTrigger>
-      <DialogContent className="max-w-lg w-full p-0">
-        <DialogHeader className="px-5 pt-4">
+      <DialogContent className="max-w-md w-full p-0 md:rounded-xl shadow-lg flex flex-col" style={{ minHeight: 480, maxHeight: 600 }}>
+        <DialogHeader className="px-4 pt-3 pb-1">
           <DialogTitle>
             <span className="flex items-center gap-2">
-              <Bot className="text-indigo-700" size={22} />
-              AI Study Assistant
+              <Bot className="text-indigo-700" size={20} />
+              <span className="text-base font-medium">AI Study Assistant</span>
             </span>
           </DialogTitle>
           <DialogDescription>
-            Ask anything about your studies—answers, explanations, summaries, brainstorming, and more.
+            Ask study questions—answers, explanations, summaries, and more.
           </DialogDescription>
         </DialogHeader>
         {/* API Key Input if not set */}
         {!apiKey && (
-          <div className="flex flex-col gap-2 px-5 pb-3 pt-2">
+          <div className="flex flex-col gap-2 px-4 pb-3 pt-2">
             <label className="font-medium text-indigo-700 text-sm">Paste your Perplexity API key to unlock AI chat:</label>
             <input
               className="border rounded px-2 py-1 text-sm"
@@ -174,29 +171,30 @@ export default function AIChatbotDialog({ triggerClassName }: { triggerClassName
             {error && <span className="text-xs text-red-500">{error}</span>}
           </div>
         )}
-        {/* Chat Messages */}
-        <div className="flex flex-col px-5 pt-2 pb-4 min-h-[260px] max-h-[340px] overflow-y-auto bg-slate-50 rounded-t">
+        {/* Chat Messages: fixed height, scrollable */}
+        <div className="flex flex-col flex-1 px-4 pt-2 pb-3 overflow-y-auto bg-slate-50 rounded-t"
+          style={{ minHeight: 280, maxHeight: 380 }}>
           {messages.map((msg, i) => (
             <div
               key={i}
-              className={`mb-2 w-full flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
+              className={`mb-1 w-full flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
             >
               <div
-                className={`max-w-[76%] px-3 py-2 rounded-xl ${
+                className={`max-w-[80%] px-3 py-2 rounded-lg ${
                   msg.sender === "user"
                     ? "bg-sky-100 text-sky-800 self-end"
                     : "bg-white text-indigo-900 border border-indigo-100 self-start flex items-center gap-1"
                 } text-sm break-words`}
               >
-                {msg.sender === "ai" && <Bot size={14} className="mr-1 text-indigo-400" />}
+                {msg.sender === "ai" && <Bot size={13} className="mr-1 text-indigo-400" />}
                 {msg.text}
               </div>
             </div>
           ))}
           <div ref={messagesEndRef} />
         </div>
-        {/* Input */}
-        <div className="flex items-center border-t border-indigo-100 px-5 py-2 gap-2 bg-white rounded-b">
+        {/* Input fixed at bottom */}
+        <div className="flex items-center border-t border-indigo-100 px-4 py-2 gap-2 bg-white rounded-b sticky bottom-0">
           <input
             className="flex-1 py-1 px-2 border rounded focus:outline-none text-sm"
             value={input}
@@ -206,11 +204,12 @@ export default function AIChatbotDialog({ triggerClassName }: { triggerClassName
             disabled={loading || !apiKey}
           />
           <Button size="sm" onClick={handleSend} disabled={loading || !input.trim() || !apiKey}>
-            <Send size={16} className={loading ? "animate-spin" : ""} />
+            <Send size={15} className={loading ? "animate-spin" : ""} />
           </Button>
         </div>
-        {error && apiKey && <div className="text-xs text-red-600 px-5 py-1">{error}</div>}
+        {error && apiKey && <div className="text-xs text-red-600 px-4 py-1">{error}</div>}
       </DialogContent>
     </Dialog>
   );
 }
+
