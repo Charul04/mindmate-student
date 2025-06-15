@@ -1,6 +1,6 @@
 
 import React, { useRef, useState } from "react";
-import { Clock, Stopwatch } from "lucide-react";
+import { Clock, Timer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 function formatTime(sec: number) {
@@ -19,14 +19,17 @@ export default function PomodoroTimer() {
     if (isRunning) return;
     setIsRunning(true);
     intervalRef.current = setInterval(() => {
-      setTimer(t => {
-        if (t <= 1) {
+      setTimer(prevTimer => {
+        if (prevTimer <= 1) {
           clearInterval(intervalRef.current!);
           setIsRunning(false);
-          setMode(m => (m === "work" ? "break" : "work"));
-          return m === "work" ? 300 : 1500;
+          const nextMode = mode === "work" ? "break" : "work";
+          setMode(nextMode);
+          // After mode switch, set new timer value
+          setTimer(nextMode === "work" ? 1500 : 300);
+          return 0;
         }
-        return t - 1;
+        return prevTimer - 1;
       });
     }, 1000);
   }
@@ -74,7 +77,7 @@ export default function PomodoroTimer() {
         <Button onClick={reset}>Reset</Button>
       </div>
       <div className="flex gap-2 items-center text-indigo-800 text-sm justify-center mt-auto">
-        <Stopwatch size={16} />
+        <Timer size={16} />
         <span>
           {mode === "work"
             ? "25 min focus, then break!"
