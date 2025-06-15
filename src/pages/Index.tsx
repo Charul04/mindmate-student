@@ -1,5 +1,8 @@
+
 import AppLogo from "@/components/AppLogo";
 import HeroIllustration from "@/components/HeroIllustration";
+import FeatureCard from "@/components/FeatureCard";
+import QuoteCard from "@/components/QuoteCard";
 import { Book, Brain, Star, HeartPulse, Smile, Wind, Quote, PenLine, Sun, Target, Clock, Music, MessageSquare, ChevronRight, Lightbulb, ChartLine, CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
