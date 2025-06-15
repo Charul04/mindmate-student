@@ -13,6 +13,7 @@ import {
   TabsContent,
 } from "@/components/ui/tabs";
 import MoodCheckinDialog from "@/components/MoodCheckinDialog";
+import GuidedBreathingDialog from "@/components/GuidedBreathingDialog";
 
 type DashboardFeature = {
   icon: React.ReactNode;
@@ -116,6 +117,15 @@ const bonusFeatures: DashboardFeature[] = [
 ];
 
 function DashboardCard({ icon, title, description, tooltip }: DashboardFeature) {
+  // We'll make the "Guided Breathing" dashboard card activate the new dialog instead.
+  if (title === "Guided Breathing") {
+    const GuidedBreathingDialog = require("@/components/GuidedBreathingDialog").default;
+    return (
+      <GuidedBreathingDialog
+        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+      />
+    );
+  }
   return (
     <TooltipProvider>
       <Tooltip>
