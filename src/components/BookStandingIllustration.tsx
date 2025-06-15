@@ -22,7 +22,6 @@ const style = `
 `;
 
 export default function BookStandingIllustration() {
-  // Image dimensions for positioning hand (estimate; if you have actual hand PNG, we can use that)
   return (
     <div className="flex w-full items-end justify-center select-none relative">
       <style>{style}</style>
@@ -39,28 +38,7 @@ export default function BookStandingIllustration() {
         }}
         className="animate-fade-in"
       />
-      {/* Waving Hand - right top corner, looks like it's part of the book */}
-      {/* Replace this rectangle with a hand PNG for improved realism */}
-      <div
-        style={{
-          position: "absolute",
-          top: "40px",
-          right: "45px",
-          width: "44px",
-          height: "44px",
-          borderRadius: "50%",
-          background:
-            "linear-gradient(120deg, #fbbf24 75%, #f59e42 100%)",
-          border: "3px solid #ffeca0",
-          boxShadow: "0 6px 18px 6px rgba(251,191,36,.15)",
-          zIndex: 2,
-          transformOrigin: "60% 95%",
-          animation: "book-wave 1.6s cubic-bezier(.72,1.1,.53,1.18) infinite",
-          opacity: 0.86,
-        }}
-        aria-label="Waving hand"
-      ></div>
+      {/* Waving hand removed */}
     </div>
   );
 }
-
