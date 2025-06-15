@@ -1,31 +1,85 @@
 
+import React from "react";
+
+// Animation keyframes as inline styles for SVG
+const bounceAnim = {
+  animation: "bounce 2.2s cubic-bezier(.62,1.11,.5,1) infinite"
+};
+const sparkle1Anim = {
+  animation: "sparkle1 2.6s ease-in-out infinite"
+};
+const sparkle2Anim = {
+  animation: "sparkle2 2.6s ease-in-out infinite 1.2s"
+};
+const sparkle3Anim = {
+  animation: "sparkle3 2.6s ease-in-out infinite 2s"
+};
+const style = `
+@keyframes bounce {
+  0%, 100% { transform: translateY(0);}
+  15% { transform: translateY(-13px);}
+  30% { transform: translateY(0);}
+}
+@keyframes sparkle1 {
+  0%, 20%, 100% { opacity: 0;}
+  10% { opacity: 1;}
+}
+@keyframes sparkle2 {
+  0%, 60%, 100% { opacity: 0;}
+  65% { opacity: 1;}
+}
+@keyframes sparkle3 {
+  0%, 80%, 100% { opacity: 0;}
+  85% { opacity: 1;}
+}
+`;
+
 export default function HeroIllustration() {
-  // Simple SVG illustration: student on pile of books, using a laptop with a spark/star for "AI".
   return (
-    <svg viewBox="0 0 300 170" width={320} height={180} className="mx-auto mb-4 lg:mb-0" aria-hidden="true">
-      <defs>
-        <linearGradient id="hero-bg" x1="0" x2="0" y1="0" y2="1">
-          <stop stopColor="#a5b4fc" offset="0%" />
-          <stop stopColor="#f0fdfa" offset="100%" />
-        </linearGradient>
-        <linearGradient id="book" x1="0" x2="1" y1="0" y2="1">
-          <stop stopColor="#818cf8" offset="0%" />
-          <stop stopColor="#facc15" offset="100%" />
-        </linearGradient>
-      </defs>
-      <rect width="300" height="170" rx="16" fill="url(#hero-bg)" opacity=".22"/>
-      <ellipse cx="150" cy="142" rx="66" ry="9" fill="#89b4fa" opacity=".09" />
-      {/* Books */}
-      <rect x="95" y="130" width="110" height="14" rx="3" fill="url(#book)" />
-      <rect x="110" y="120" width="80" height="12" rx="3" fill="#4256e6" />
-      {/* Student */}
-      <ellipse cx="150" cy="116" rx="16" ry="10" fill="#fef08a" />
-      <circle cx="150" cy="110" r="7.5" fill="#bae6fd" />
-      {/* Laptop */}
-      <rect x="144" y="112" width="12" height="6" rx="2" fill="#e0e7ef" />
-      {/* Spark/star */}
-      <polygon points="170,105 174,110 178,105 176,111 181,114 175,114 174,120 172,114 166,114 171,111"
-        fill="#facc15" opacity=".8"/>
-    </svg>
+    <div className="w-full flex items-center justify-center relative select-none">
+      {/* Animation styles */}
+      <style>{style}</style>
+      <svg
+        viewBox="0 0 280 180"
+        width={240}
+        height={150}
+        aria-hidden="true"
+        className="mx-auto mb-4 lg:mb-0"
+      >
+        {/* Background */}
+        <rect x="24" y="54" width="232" height="104" rx="20" fill="#f0f6ff" opacity=".5"/>
+        {/* Book shadow */}
+        <ellipse cx="140" cy="148" rx="52" ry="12" fill="#a5b4fc" opacity=".18" />
+        {/* Cute bouncing book */}
+        <g style={bounceAnim}>
+          {/* Book base */}
+          <rect x="87" y="100" width="106" height="28" rx="8" fill="#facc15" />
+          {/* Book pages */}
+          <rect x="92" y="104" width="96" height="16" rx="5" fill="#fffdea" />
+          {/* Book spine */}
+          <rect x="125" y="100" width="30" height="28" rx="7" fill="#818cf8" opacity=".9"/>
+          {/* Happy face */}
+          <ellipse cx="140" cy="117" rx="7" ry="7" fill="#fff" />
+          <ellipse cx="160" cy="117" rx="7" ry="7" fill="#fff" />
+          {/* Eyes */}
+          <circle cx="140" cy="117" r="2.2" fill="#444a64" />
+          <circle cx="160" cy="117" r="2.2" fill="#444a64" />
+          {/* Smile */}
+          <path d="M143 124 q7 4 14 0" stroke="#444a64" strokeWidth="2" fill="none" />
+        </g>
+        {/* Animated sparkles */}
+        <g>
+          <g style={sparkle1Anim}>
+            <polygon points="105,85 108,90 112,85 110,91 115,93 110,93 109,99 107,93 101,93 106,91" fill="#facc15" opacity="0.7"/>
+          </g>
+          <g style={sparkle2Anim}>
+            <polygon points="180,80 184,84 188,80 186,86 190,88 185,88 184,93 182,88 177,88 183,86" fill="#bae6fd" opacity="0.7"/>
+          </g>
+          <g style={sparkle3Anim}>
+            <polygon points="145,70 148,73 151,70 150,76 155,78 150,78 149,83 147,77 143,78 148,76" fill="#fed7aa" opacity="0.75"/>
+          </g>
+        </g>
+      </svg>
+    </div>
   );
 }
