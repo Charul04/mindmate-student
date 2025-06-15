@@ -1,6 +1,8 @@
+
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Trash2, Save, Sticker } from "lucide-react";
+import JournalingPromptDialog from "@/components/JournalingPromptDialog";
 
 const COLORS = [
   "#ffffff", "#fef6e4", "#e8eaf6", "#fce4ec", "#e0f7fa", "#f3e5f5",
@@ -79,6 +81,9 @@ export default function JournalPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-sky-50 to-white px-4 py-8">
       <div className="max-w-2xl mx-auto bg-white/90 shadow-md rounded-xl p-6">
+        <div className="mb-6">
+          <JournalingPromptDialog />
+        </div>
         <h1 className="text-3xl font-bold text-indigo-800 mb-4 flex items-center gap-3">
           <Sticker className="text-sky-400" size={30} /> My Journal
         </h1>
@@ -254,3 +259,4 @@ export default function JournalPage() {
     </div>
   );
 }
+
