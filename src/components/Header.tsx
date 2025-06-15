@@ -1,6 +1,6 @@
 
 import AppLogo from "@/components/AppLogo";
-import ThemeAndLanguageSwitcher from "@/components/ThemeAndLanguageSwitcher";
+// import ThemeAndLanguageSwitcher from "@/components/ThemeAndLanguageSwitcher";
 
 export default function Header() {
   return (
@@ -8,8 +8,9 @@ export default function Header() {
       <div>
         <AppLogo />
       </div>
+      {/* Removed ThemeAndLanguageSwitcher */}
       <div className="flex items-center gap-6">
-        <ThemeAndLanguageSwitcher />
+        {/* Buttons removed as requested */}
       </div>
     </header>
   );
