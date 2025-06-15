@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from "react";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -50,7 +49,7 @@ function speak(text: string, onEnd: () => void) {
 }
 
 // Helper for browser speech recognition (STT)
-function getSpeechRecognition(): SpeechRecognition | null {
+function getSpeechRecognition(): any | null {
   const w = window as any;
   return w.SpeechRecognition ? new w.SpeechRecognition() :
          w.webkitSpeechRecognition ? new w.webkitSpeechRecognition() :
@@ -62,7 +61,7 @@ export default function VoiceAiCompanionDialog({ triggerClassName }: { triggerCl
   const [voiceState, setVoiceState] = useState<VoiceState>("idle");
   const [userText, setUserText] = useState("");
   const [aiReply, setAiReply] = useState("");
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<any | null>(null);
 
   // Start voice recording and STT
   const startRecording = () => {
