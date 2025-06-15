@@ -1,7 +1,6 @@
-
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Trash2, Save, Sticker, Font, ColorPicker } from "lucide-react";
+import { Trash2, Save, Sticker } from "lucide-react";
 
 const COLORS = [
   "#ffffff", "#fef6e4", "#e8eaf6", "#fce4ec", "#e0f7fa", "#f3e5f5",
@@ -87,7 +86,7 @@ export default function JournalPage() {
         <div className="flex flex-wrap gap-3 mb-4 items-center">
           {/* Page Color */}
           <div className="flex items-center gap-1">
-            <ColorPicker className="mr-1" size={20} />
+            <span className="mr-1">🎨</span>
             <span className="text-xs">Page:</span>
             <div className="flex gap-1">
               {COLORS.map((col, i) => (
@@ -103,7 +102,7 @@ export default function JournalPage() {
           </div>
           {/* Font Size */}
           <div className="flex items-center gap-1 ml-3">
-            <Font className="mr-1" size={20} />
+            <span className="mr-1">🅰️</span>
             <span className="text-xs">Size:</span>
             <select
               className="bg-transparent p-1 border rounded"
@@ -117,7 +116,7 @@ export default function JournalPage() {
           </div>
           {/* Font Color */}
           <div className="flex items-center gap-1 ml-3">
-            <ColorPicker className="mr-1" size={20} />
+            <span className="mr-1">🎨</span>
             <span className="text-xs">Font:</span>
             <div className="flex gap-1">
               {FONT_COLORS.map(col => (
