@@ -20,6 +20,10 @@ import StudyPlanner from "@/components/StudyPlanner";
 import PomodoroTimer from "@/components/PomodoroTimer";
 import Flashcards from "@/components/Flashcards";
 import GoalsTracker from "@/components/GoalsTracker";
+import StudyPlannerDialog from "@/components/StudyPlannerDialog";
+import PomodoroTimerDialog from "@/components/PomodoroTimerDialog";
+import FlashcardsDialog from "@/components/FlashcardsDialog";
+import GoalsTrackerDialog from "@/components/GoalsTrackerDialog";
 import { useNavigate } from "react-router-dom";
 
 type DashboardFeature = {
@@ -253,12 +257,12 @@ export default function Index() {
             </TabsContent>
             <TabsContent value="study" className="px-6 py-7">
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-                {/* Custom render for new features */}
-                <StudyPlanner />
-                <PomodoroTimer />
+                {/* Use dialogs for features, opening on click */}
+                <StudyPlannerDialog />
+                <PomodoroTimerDialog />
                 <DashboardCard {...studySupportFeatures[2]} />
-                <Flashcards />
-                <GoalsTracker />
+                <FlashcardsDialog />
+                <GoalsTrackerDialog />
               </div>
             </TabsContent>
             <TabsContent value="bonus" className="px-6 py-7">
