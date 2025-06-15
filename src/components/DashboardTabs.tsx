@@ -158,32 +158,28 @@ function DashboardCard({ icon, title, description, tooltip }: DashboardFeature) 
 
 export default function DashboardTabs() {
   return (
-    <section id="dashboard" className="relative w-full min-h-[576px] border-t border-indigo-100 py-12 px-3 sm:px-8 overflow-hidden bg-gradient-to-br from-[rgba(221,236,255,0.55)] via-sky-50/70 to-white dark:from-gray-900 dark:to-gray-800">
-      <DashboardBgDoodle />
+    <section id="dashboard" className="relative w-full min-h-[576px] border-t border-indigo-100 py-12 px-3 sm:px-8 overflow-hidden bg-white">
       <div className="relative z-10">
-        <h2 className="text-4xl md:text-5xl font-extrabold text-center text-indigo-900 mb-4 tracking-tight drop-shadow-2xl animate-fade-in">
+        <h2 className="text-4xl md:text-5xl font-extrabold text-center text-indigo-900 mb-4 tracking-tight">
           Your MindMate<span className="text-sky-500 duration-150">+</span> Dashboard
         </h2>
-        <DashboardDividerDoodle />
       </div>
-      <DashboardDoodle />
-      <div className="max-w-4xl mx-auto bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl p-0 mb-6 border border-indigo-100/80 animate-fade-in relative z-10 drop-shadow-2xl">
+      <div className="max-w-4xl mx-auto bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl p-0 mb-6 border border-indigo-100/80">
         <Tabs defaultValue="mental" className="w-full">
-          <TabsList className="w-full flex justify-between items-center rounded-t-2xl border-b border-indigo-100 bg-gradient-to-r from-sky-100 via-indigo-50 to-white px-3 py-1 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-gradient-to-r after:from-sky-300/60 after:to-indigo-300/60 animate-fade-in">
-            <TabsTrigger value="mental" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700 animate-fade-in">
+          <TabsList className="w-full flex justify-between items-center rounded-t-2xl border-b border-indigo-100 bg-white px-3 py-1 relative">
+            <TabsTrigger value="mental" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700">
               🧠 Mental Health
             </TabsTrigger>
-            <TabsTrigger value="study" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700 animate-fade-in">
+            <TabsTrigger value="study" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700">
               📚 Study Support
             </TabsTrigger>
-            <TabsTrigger value="bonus" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700 animate-fade-in">
+            <TabsTrigger value="bonus" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700">
               🌟 Bonus Features
             </TabsTrigger>
           </TabsList>
           {/* MENTAL HEALTH TAB */}
-          <TabsContent value="mental" className="px-6 py-7 animate-fade-in">
+          <TabsContent value="mental" className="px-6 py-7">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {/* Use improved DashboardFeatureCard as a wrapper for dialog triggers */}
               <DashboardFeatureCard
                 icon={<span className="text-indigo-600"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#E0ECFB"/><path d="M19 14c0 2.21-1.79 4-4 4s-4-1.79-4-4" stroke="#6366F1" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/><path d="M10 12c.64-1.14 1.91-2 4-2s3.36.86 4 2" stroke="#38BDF8" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg></span>}
                 title="Guided Breathing"
@@ -211,7 +207,7 @@ export default function DashboardTabs() {
             </div>
           </TabsContent>
           {/* STUDY SUPPORT TAB */}
-          <TabsContent value="study" className="px-6 py-7 animate-fade-in">
+          <TabsContent value="study" className="px-6 py-7">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               <DashboardFeatureCard
                 icon={<span className="text-teal-600"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#E6FCF6"/><path d="M11 17.5h6" stroke="#0EA5E9" strokeWidth="1.8" strokeLinecap="round"/><path d="M11 10.5h6" stroke="#14B8A6" strokeWidth="1.8" strokeLinecap="round"/></svg></span>}
@@ -240,8 +236,7 @@ export default function DashboardTabs() {
             </div>
           </TabsContent>
           {/* BONUS FEATURES TAB */}
-          <TabsContent value="bonus" className="px-6 py-7 animate-fade-in">
-            {/* Place each feature in its own distinct card + grid */}
+          <TabsContent value="bonus" className="px-6 py-7">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               <DashboardFeatureCard
                 icon={<span className="text-purple-600"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#F3E8FF"/><path d="M10 11v6m8-6v6" stroke="#A78BFA" strokeWidth="1.8" strokeLinecap="round"/><circle cx="14" cy="14" r="7" stroke="#9333EA" strokeWidth="1.5" fill="none"/></svg></span>}
