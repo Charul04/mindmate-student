@@ -101,7 +101,7 @@ const bonusFeatures: DashboardFeature[] = [
   },
   {
     icon: <Book className="text-indigo-700" size={28} />,
-    description: "AI Flashcards",
+    title: "AI Flashcards",
     description: "AI generates flashcards per your subject with save/remove.",
     tooltip: "Type your subject/topic for instant cards."
   }
