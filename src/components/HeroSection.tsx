@@ -1,4 +1,3 @@
-
 import BookStandingIllustration from "@/components/BookStandingIllustration";
 import { useTranslation } from "react-i18next";
 import "@/i18n";
@@ -24,7 +23,6 @@ export default function HeroSection() {
       <div className="flex-1 flex flex-col items-center md:items-start justify-center text-center md:text-left animate-fade-in">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight text-indigo-900 mb-4">
           {t("appName")}
-          <span className="text-sky-500">+</span>
         </h1>
         <p className="text-base sm:text-xl md:text-2xl text-indigo-700 font-medium mb-4 max-w-md tracking-normal drop-shadow-sm">
           {t("studySmarter")}

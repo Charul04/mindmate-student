@@ -46,8 +46,7 @@ export default function DashboardTabs() {
       </div>
 
       <h2 className="relative z-10 text-2xl sm:text-3xl font-bold text-center text-indigo-900 mb-4 sm:mb-8 animate-fade-in drop-shadow-[0_2px_8px_rgba(109,40,217,0.14)]">
-        Your MindMate
-        <span className="text-sky-500 font-extrabold">+</span> Dashboard
+        Your MindMate Dashboard
       </h2>
       <div className="relative z-10 w-full max-w-xl sm:max-w-4xl mx-auto px-0 mb-3 sm:mb-6">
         {/* Frosted-glass, glowing card container with new soft purple border/blur */}
