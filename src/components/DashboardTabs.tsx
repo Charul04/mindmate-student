@@ -20,117 +20,9 @@ import ScreenTimeTrackerDialog from "@/components/ScreenTimeTrackerDialog";
 import { Smile, Wind, Quote, PenLine, CalendarDays, Clock, Book, ChartLine, Music, Lightbulb, ChevronRight } from "lucide-react";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import React from "react";
-
-type DashboardFeature = {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  tooltip?: string;
-};
-
-const mentalHealthFeatures: DashboardFeature[] = [
-  {
-    icon: <Smile className="text-sky-600" size={28} />,
-    title: "Mood Check-In",
-    description: "Select your mood to get tailored advice.",
-    tooltip: "Track your mood & get helpful support."
-  },
-  {
-    icon: <Wind className="text-indigo-600" size={28} />,
-    title: "Guided Breathing",
-    description: "3–5 min calming breathing session.",
-    tooltip: "Follow a script for relaxation."
-  },
-  {
-    icon: <Quote className="text-yellow-500" size={28} />,
-    title: "Motivational Quote",
-    description: "Instant boost with inspiration!",
-    tooltip: "AI finds a motivational quote for you."
-  },
-  {
-    icon: <PenLine className="text-indigo-400" size={28} />,
-    title: "Journaling Prompt",
-    description: "Reflect with a daily writing activity.",
-    tooltip: "Get thoughtful prompts to guide your journaling."
-  },
-];
-
-const studySupportFeatures: DashboardFeature[] = [
-  {
-    icon: <CalendarDays className="text-teal-600" size={28} />,
-    title: "Daily Study Planner",
-    description: "Simple to-do & calendar to add events, AI suggestions.",
-    tooltip: "Organize your study tasks and schedule."
-  },
-  {
-    icon: <Clock className="text-sky-600" size={28} />,
-    title: "Pomodoro Suggestion",
-    description: "AI recommends focus & break cycles. Stopwatch & clock added.",
-    tooltip: "Boost focus with timers and sessions."
-  },
-  {
-    icon: <Book className="text-indigo-700" size={28} />,
-    title: "AI Study Assistant",
-    description: "Get personalized support, notes, and answers—instantly, 24/7.",
-    tooltip: "Type your study question for instant help."
-  },
-  {
-    icon: <ChartLine className="text-green-600" size={28} />,
-    title: "Goals Tracker",
-    description: "Track goals for day, week, month, year. Remove & view progress.",
-    tooltip: "Set and manage your study goals."
-  }
-];
-
-const bonusFeatures: DashboardFeature[] = [
-  {
-    icon: <Smile className="text-pink-500" size={28} />,
-    title: "Break with Me",
-    description: "Fun facts, jokes, and mindful breaks."
-  },
-  {
-    icon: <Music className="text-blue-600" size={28} />,
-    title: "Focus Music Links",
-    description: "Curated YouTube/Spotify playlists."
-  },
-  {
-    icon: <Lightbulb className="text-amber-500" size={28} />,
-    title: "Study Technique Tips",
-    description: "Feynman, flashcards, and other strategies.",
-    tooltip: "Get smarter with proven techniques."
-  },
-  {
-    icon: <Book className="text-indigo-700" size={28} />,
-    title: "AI Flashcards",
-    description: "AI generates flashcards per your subject with save/remove.",
-    tooltip: "Type your subject/topic for instant cards."
-  }
-];
-
-function DashboardCard({ icon, title, description, tooltip }: DashboardFeature) {
-  // Transparent, border-only button style
-  return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button
-            className="group flex flex-col items-start bg-transparent rounded-xl border border-indigo-100 p-5 md:p-6 shadow-none transition focus:ring-2 focus:ring-indigo-100 w-full min-h-[104px] text-left hover:bg-indigo-50/35 hover:shadow-md focus:bg-indigo-50/50"
-          >
-            <span className="flex items-center mb-2">{icon}</span>
-            <span className="font-semibold text-indigo-900 text-[1.08rem]">{title}</span>
-            <span className="text-indigo-900/70 text-sm mt-1">{description}</span>
-            <ChevronRight className="absolute right-4 top-4 text-indigo-200 group-hover:text-indigo-500 transition hidden md:block" size={20} />
-          </button>
-        </TooltipTrigger>
-        {tooltip && (
-          <TooltipContent side="bottom">
-            {tooltip}
-          </TooltipContent>
-        )}
-      </Tooltip>
-    </TooltipProvider>
-  );
-}
+import MentalHealthFeaturesTab from "@/components/MentalHealthFeaturesTab";
+import StudySupportFeaturesTab from "@/components/StudySupportFeaturesTab";
+import BonusFeaturesTab from "@/components/BonusFeaturesTab";
 
 export default function DashboardTabs() {
   return (
@@ -274,70 +166,14 @@ export default function DashboardTabs() {
               🌟 Bonus Features
             </TabsTrigger>
           </TabsList>
-          {/* MENTAL HEALTH TAB */}
           <TabsContent value="mental" className="relative z-10 px-1 sm:px-3 py-5 sm:py-7">
-            {/* Glass grid container for the area */}
-            <div className="relative overflow-visible">
-              {/* Remove colored/blur backgrounds under the buttons */}
-              {/* <div className="absolute inset-1 -z-10 rounded-2xl bg-gradient-to-br from-purple-100/50 via-indigo-50/70 to-sky-100/40 shadow-xl shadow-purple-100/22 blur-sm" aria-hidden="true" /> */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
-                {mentalHealthFeatures.map((f) =>
-                  f.title === "Mood Check-In" ? (
-                    <MoodCheckinDialog
-                      key={f.title}
-                      triggerClassName="group relative flex flex-col items-start bg-transparent rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-none hover:bg-indigo-50/40 focus:ring-2 focus:ring-indigo-100 w-full min-h-[120px] text-left transition-all"
-                    />
-                  ) : (
-                    <DashboardCard
-                      key={f.title}
-                      {...f}
-                    />
-                  )
-                )}
-              </div>
-            </div>
+            <MentalHealthFeaturesTab />
           </TabsContent>
-          {/* STUDY SUPPORT TAB */}
           <TabsContent value="study" className="relative z-10 px-1 sm:px-3 py-5 sm:py-7">
-            <div className="relative overflow-visible">
-              {/* Remove colored/blur backgrounds under the buttons */}
-              {/* <div className="absolute inset-1 -z-10 rounded-2xl bg-gradient-to-tr from-purple-100/40 via-sky-100/60 to-white/50 shadow-lg shadow-purple-100/15 blur-sm" aria-hidden="true" /> */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
-                <StudyPlannerDialog 
-                  triggerClassName="group relative flex flex-col items-start bg-transparent rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-none hover:bg-indigo-50/40 focus:ring-2 focus:ring-indigo-100 w-full min-h-[120px] text-left transition-all"
-                />
-                <PomodoroTimerDialog 
-                  triggerClassName="group relative flex flex-col items-start bg-transparent rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-none hover:bg-indigo-50/40 focus:ring-2 focus:ring-indigo-100 w-full min-h-[120px] text-left transition-all"
-                />
-                <GoalsTrackerDialog
-                  triggerClassName="group relative flex flex-col items-start bg-transparent rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-none hover:bg-indigo-50/40 focus:ring-2 focus:ring-indigo-100 w-full min-h-[120px] text-left transition-all"
-                />
-              </div>
-            </div>
+            <StudySupportFeaturesTab />
           </TabsContent>
-          {/* BONUS FEATURES TAB */}
           <TabsContent value="bonus" className="relative z-10 px-1 sm:px-3 py-5 sm:py-7">
-            <div className="relative overflow-visible">
-              {/* Remove colored/blur backgrounds under the buttons */}
-              {/* <div className="absolute inset-1 -z-10 rounded-2xl bg-gradient-to-bl from-purple-100/34 via-fuchsia-100/55 to-indigo-100/27 shadow-md shadow-purple-100/16 blur-sm" aria-hidden="true" /> */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
-                <BreakWithMeDialog
-                  triggerClassName="group relative flex flex-col items-start bg-transparent rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-none hover:bg-indigo-50/40 focus:ring-2 focus:ring-indigo-100 w-full min-h-[120px] text-left transition-all"
-                />
-                <FocusMusicDialog
-                  triggerClassName="group relative flex flex-col items-start bg-transparent rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-none hover:bg-indigo-50/40 focus:ring-2 focus:ring-indigo-100 w-full min-h-[120px] text-left transition-all"
-                />
-                <StudyTipsDialog
-                  triggerClassName="group relative flex flex-col items-start bg-transparent rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-none hover:bg-indigo-50/40 focus:ring-2 focus:ring-indigo-100 w-full min-h-[120px] text-left transition-all"
-                />
-                <FlashcardsDialog
-                  triggerClassName="group relative flex flex-col items-start bg-transparent rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-none hover:bg-indigo-50/40 focus:ring-2 focus:ring-indigo-100 w-full min-h-[120px] text-left transition-all"
-                />
-                <ScreenTimeTrackerDialog
-                  triggerClassName="group relative flex flex-col items-start bg-transparent rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-none hover:bg-indigo-50/40 focus:ring-2 focus:ring-indigo-100 w-full min-h-[120px] text-left transition-all"
-                />
-              </div>
-            </div>
+            <BonusFeaturesTab />
           </TabsContent>
         </Tabs>
       </div>
