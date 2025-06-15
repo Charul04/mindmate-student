@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -11,11 +10,10 @@ type JournalEntry = {
   date: string;
 };
 
-// Example reflective questions for journaling
+// Reflective questions for journaling, challenge/struggle topics removed
 const PROMPTS = [
   "What made you smile this week?",
   "What's something you're proud of but never say out loud?",
-  // Removed: "What challenge did you overcome recently, and what did you learn from it?",
   "If you could give your past self one piece of advice, what would it be?",
   "Describe a moment when you felt truly at peace.",
   "How are you really feeling today—beneath the surface?",
