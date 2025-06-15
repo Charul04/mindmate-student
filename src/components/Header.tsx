@@ -4,7 +4,7 @@ import AppLogo from "@/components/AppLogo";
 
 export default function Header() {
   return (
-    <header className="flex justify-between items-center px-8 py-6 border-b border-indigo-100 bg-white/90 dark:bg-slate-900/85 shadow-sm">
+    <header className="flex justify-between items-center px-8 py-6 border-b border-indigo-100 bg-white/90 shadow-sm">
       <div>
         <AppLogo />
       </div>
@@ -15,4 +15,3 @@ export default function Header() {
     </header>
   );
 }
-

@@ -6,7 +6,7 @@ import "@/i18n";
 export default function FooterSection() {
   const { t } = useTranslation();
   return (
-    <footer className="mt-auto px-8 py-8 bg-white/90 dark:bg-slate-900/85 border-t border-indigo-100 flex flex-col md:flex-row justify-between items-center text-indigo-700 text-sm relative overflow-hidden">
+    <footer className="mt-auto px-8 py-8 bg-white/90 border-t border-indigo-100 flex flex-col md:flex-row justify-between items-center text-indigo-700 text-sm relative overflow-hidden">
       {/* Subtle soft purple background glow */}
       <div
         aria-hidden="true"
