@@ -15,6 +15,7 @@ import {
 import MoodCheckinDialog from "@/components/MoodCheckinDialog";
 import GuidedBreathingDialog from "@/components/GuidedBreathingDialog";
 import MotivationalQuoteDialog from "@/components/MotivationalQuoteDialog";
+import JournalingPromptDialog from "@/components/JournalingPromptDialog";
 
 type DashboardFeature = {
   icon: React.ReactNode;
@@ -42,12 +43,7 @@ const mentalHealthFeatures: DashboardFeature[] = [
     description: "Instant boost with inspiration!",
     tooltip: "AI finds a motivational quote for you."
   },
-  {
-    icon: <PenLine className="text-indigo-400" size={28} />,
-    title: "Journaling Prompt",
-    description: "Reflect with a daily writing activity.",
-    tooltip: "Build reflection habits with prompts."
-  },
+  // "Journaling Prompt" card will be handled by the new dialog, not here.
 ];
 
 const studySupportFeatures: DashboardFeature[] = [
@@ -234,6 +230,11 @@ export default function Index() {
                     <DashboardCard key={f.title} {...f} />
                   )
                 )}
+                {/* Add Journaling Prompt as a special dialog card */}
+                <JournalingPromptDialog
+                  key="Journaling Prompt"
+                  triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+                />
               </div>
             </TabsContent>
             <TabsContent value="study" className="px-6 py-7">
