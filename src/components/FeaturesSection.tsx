@@ -4,11 +4,6 @@ import { Book, Brain, Star, HeartPulse } from "lucide-react";
 
 const features = [
   {
-    icon: Book,
-    title: "AI Study Assistant",
-    description: "Get personalized support, notes, and answers—instantly, 24/7.",
-  },
-  {
     icon: Brain,
     title: "Focus & Motivation",
     description: "Pomodoro timers, habit streaks, and daily focus boosts designed for students.",
