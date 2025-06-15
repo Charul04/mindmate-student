@@ -1,4 +1,5 @@
-import React, { useState, useRef } from "react";
+
+import React, { useState, useRef, useEffect } from "react";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Mic, MicOff, Speaker, Sparkles } from "lucide-react";
@@ -117,6 +118,36 @@ export default function VoiceAiCompanionDialog({ triggerClassName }: { triggerCl
   const [aiReply, setAiReply] = useState("");
   const recognitionRef = useRef<any | null>(null);
 
+  // Add Perplexity API Key management
+  const [apiKey, setApiKey] = useState<string | null>(null);
+  const [apiKeyInput, setApiKeyInput] = useState("");
+  const [apiKeyError, setApiKeyError] = useState<string | null>(null);
+
+  // Load Perplexity API Key from localStorage on mount
+  useEffect(() => {
+    setApiKey(localStorage.getItem("pplx_api_key"));
+  }, [open]);
+
+  // Save key to localStorage and state
+  const handleSaveApiKey = () => {
+    if (!apiKeyInput.startsWith("pplx_") || apiKeyInput.length < 20) {
+      setApiKeyError("Please enter a valid Perplexity API key.");
+      return;
+    }
+    localStorage.setItem("pplx_api_key", apiKeyInput);
+    setApiKey(apiKeyInput);
+    setApiKeyInput("");
+    setApiKeyError(null);
+  };
+
+  // Optionally allow clearing or changing the key
+  const handleClearApiKey = () => {
+    localStorage.removeItem("pplx_api_key");
+    setApiKey(null);
+    setApiKeyInput("");
+    setApiKeyError(null);
+  };
+
   // Start voice recording and STT
   const startRecording = () => {
     const rec = getSpeechRecognition();
@@ -212,7 +243,37 @@ export default function VoiceAiCompanionDialog({ triggerClassName }: { triggerCl
             </div>
           </DialogDescription>
         </DialogHeader>
-        <div className="flex flex-col gap-4 px-4 pt-1 pb-5">
+        {/* --- API KEY SECTION --- */}
+        {!apiKey && (
+          <div className="flex flex-col items-stretch gap-2 bg-yellow-50 border border-yellow-200 rounded-xl px-5 py-4 m-4 -mb-1 animate-fade-in">
+            <label htmlFor="pplx_api_key_input" className="block text-sm font-semibold text-yellow-900 mb-1">Enter your Perplexity API key to unlock voice AI:</label>
+            <input
+              id="pplx_api_key_input"
+              type="text"
+              value={apiKeyInput}
+              onChange={e => setApiKeyInput(e.target.value)}
+              className="px-3 py-2 rounded-md border border-yellow-300 bg-white text-base text-yellow-900 focus:outline-none focus:ring-2 focus:ring-yellow-200"
+              placeholder="Paste Perplexity API key (starts with pplx_)"
+              autoComplete="off"
+            />
+            <Button size="sm" className="mt-2 bg-yellow-400 text-yellow-950 hover:bg-yellow-300 hover:text-yellow-700" onClick={handleSaveApiKey}>
+              Save API Key
+            </Button>
+            {apiKeyError && <div className="text-red-500 text-xs mt-1">{apiKeyError}</div>}
+            <a className="text-xs underline mt-1 text-yellow-900 hover:text-yellow-600" href="https://docs.perplexity.ai/docs/api-overview" target="_blank" rel="noopener noreferrer">What is this? Get your Perplexity API key</a>
+          </div>
+        )}
+        {/* --- END API KEY SECTION --- */}
+        {/* Allow user to clear key */}
+        {apiKey && (
+          <div className="w-full flex justify-end px-5 mt-1 mb-0">
+            <button className="text-xs text-gray-400 hover:text-sky-500 underline" onClick={handleClearApiKey}>
+              Change API key
+            </button>
+          </div>
+        )}
+        {/* Main voice controls only if API key is set */}
+        <div className={"flex flex-col gap-4 px-4 pt-1 pb-5" + (!apiKey ? " opacity-40 pointer-events-none select-none" : "")}>
           {/* Recording/idle/controls */}
           <div className="flex flex-col gap-2 items-center">
             <Button
@@ -229,6 +290,7 @@ export default function VoiceAiCompanionDialog({ triggerClassName }: { triggerCl
                   : startRecording
               }
               aria-label={voiceState === "recording" ? "Stop recording" : "Start recording"}
+              disabled={!apiKey}
             >
               {voiceState === "recording" ? <MicOff size={38} className="animate-bounce text-red-500"/> : <Mic size={38} className="animate-bounce" />}
             </Button>
