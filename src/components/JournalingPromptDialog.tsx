@@ -15,7 +15,6 @@ const PROMPTS = [
   "How are you really feeling today—beneath the surface?",
   "What would you do tomorrow if you knew you couldn't fail?",
   "Who inspires you and why?",
-  "What are you most grateful for at this moment?",
   "Describe a time you surprised yourself."
 ];
 const SUPPORTIVE_MESSAGE = "There's power in knowing yourself. Keep going.";
@@ -82,3 +81,4 @@ export default function JournalingPromptDialog({ triggerClassName }: { triggerCl
     </Dialog>
   );
 }
+
