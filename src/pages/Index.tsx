@@ -24,6 +24,7 @@ import StudyPlannerDialog from "@/components/StudyPlannerDialog";
 import PomodoroTimerDialog from "@/components/PomodoroTimerDialog";
 import FlashcardsDialog from "@/components/FlashcardsDialog";
 import GoalsTrackerDialog from "@/components/GoalsTrackerDialog";
+import AIChatbotDialog from "@/components/AIChatbotDialog";
 import { useNavigate } from "react-router-dom";
 
 type DashboardFeature = {
@@ -260,13 +261,8 @@ export default function Index() {
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
                 <StudyPlannerDialog />
                 <PomodoroTimerDialog />
-                {/* AI Study Assistant Card */}
-                <DashboardCard
-                  icon={<Book className="text-indigo-700" size={28} />}
-                  title="AI Study Assistant"
-                  description="Get personalized support, notes, and answers—instantly, 24/7."
-                  tooltip="Type your study question for instant help."
-                />
+                {/* AI Study Assistant (now opens a chatbot dialog) */}
+                <AIChatbotDialog />
                 <GoalsTrackerDialog />
               </div>
             </TabsContent>

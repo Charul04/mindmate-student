@@ -21,13 +21,11 @@ export default function StudyPlanner() {
     setTodos(todos.filter(t => t.id !== id));
   }
 
-  // Calendar events are "events" set to the chosen date
-  // You could expand this logic to save events per-date
   return (
-    <div className="flex flex-col bg-white/70 rounded-xl border border-indigo-100 p-5 min-h-[250px] shadow-sm w-full">
-      <div className="flex items-center gap-2 mb-3">
-        <CalendarDays className="text-teal-600" size={22} />
-        <span className="font-semibold text-indigo-900 text-base">Daily Study Planner</span>
+    <div className="flex flex-col bg-white/70 rounded-xl border border-indigo-100 p-4 min-h-[170px] shadow-sm w-full max-w-md">
+      <div className="flex items-center gap-2 mb-2">
+        <CalendarDays className="text-teal-600" size={20} />
+        <span className="font-semibold text-indigo-900 text-[1rem]">Daily Study Planner</span>
       </div>
       <div className="flex items-center mb-2 gap-2">
         <input
@@ -38,10 +36,10 @@ export default function StudyPlanner() {
           onKeyDown={e => e.key === "Enter" ? addTask() : undefined}
         />
         <Button size="sm" onClick={addTask} title="Add Task">
-          <Plus size={16} />
+          <Plus size={14} />
         </Button>
       </div>
-      <ul className="space-y-1 mb-3 max-h-28 overflow-auto">
+      <ul className="space-y-1 mb-2 max-h-20 overflow-auto">
         {todos.length === 0 && <li className="text-sm text-sky-700">No planned tasks yet.</li>}
         {todos.map(t => (
           <li key={t.id} className="flex justify-between items-center bg-sky-50 rounded px-2 py-1">
@@ -54,7 +52,7 @@ export default function StudyPlanner() {
         mode="single"
         selected={calendarDate}
         onSelect={setCalendarDate}
-        className="p-3 pointer-events-auto mb-2"
+        className="p-2 pointer-events-auto mb-1"
       />
       <div className="text-xs text-indigo-700">Add your tasks & optionally pick a study date.</div>
     </div>
