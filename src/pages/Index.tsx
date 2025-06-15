@@ -29,6 +29,7 @@ import BreakWithMeDialog from "@/components/BreakWithMeDialog";
 import FocusMusicDialog from "@/components/FocusMusicDialog";
 import StudyTipsDialog from "@/components/StudyTipsDialog";
 import { useNavigate } from "react-router-dom";
+import ThemeAndLanguageSwitcher from "@/components/ThemeAndLanguageSwitcher";
 
 type DashboardFeature = {
   icon: React.ReactNode;
@@ -198,6 +199,9 @@ export default function Index() {
       <header className="flex justify-between items-center px-8 py-6 border-b border-indigo-100 bg-white/90 shadow-sm">
         <div>
           <AppLogo />
+        </div>
+        <div className="flex items-center gap-6">
+          <ThemeAndLanguageSwitcher />
         </div>
       </header>
       {/* HERO */}
