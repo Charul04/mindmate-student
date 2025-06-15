@@ -5,6 +5,9 @@ import React from "react";
 const bounceAnim = {
   animation: "bounce 2.2s cubic-bezier(.62,1.11,.5,1) infinite"
 };
+const handWaveAnim = {
+  animation: "wave 1s ease-in-out infinite"
+};
 const sparkle1Anim = {
   animation: "sparkle1 2.6s ease-in-out infinite"
 };
@@ -14,11 +17,22 @@ const sparkle2Anim = {
 const sparkle3Anim = {
   animation: "sparkle3 2.6s ease-in-out infinite 2s"
 };
+const bubbleAnim = {
+  animation: "bubble-pop 0.5s cubic-bezier(.7,-0.3,.4,1.7) 0.6s both"
+};
+
 const style = `
 @keyframes bounce {
   0%, 100% { transform: translateY(0);}
   15% { transform: translateY(-13px);}
   30% { transform: translateY(0);}
+}
+@keyframes wave {
+  0%, 60%, 100% { transform: rotate(0deg);}
+  20% { transform: rotate(-10deg);}
+  40% { transform: rotate(18deg);}
+  50% { transform: rotate(-6deg);}
+  70% { transform: rotate(12deg);}
 }
 @keyframes sparkle1 {
   0%, 20%, 100% { opacity: 0;}
@@ -31,6 +45,11 @@ const style = `
 @keyframes sparkle3 {
   0%, 80%, 100% { opacity: 0;}
   85% { opacity: 1;}
+}
+@keyframes bubble-pop {
+  0% { opacity: 0; transform: scale(0.3) translateY(-16px);}
+  80% { opacity: 1; transform: scale(1.1) translateY(-18px);}
+  100% { opacity: 1; transform: scale(1) translateY(-18px);}
 }
 `;
 
@@ -50,6 +69,25 @@ export default function HeroIllustration() {
         <rect x="24" y="54" width="232" height="104" rx="20" fill="#f0f6ff" opacity=".5"/>
         {/* Book shadow */}
         <ellipse cx="140" cy="148" rx="52" ry="12" fill="#a5b4fc" opacity=".18" />
+
+        {/* Speech bubble saying "hii!" */}
+        <g style={bubbleAnim}>
+          <g>
+            <ellipse cx="186" cy="86" rx="26" ry="15" fill="#fffde4" stroke="#ffe38c" strokeWidth="2" />
+            <polygon points="172,103 183,99 180,107" fill="#fffde4" stroke="#ffe38c" strokeWidth="1" />
+            <text
+              x="185"
+              y="91"
+              textAnchor="middle"
+              fontWeight="bold"
+              fontSize="1.35rem"
+              fontFamily="Comic Sans MS, Comic Sans, Chalkboard, Arial"
+              fill="#ffc700"
+              style={{userSelect: "none"}}
+            >hii!</text>
+          </g>
+        </g>
+
         {/* Cute bouncing book */}
         <g style={bounceAnim}>
           {/* Book base */}
@@ -66,6 +104,22 @@ export default function HeroIllustration() {
           <circle cx="160" cy="117" r="2.2" fill="#444a64" />
           {/* Smile */}
           <path d="M143 124 q7 4 14 0" stroke="#444a64" strokeWidth="2" fill="none" />
+
+          {/* Waving hand! */}
+          <g style={{
+            ...handWaveAnim,
+            transformOrigin: "172px 111px", // pivot at wrist
+          }}>
+            {/* Cartoon hand: palm (circle) + 4 fingers (rounded rects) */}
+            <ellipse cx="177" cy="111" rx="5" ry="7" fill="#fffbe7" stroke="#fed7aa" strokeWidth="2"/>
+            {/* four fingers */}
+            <rect x="176" y="101" width="3" height="8" rx="1.3" fill="#fed7aa" stroke="#facc15" strokeWidth="0.6"/>
+            <rect x="173" y="103" width="2.2" height="7" rx="1.1" fill="#fed7aa" stroke="#facc15" strokeWidth="0.6"/>
+            <rect x="170.7" y="105" width="2" height="7" rx="1" fill="#fed7aa" stroke="#facc15" strokeWidth="0.6"/>
+            <rect x="179.1" y="104" width="2" height="7" rx="1" fill="#fed7aa" stroke="#facc15" strokeWidth="0.6"/>
+            {/* thumb */}
+            <rect x="182" y="112" width="2.6" height="6.3" rx="1.1" fill="#fed7aa" stroke="#facc15" strokeWidth="0.5" transform="rotate(34 183 115)" />
+          </g>
         </g>
         {/* Animated sparkles */}
         <g>
