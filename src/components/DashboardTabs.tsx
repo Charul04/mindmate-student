@@ -69,10 +69,10 @@ const studySupportFeatures: DashboardFeature[] = [
     tooltip: "Boost focus with timers and sessions."
   },
   {
-    icon: <Book className="text-indigo-700" size={28} />,
-    title: "AI Study Assistant",
-    description: "Get personalized support, notes, and answers—instantly, 24/7.",
-    tooltip: "Type your study question for instant help."
+    icon: <PenLine className="text-indigo-400" size={28} />,
+    title: "Reflective Writing",
+    description: "Journaling prompts for personal reflection and growth.",
+    tooltip: "Write and reflect daily with guided prompts."
   },
   {
     icon: <ChartLine className="text-green-600" size={28} />,
@@ -190,7 +190,9 @@ export default function DashboardTabs() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
               <StudyPlannerDialog />
               <PomodoroTimerDialog />
-              {/* Removed <AIChatbotDialog /> */}
+              <JournalingPromptDialog
+                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+              />
               <GoalsTrackerDialog />
             </div>
           </TabsContent>
