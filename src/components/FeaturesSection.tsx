@@ -22,9 +22,14 @@ const features = [
 
 export default function FeaturesSection() {
   return (
-    <section id="features" className="w-full bg-white border-t border-b border-indigo-100 py-14 px-8">
+    <section
+      id="features"
+      className="w-full bg-gradient-to-br from-purple-50 via-white to-white border-t border-b border-indigo-100 py-14 px-8 transition-colors duration-300"
+      // Subtle light purple gradient background
+      style={{ background: "linear-gradient(135deg, #f6f3fb 0%, #f8fafc 65%, #fff 100%)" }}
+    >
       <h2 className="text-3xl font-bold text-center text-indigo-900 mb-8 animate-fade-in">
-        How MindMate+ helps you thrive
+        How MindMate helps you thrive
       </h2>
       <div className="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto">
         {features.map(({ icon, title, description }) => (
