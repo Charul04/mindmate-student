@@ -16,6 +16,10 @@ import MoodCheckinDialog from "@/components/MoodCheckinDialog";
 import GuidedBreathingDialog from "@/components/GuidedBreathingDialog";
 import MotivationalQuoteDialog from "@/components/MotivationalQuoteDialog";
 import JournalingPromptDialog from "@/components/JournalingPromptDialog";
+import StudyPlanner from "@/components/StudyPlanner";
+import PomodoroTimer from "@/components/PomodoroTimer";
+import Flashcards from "@/components/Flashcards";
+import GoalsTracker from "@/components/GoalsTracker";
 import { useNavigate } from "react-router-dom";
 
 type DashboardFeature = {
@@ -56,14 +60,14 @@ const studySupportFeatures: DashboardFeature[] = [
   {
     icon: <CalendarDays className="text-teal-600" size={28} />,
     title: "Daily Study Planner",
-    description: "Simple to-do & AI smart suggestions.",
-    tooltip: "Organize your study tasks."
+    description: "Simple to-do & calendar to add events, AI suggestions.",
+    tooltip: "Organize your study tasks and schedule."
   },
   {
     icon: <Clock className="text-sky-600" size={28} />,
     title: "Pomodoro Suggestion",
-    description: "AI recommends focus & break cycles.",
-    tooltip: "Boost focus with smart timers."
+    description: "AI recommends focus & break cycles. Stopwatch & clock added.",
+    tooltip: "Boost focus with timers and sessions."
   },
   {
     icon: <Lightbulb className="text-amber-500" size={28} />,
@@ -74,15 +78,15 @@ const studySupportFeatures: DashboardFeature[] = [
   {
     icon: <Book className="text-indigo-700" size={28} />,
     title: "AI Flashcards",
-    description: "AI generates flashcards per your subject.",
+    description: "AI generates flashcards per your subject with save/remove.",
     tooltip: "Type your subject/topic for instant cards."
   },
   {
-    icon: <Target className="text-green-600" size={28} />,
-    title: "Exam Stress Mode",
-    description: "Calming advice and focus prioritization.",
-    tooltip: "Take a breath, get study order + calm."
-  },
+    icon: <ChartLine className="text-green-600" size={28} />,
+    title: "Goals Tracker",
+    description: "Track goals for day, week, month, year. Remove & view progress.",
+    tooltip: "Set and manage your study goals."
+  }
 ];
 
 const bonusFeatures: DashboardFeature[] = [
@@ -249,9 +253,12 @@ export default function Index() {
             </TabsContent>
             <TabsContent value="study" className="px-6 py-7">
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-                {studySupportFeatures.map((f) => (
-                  <DashboardCard key={f.title} {...f} />
-                ))}
+                {/* Custom render for new features */}
+                <StudyPlanner />
+                <PomodoroTimer />
+                <DashboardCard {...studySupportFeatures[2]} />
+                <Flashcards />
+                <GoalsTracker />
               </div>
             </TabsContent>
             <TabsContent value="bonus" className="px-6 py-7">
