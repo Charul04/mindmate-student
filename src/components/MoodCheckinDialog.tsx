@@ -11,6 +11,7 @@ import {
   DialogFooter
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Smile } from "lucide-react";
 
 const moods = [
   { value: "happy", label: "😊 Happy" },
@@ -75,11 +76,21 @@ export default function MoodCheckinDialog({ triggerClassName }: { triggerClassNa
       <DialogTrigger asChild>
         <button
           type="button"
-          className={triggerClassName}
+          className={`
+            group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm
+            hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left outline-none
+            ${triggerClassName ?? ""}
+          `}
           tabIndex={0}
           aria-label="Start Mood Check-In"
         >
-          Mood Check-In
+          <span className="flex items-center mb-2">
+            <Smile className="text-sky-600 mr-2" size={28} />
+            <span className="font-semibold text-indigo-900 text-[1.08rem]">Mood Check-In</span>
+          </span>
+          <span className="text-indigo-900/70 text-sm mt-1">
+            Select your mood to get tailored advice.
+          </span>
         </button>
       </DialogTrigger>
       <DialogContent>
@@ -132,4 +143,3 @@ export default function MoodCheckinDialog({ triggerClassName }: { triggerClassNa
     </Dialog>
   );
 }
-
