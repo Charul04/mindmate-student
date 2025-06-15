@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import StudyPlanner from "./StudyPlanner";
@@ -37,4 +36,3 @@ export default function StudyPlannerDialog({ triggerClassName }: { triggerClassN
     </Dialog>
   );
 }
-

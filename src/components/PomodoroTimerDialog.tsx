@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import PomodoroTimer from "./PomodoroTimer";
@@ -37,4 +36,3 @@ export default function PomodoroTimerDialog({ triggerClassName }: { triggerClass
     </Dialog>
   );
 }
-
