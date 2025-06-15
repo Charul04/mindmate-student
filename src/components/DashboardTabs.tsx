@@ -4,18 +4,16 @@ import {
   TabsTrigger,
   TabsContent,
 } from "@/components/ui/tabs";
-import MoodCheckinDialog from "@/components/MoodCheckinDialog";
 import GuidedBreathingDialog from "@/components/GuidedBreathingDialog";
 import MotivationalQuoteDialog from "@/components/MotivationalQuoteDialog";
 import JournalingPromptDialog from "@/components/JournalingPromptDialog";
 import StudyPlannerDialog from "@/components/StudyPlannerDialog";
 import PomodoroTimerDialog from "@/components/PomodoroTimerDialog";
-import FlashcardsDialog from "@/components/FlashcardsDialog";
 import GoalsTrackerDialog from "@/components/GoalsTrackerDialog";
 import BreakWithMeDialog from "@/components/BreakWithMeDialog";
 import FocusMusicDialog from "@/components/FocusMusicDialog";
 import StudyTipsDialog from "@/components/StudyTipsDialog";
-import VoiceAiCompanionDialog from "@/components/VoiceAiCompanionDialog";
+import FlashcardsDialog from "@/components/FlashcardsDialog";
 import ScreenTimeTrackerDialog from "@/components/ScreenTimeTrackerDialog";
 import { Smile, Wind, Quote, PenLine, CalendarDays, Clock, Book, ChartLine, Music, Lightbulb, ChevronRight } from "lucide-react";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
@@ -29,12 +27,6 @@ type DashboardFeature = {
 };
 
 const mentalHealthFeatures: DashboardFeature[] = [
-  {
-    icon: <Smile className="text-sky-600" size={28} />,
-    title: "Mood Check-In",
-    description: "Select your mood to get tailored advice.",
-    tooltip: "Track your mood & get helpful support."
-  },
   {
     icon: <Wind className="text-indigo-600" size={28} />,
     title: "Guided Breathing",
@@ -69,12 +61,6 @@ const studySupportFeatures: DashboardFeature[] = [
     tooltip: "Boost focus with timers and sessions."
   },
   {
-    icon: <PenLine className="text-indigo-400" size={28} />,
-    title: "Reflective Writing",
-    description: "Journaling prompts for personal reflection and growth.",
-    tooltip: "Write and reflect daily with guided prompts."
-  },
-  {
     icon: <ChartLine className="text-green-600" size={28} />,
     title: "Goals Tracker",
     description: "Track goals for day, week, month, year. Remove & view progress.",
@@ -83,11 +69,6 @@ const studySupportFeatures: DashboardFeature[] = [
 ];
 
 const bonusFeatures: DashboardFeature[] = [
-  {
-    icon: <Smile className="text-pink-500" size={28} />,
-    title: "Break with Me",
-    description: "Fun facts, jokes, and mindful breaks."
-  },
   {
     icon: <Music className="text-blue-600" size={28} />,
     title: "Focus Music Links",
@@ -100,15 +81,14 @@ const bonusFeatures: DashboardFeature[] = [
     tooltip: "Get smarter with proven techniques."
   },
   {
-    icon: <Book className="text-indigo-700" size={28} />,
-    title: "AI Flashcards",
-    description: "AI generates flashcards per your subject with save/remove.",
-    tooltip: "Type your subject/topic for instant cards."
-  }
+    icon: <ChartLine className="text-green-600" size={28} />,
+    title: "Goals Tracker",
+    description: "Track your study goals.",
+    tooltip: "Track progress and set new goals."
+  },
 ];
 
 function DashboardCard({ icon, title, description, tooltip }: DashboardFeature) {
-  // Keep dialog triggers for specific features
   if (title === "Guided Breathing") {
     return (
       <GuidedBreathingDialog
@@ -126,6 +106,27 @@ function DashboardCard({ icon, title, description, tooltip }: DashboardFeature) 
   if (title === "Journaling Prompt") {
     return (
       <JournalingPromptDialog
+        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+      />
+    );
+  }
+  if (title === "Focus Music Links") {
+    return (
+      <FocusMusicDialog
+        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+      />
+    );
+  }
+  if (title === "Study Technique Tips") {
+    return (
+      <StudyTipsDialog
+        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+      />
+    );
+  }
+  if (title === "Goals Tracker") {
+    return (
+      <GoalsTrackerDialog
         triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
       />
     );
@@ -153,8 +154,8 @@ function DashboardCard({ icon, title, description, tooltip }: DashboardFeature) 
 
 export default function DashboardTabs() {
   return (
-    <section id="dashboard" className="w-full bg-primary/95 border-t border-indigo-100 py-12 px-3 sm:px-8">
-      <h2 className="text-3xl font-bold text-center text-indigo-50 mb-7 animate-fade-in">
+    <section id="dashboard" className="w-full bg-white border-t border-indigo-100 py-12 px-3 sm:px-8">
+      <h2 className="text-3xl font-bold text-center text-indigo-900 mb-7 animate-fade-in">
         Your MindMate+ Dashboard
       </h2>
       <div className="max-w-4xl mx-auto bg-sky-50/60 rounded-2xl shadow-md p-0 mb-6 animate-fade-in">
@@ -173,16 +174,15 @@ export default function DashboardTabs() {
           {/* MENTAL HEALTH TAB */}
           <TabsContent value="mental" className="px-6 py-7">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-              {mentalHealthFeatures.map((f) =>
-                f.title === "Mood Check-In" ? (
-                  <MoodCheckinDialog
-                    key={f.title}
-                    triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
-                  />
-                ) : (
-                  <DashboardCard key={f.title} {...f} />
-                )
-              )}
+              <GuidedBreathingDialog
+                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+              />
+              <MotivationalQuoteDialog
+                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+              />
+              <JournalingPromptDialog
+                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+              />
             </div>
           </TabsContent>
           {/* STUDY SUPPORT TAB */}
@@ -190,31 +190,25 @@ export default function DashboardTabs() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
               <StudyPlannerDialog />
               <PomodoroTimerDialog />
-              <JournalingPromptDialog
-                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
-              />
               <GoalsTrackerDialog />
             </div>
           </TabsContent>
           {/* BONUS FEATURES TAB */}
           <TabsContent value="bonus" className="px-6 py-7">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+              <ScreenTimeTrackerDialog
+                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+              />
               <BreakWithMeDialog
                 triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
               />
               <FocusMusicDialog
                 triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
               />
-              <VoiceAiCompanionDialog
-                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
-              />
               <StudyTipsDialog
                 triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
               />
               <FlashcardsDialog
-                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
-              />
-              <ScreenTimeTrackerDialog
                 triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
               />
             </div>
