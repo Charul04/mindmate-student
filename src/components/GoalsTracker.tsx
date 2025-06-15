@@ -37,9 +37,9 @@ export default function GoalsTracker() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row bg-white/70 rounded-xl border border-indigo-100 p-3 shadow-sm w-full max-w-2xl min-h-[194px]">
+    <div className="flex flex-row bg-white/70 rounded-xl border border-indigo-100 p-3 shadow-sm w-full max-w-2xl min-h-[194px]">
       {/* Left: goals form and list */}
-      <div className="flex-1 flex flex-col md:mr-4 mb-4 md:mb-0 min-w-[180px]">
+      <div className="flex-1 flex flex-col min-w-[180px] max-w-[260px] mr-4">
         <div className="flex gap-2 items-center mb-2">
           <ChartLine className="text-green-600" size={20} />
           <span className="font-semibold text-indigo-900 text-[1rem]">Goals Tracker</span>
@@ -83,8 +83,8 @@ export default function GoalsTracker() {
         <div className="text-xs text-indigo-700">Set and track your goals for today, this week, month, or year!</div>
       </div>
       {/* Right: progress chart */}
-      <div className="flex items-center justify-center w-full md:w-[48%]">
-        <div className="w-full h-36 md:h-48">
+      <div className="flex items-center justify-center w-[64%] min-w-[220px]">
+        <div className="w-full h-40 md:h-56 bg-white rounded-lg border border-indigo-100 shadow-sm p-2">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={progress}>
               <CartesianGrid strokeDasharray="3 3" />

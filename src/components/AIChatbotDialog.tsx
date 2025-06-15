@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { MessageSquare, Send, Bot } from "lucide-react";
@@ -31,6 +30,8 @@ export default function AIChatbotDialog({ triggerClassName }: { triggerClassName
   const [apiKeyInput, setApiKeyInput] = useState("");
   const [error, setError] = useState<string | null>(null);
 
+  // Chat history is preserved within dialog session for ChatGPT-like experience.
+  // Each message is sent with full chat history (minus opening prompt for Perplexity token efficiency).
   // Scroll to bottom on new message or dialog open
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
