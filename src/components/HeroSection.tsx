@@ -1,3 +1,4 @@
+
 import BookStandingIllustration from "@/components/BookStandingIllustration";
 import { useTranslation } from "react-i18next";
 import "@/i18n";
@@ -8,26 +9,26 @@ export default function HeroSection() {
     <section
       className="
         flex flex-col-reverse md:flex-row md:items-center 
-        gap-8 md:gap-10 
+        gap-7 md:gap-10 
         px-2 sm:px-4 md:px-8 
-        pt-8 sm:pt-10 pb-5 
-        max-w-6xl mx-auto w-full 
+        pt-7 sm:pt-10 pb-2 sm:pb-5 
+        max-w-xl sm:max-w-6xl mx-auto w-full 
         flex-grow
       "
       style={{
-        paddingTop: "calc(env(safe-area-inset-top, 0px) + 1.5rem)",
+        paddingTop: "calc(env(safe-area-inset-top, 0px) + 1.15rem)",
       }}
     >
-      <div className="flex-1 flex flex-col items-start justify-center animate-fade-in">
-        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight text-indigo-900 mb-4">
+      <div className="flex-1 flex flex-col items-center md:items-start justify-center text-center md:text-left animate-fade-in">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight text-indigo-900 mb-3">
           {t("appName")}
           <span className="text-sky-500">+</span>
         </h1>
-        <p className="text-lg sm:text-2xl text-indigo-700 font-medium mb-3 max-w-lg tracking-normal">
+        <p className="text-base sm:text-xl md:text-2xl text-indigo-700 font-medium mb-2 max-w-md tracking-normal">
           {t("studySmarter")}
         </p>
       </div>
-      <div className="flex-1 flex justify-center items-end min-h-[200px] sm:min-h-[260px]">
+      <div className="flex-1 flex justify-center items-end min-h-[170px] sm:min-h-[220px]">
         <BookStandingIllustration />
       </div>
     </section>
