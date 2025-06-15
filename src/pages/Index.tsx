@@ -242,9 +242,9 @@ export default function Index() {
                 🌟 Bonus Features
               </TabsTrigger>
             </TabsList>
+            {/* MENTAL HEALTH TAB */}
             <TabsContent value="mental" className="px-6 py-7">
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-                {/* Override Mood Check-In card to open MoodCheckinDialog */}
                 {mentalHealthFeatures.map((f) =>
                   f.title === "Mood Check-In" ? (
                     <MoodCheckinDialog
@@ -257,18 +257,18 @@ export default function Index() {
                 )}
               </div>
             </TabsContent>
+            {/* STUDY SUPPORT TAB */}
             <TabsContent value="study" className="px-6 py-7">
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
                 <StudyPlannerDialog />
                 <PomodoroTimerDialog />
-                {/* AI Study Assistant (now opens a chatbot dialog) */}
                 <AIChatbotDialog />
                 <GoalsTrackerDialog />
               </div>
             </TabsContent>
+            {/* BONUS FEATURES TAB */}
             <TabsContent value="bonus" className="px-6 py-7">
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-                {/* Iterate bonusFeatures except "AI Flashcards", which should open the dialog */}
                 {bonusFeatures.map((f) =>
                   f.title === "AI Flashcards" ? (
                     <FlashcardsDialog

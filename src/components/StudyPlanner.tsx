@@ -22,7 +22,7 @@ export default function StudyPlanner() {
   }
 
   return (
-    <div className="flex flex-col bg-white/70 rounded-xl border border-indigo-100 p-4 min-h-[170px] shadow-sm w-full max-w-md">
+    <div className="flex flex-col bg-white/70 rounded-xl border border-indigo-100 p-3 min-h-[110px] shadow-sm w-full max-w-sm md:max-w-xs" style={{ minWidth: 260 }}>
       <div className="flex items-center gap-2 mb-2">
         <CalendarDays className="text-teal-600" size={20} />
         <span className="font-semibold text-indigo-900 text-[1rem]">Daily Study Planner</span>
@@ -39,7 +39,7 @@ export default function StudyPlanner() {
           <Plus size={14} />
         </Button>
       </div>
-      <ul className="space-y-1 mb-2 max-h-20 overflow-auto">
+      <ul className="space-y-1 mb-2 max-h-16 overflow-auto">
         {todos.length === 0 && <li className="text-sm text-sky-700">No planned tasks yet.</li>}
         {todos.map(t => (
           <li key={t.id} className="flex justify-between items-center bg-sky-50 rounded px-2 py-1">
@@ -52,7 +52,7 @@ export default function StudyPlanner() {
         mode="single"
         selected={calendarDate}
         onSelect={setCalendarDate}
-        className="p-2 pointer-events-auto mb-1"
+        className="p-1 pointer-events-auto mb-1"
       />
       <div className="text-xs text-indigo-700">Add your tasks & optionally pick a study date.</div>
     </div>
