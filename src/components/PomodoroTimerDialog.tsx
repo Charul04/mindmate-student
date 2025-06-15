@@ -12,7 +12,7 @@ export default function PomodoroTimerDialog({ triggerClassName }: { triggerClass
         <button
           className={`
             group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm
-            hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left
+            hover:shadow-lg transition-shadow focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left
             ${triggerClassName ?? ""}
           `}
         >
@@ -37,3 +37,4 @@ export default function PomodoroTimerDialog({ triggerClassName }: { triggerClass
     </Dialog>
   );
 }
+
