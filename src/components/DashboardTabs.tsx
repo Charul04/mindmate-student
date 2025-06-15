@@ -112,21 +112,21 @@ function DashboardCard({ icon, title, description, tooltip }: DashboardFeature) 
   if (title === "Guided Breathing") {
     return (
       <GuidedBreathingDialog
-        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-3 xs:p-4 sm:p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[88px] text-left"
+        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
       />
     );
   }
   if (title === "Motivational Quote") {
     return (
       <MotivationalQuoteDialog
-        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-3 xs:p-4 sm:p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[88px] text-left"
+        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
       />
     );
   }
   if (title === "Journaling Prompt") {
     return (
       <JournalingPromptDialog
-        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-3 xs:p-4 sm:p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[88px] text-left"
+        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
       />
     );
   }
@@ -134,10 +134,10 @@ function DashboardCard({ icon, title, description, tooltip }: DashboardFeature) 
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <button className="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-3 xs:p-4 sm:p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow focus:ring-2 focus:ring-sky-200 w-full min-h-[88px] text-left">
-            <span className="flex items-center mb-1 sm:mb-2">{icon}</span>
+          <button className="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left">
+            <span className="flex items-center mb-2">{icon}</span>
             <span className="font-semibold text-indigo-900 text-[1.08rem]">{title}</span>
-            <span className="text-indigo-900/70 text-xs xs:text-sm mt-1">{description}</span>
+            <span className="text-indigo-900/70 text-sm mt-1">{description}</span>
             <ChevronRight className="absolute right-4 top-4 text-indigo-200 group-hover:text-indigo-500 transition hidden md:block" size={20} />
           </button>
         </TooltipTrigger>
@@ -153,31 +153,31 @@ function DashboardCard({ icon, title, description, tooltip }: DashboardFeature) 
 
 export default function DashboardTabs() {
   return (
-    <section id="dashboard" className="w-full bg-white border-t border-indigo-100 py-8 xs:py-10 sm:py-12 px-1 xs:px-3 sm:px-8">
-      <h2 className="text-2xl xs:text-3xl font-bold text-center text-indigo-900 mb-5 xs:mb-7 animate-fade-in">
+    <section id="dashboard" className="w-full bg-white border-t border-indigo-100 py-12 px-3 sm:px-8">
+      <h2 className="text-3xl font-bold text-center text-indigo-900 mb-7 animate-fade-in">
         Your MindMate+ Dashboard
       </h2>
-      <div className="max-w-4xl mx-auto bg-sky-50/60 rounded-2xl shadow-md p-0 mb-4 xs:mb-6 animate-fade-in">
+      <div className="max-w-4xl mx-auto bg-sky-50/60 rounded-2xl shadow-md p-0 mb-6 animate-fade-in">
         <Tabs defaultValue="mental" className="w-full">
-          <TabsList className="w-full flex justify-between items-center rounded-t-2xl border-b border-indigo-100 bg-gradient-to-r from-sky-100 via-indigo-50 to-white px-1 xs:px-3 py-1">
-            <TabsTrigger value="mental" className="flex-1 text-base xs:text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700">
+          <TabsList className="w-full flex justify-between items-center rounded-t-2xl border-b border-indigo-100 bg-gradient-to-r from-sky-100 via-indigo-50 to-white px-3 py-1">
+            <TabsTrigger value="mental" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700">
               🧠 Mental Health
             </TabsTrigger>
-            <TabsTrigger value="study" className="flex-1 text-base xs:text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700">
+            <TabsTrigger value="study" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700">
               📚 Study Support
             </TabsTrigger>
-            <TabsTrigger value="bonus" className="flex-1 text-base xs:text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700">
+            <TabsTrigger value="bonus" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700">
               🌟 Bonus Features
             </TabsTrigger>
           </TabsList>
           {/* MENTAL HEALTH TAB */}
-          <TabsContent value="mental" className="px-1 xs:px-3 sm:px-6 py-5 xs:py-7">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 xs:gap-4 sm:gap-5">
+          <TabsContent value="mental" className="px-6 py-7">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
               {mentalHealthFeatures.map((f) =>
                 f.title === "Mood Check-In" ? (
                   <MoodCheckinDialog
                     key={f.title}
-                    triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-3 xs:p-4 sm:p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[88px] text-left"
+                    triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
                   />
                 ) : (
                   <DashboardCard key={f.title} {...f} />
@@ -186,31 +186,31 @@ export default function DashboardTabs() {
             </div>
           </TabsContent>
           {/* STUDY SUPPORT TAB */}
-          <TabsContent value="study" className="px-1 xs:px-3 sm:px-6 py-5 xs:py-7">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 xs:gap-4 sm:gap-5">
-              <StudyPlannerDialog triggerClassName="p-3 xs:p-4 sm:p-5 md:p-6" />
-              <PomodoroTimerDialog triggerClassName="p-3 xs:p-4 sm:p-5 md:p-6" />
+          <TabsContent value="study" className="px-6 py-7">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+              <StudyPlannerDialog />
+              <PomodoroTimerDialog />
               {/* Removed <AIChatbotDialog /> */}
-              <GoalsTrackerDialog triggerClassName="p-3 xs:p-4 sm:p-5 md:p-6" />
+              <GoalsTrackerDialog />
             </div>
           </TabsContent>
           {/* BONUS FEATURES TAB */}
-          <TabsContent value="bonus" className="px-1 xs:px-3 sm:px-6 py-5 xs:py-7">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 xs:gap-4 sm:gap-5">
+          <TabsContent value="bonus" className="px-6 py-7">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
               <BreakWithMeDialog
-                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-3 xs:p-4 sm:p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[88px] text-left"
+                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
               />
               <FocusMusicDialog
-                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-3 xs:p-4 sm:p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[88px] text-left"
+                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
               />
               <StudyTipsDialog
-                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-3 xs:p-4 sm:p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[88px] text-left"
+                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
               />
               <FlashcardsDialog
-                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-3 xs:p-4 sm:p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[88px] text-left"
+                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
               />
               <ScreenTimeTrackerDialog
-                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-3 xs:p-4 sm:p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[88px] text-left"
+                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
               />
             </div>
           </TabsContent>
