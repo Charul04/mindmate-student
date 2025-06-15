@@ -74,16 +74,10 @@ const studySupportFeatures: DashboardFeature[] = [
     tooltip: "Boost focus with timers and sessions."
   },
   {
-    icon: <Lightbulb className="text-amber-500" size={28} />,
-    title: "Study Technique Tips",
-    description: "Feynman, flashcards, and other strategies.",
-    tooltip: "Get smarter with proven techniques."
-  },
-  {
     icon: <Book className="text-indigo-700" size={28} />,
-    title: "AI Flashcards",
-    description: "AI generates flashcards per your subject with save/remove.",
-    tooltip: "Type your subject/topic for instant cards."
+    title: "AI Study Assistant",
+    description: "Get personalized support, notes, and answers—instantly, 24/7.",
+    tooltip: "Type your study question for instant help."
   },
   {
     icon: <ChartLine className="text-green-600" size={28} />,
@@ -100,11 +94,6 @@ const bonusFeatures: DashboardFeature[] = [
     description: "Mix wellness & academic widgets."
   },
   {
-    icon: <ChartLine className="text-sky-800" size={28} />,
-    title: "Progress Tracker",
-    description: "See your mood & study trends."
-  },
-  {
     icon: <Smile className="text-pink-500" size={28} />,
     title: "Break with Me",
     description: "Fun facts, jokes, and mindful breaks."
@@ -119,6 +108,18 @@ const bonusFeatures: DashboardFeature[] = [
     title: "AI Check-in Reminder",
     description: "Gentle check-ins: 'How are you doing?'"
   },
+  {
+    icon: <Lightbulb className="text-amber-500" size={28} />,
+    title: "Study Technique Tips",
+    description: "Feynman, flashcards, and other strategies.",
+    tooltip: "Get smarter with proven techniques."
+  },
+  {
+    icon: <Book className="text-indigo-700" size={28} />,
+    title: "AI Flashcards",
+    description: "AI generates flashcards per your subject with save/remove.",
+    tooltip: "Type your subject/topic for instant cards."
+  }
 ];
 
 function DashboardCard({ icon, title, description, tooltip }: DashboardFeature) {
@@ -257,19 +258,31 @@ export default function Index() {
             </TabsContent>
             <TabsContent value="study" className="px-6 py-7">
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-                {/* Use dialogs for features, opening on click */}
                 <StudyPlannerDialog />
                 <PomodoroTimerDialog />
-                <DashboardCard {...studySupportFeatures[2]} />
-                <FlashcardsDialog />
+                {/* AI Study Assistant Card */}
+                <DashboardCard
+                  icon={<Book className="text-indigo-700" size={28} />}
+                  title="AI Study Assistant"
+                  description="Get personalized support, notes, and answers—instantly, 24/7."
+                  tooltip="Type your study question for instant help."
+                />
                 <GoalsTrackerDialog />
               </div>
             </TabsContent>
             <TabsContent value="bonus" className="px-6 py-7">
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-                {bonusFeatures.map((f) => (
-                  <DashboardCard key={f.title} {...f} />
-                ))}
+                {/* Iterate bonusFeatures except "AI Flashcards", which should open the dialog */}
+                {bonusFeatures.map((f) =>
+                  f.title === "AI Flashcards" ? (
+                    <FlashcardsDialog
+                      key={f.title}
+                      triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+                    />
+                  ) : (
+                    <DashboardCard key={f.title} {...f} />
+                  )
+                )}
               </div>
             </TabsContent>
           </Tabs>
