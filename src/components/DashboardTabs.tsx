@@ -108,33 +108,14 @@ const bonusFeatures: DashboardFeature[] = [
 ];
 
 function DashboardCard({ icon, title, description, tooltip }: DashboardFeature) {
-  // Keep dialog triggers for specific features
-  if (title === "Guided Breathing") {
-    return (
-      <GuidedBreathingDialog
-        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
-      />
-    );
-  }
-  if (title === "Motivational Quote") {
-    return (
-      <MotivationalQuoteDialog
-        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
-      />
-    );
-  }
-  if (title === "Journaling Prompt") {
-    return (
-      <JournalingPromptDialog
-        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
-      />
-    );
-  }
+  // Transparent, border-only button style
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <button className="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left">
+          <button
+            className="group flex flex-col items-start bg-transparent rounded-xl border border-indigo-100 p-5 md:p-6 shadow-none transition focus:ring-2 focus:ring-indigo-100 w-full min-h-[104px] text-left hover:bg-indigo-50/35 hover:shadow-md focus:bg-indigo-50/50"
+          >
             <span className="flex items-center mb-2">{icon}</span>
             <span className="font-semibold text-indigo-900 text-[1.08rem]">{title}</span>
             <span className="text-indigo-900/70 text-sm mt-1">{description}</span>
@@ -297,14 +278,14 @@ export default function DashboardTabs() {
           <TabsContent value="mental" className="relative z-10 px-1 sm:px-3 py-5 sm:py-7">
             {/* Glass grid container for the area */}
             <div className="relative overflow-visible">
-              {/* Soft purple blurred background behind the button grid */}
-              <div className="absolute inset-1 -z-10 rounded-2xl bg-gradient-to-br from-purple-100/50 via-indigo-50/70 to-sky-100/40 shadow-xl shadow-purple-100/22 blur-sm" aria-hidden="true" />
+              {/* Remove colored/blur backgrounds under the buttons */}
+              {/* <div className="absolute inset-1 -z-10 rounded-2xl bg-gradient-to-br from-purple-100/50 via-indigo-50/70 to-sky-100/40 shadow-xl shadow-purple-100/22 blur-sm" aria-hidden="true" /> */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
                 {mentalHealthFeatures.map((f) =>
                   f.title === "Mood Check-In" ? (
                     <MoodCheckinDialog
                       key={f.title}
-                      triggerClassName="group relative flex flex-col items-start bg-white/90 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-[0_8px_36px_0_rgba(155,144,240,0.10)] hover:shadow-2xl focus:ring-2 focus:ring-purple-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-br before:from-purple-200/40 before:to-pink-100/24 before:opacity-0 group-hover:before:opacity-90 group-hover:before:blur group-hover:shadow-xl group-hover:ring-2 group-hover:ring-purple-100/60"
+                      triggerClassName="group relative flex flex-col items-start bg-transparent rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-none hover:bg-indigo-50/40 focus:ring-2 focus:ring-indigo-100 w-full min-h-[120px] text-left transition-all"
                     />
                   ) : (
                     <DashboardCard
@@ -319,17 +300,17 @@ export default function DashboardTabs() {
           {/* STUDY SUPPORT TAB */}
           <TabsContent value="study" className="relative z-10 px-1 sm:px-3 py-5 sm:py-7">
             <div className="relative overflow-visible">
-              {/* Soft purple background for this tab as well */}
-              <div className="absolute inset-1 -z-10 rounded-2xl bg-gradient-to-tr from-purple-100/40 via-sky-100/60 to-white/50 shadow-lg shadow-purple-100/15 blur-sm" aria-hidden="true" />
+              {/* Remove colored/blur backgrounds under the buttons */}
+              {/* <div className="absolute inset-1 -z-10 rounded-2xl bg-gradient-to-tr from-purple-100/40 via-sky-100/60 to-white/50 shadow-lg shadow-purple-100/15 blur-sm" aria-hidden="true" /> */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
                 <StudyPlannerDialog 
-                  triggerClassName="group relative flex flex-col items-start bg-white/90 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-[0_8px_32px_0_rgba(155,144,240,0.11)] hover:shadow-2xl focus:ring-2 focus:ring-purple-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-tr before:from-purple-200/37 before:to-fuchsia-100/15 before:opacity-0 group-hover:before:opacity-90 group-hover:before:blur group-hover:shadow-xl group-hover:ring-2 group-hover:ring-purple-100/50"
+                  triggerClassName="group relative flex flex-col items-start bg-transparent rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-none hover:bg-indigo-50/40 focus:ring-2 focus:ring-indigo-100 w-full min-h-[120px] text-left transition-all"
                 />
                 <PomodoroTimerDialog 
-                  triggerClassName="group relative flex flex-col items-start bg-white/90 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-[0_8px_32px_0_rgba(155,144,240,0.10)] hover:shadow-2xl focus:ring-2 focus:ring-purple-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-tl before:from-purple-100/44 before:to-indigo-100/22 before:opacity-0 group-hover:before:opacity-70 group-hover:before:blur group-hover:shadow-xl group-hover:ring-2 group-hover:ring-purple-100/38"
+                  triggerClassName="group relative flex flex-col items-start bg-transparent rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-none hover:bg-indigo-50/40 focus:ring-2 focus:ring-indigo-100 w-full min-h-[120px] text-left transition-all"
                 />
                 <GoalsTrackerDialog
-                  triggerClassName="group relative flex flex-col items-start bg-white/90 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-[0_10px_38px_0_rgba(155,144,240,0.09)] hover:shadow-2xl focus:ring-2 focus:ring-purple-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-br before:from-purple-100/32 before:to-yellow-100/15 before:opacity-0 group-hover:before:opacity-75 group-hover:before:blur group-hover:shadow-xl group-hover:ring-2 group-hover:ring-purple-100/23"
+                  triggerClassName="group relative flex flex-col items-start bg-transparent rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-none hover:bg-indigo-50/40 focus:ring-2 focus:ring-indigo-100 w-full min-h-[120px] text-left transition-all"
                 />
               </div>
             </div>
@@ -337,23 +318,23 @@ export default function DashboardTabs() {
           {/* BONUS FEATURES TAB */}
           <TabsContent value="bonus" className="relative z-10 px-1 sm:px-3 py-5 sm:py-7">
             <div className="relative overflow-visible">
-              {/* Subtle purple undertone behind the bonus grid */}
-              <div className="absolute inset-1 -z-10 rounded-2xl bg-gradient-to-bl from-purple-100/34 via-fuchsia-100/55 to-indigo-100/27 shadow-md shadow-purple-100/16 blur-sm" aria-hidden="true" />
+              {/* Remove colored/blur backgrounds under the buttons */}
+              {/* <div className="absolute inset-1 -z-10 rounded-2xl bg-gradient-to-bl from-purple-100/34 via-fuchsia-100/55 to-indigo-100/27 shadow-md shadow-purple-100/16 blur-sm" aria-hidden="true" /> */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
                 <BreakWithMeDialog
-                  triggerClassName="group relative flex flex-col items-start bg-white/90 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-[0_8px_38px_0_rgba(155,144,240,0.09)] hover:shadow-2xl focus:ring-2 focus:ring-purple-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-br before:from-purple-100/36 before:to-indigo-100/21 before:opacity-0 group-hover:before:opacity-86 group-hover:before:blur group-hover:shadow-xl group-hover:ring-2 group-hover:ring-purple-100/10"
+                  triggerClassName="group relative flex flex-col items-start bg-transparent rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-none hover:bg-indigo-50/40 focus:ring-2 focus:ring-indigo-100 w-full min-h-[120px] text-left transition-all"
                 />
                 <FocusMusicDialog
-                  triggerClassName="group relative flex flex-col items-start bg-white/90 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-[0_10px_36px_0_rgba(155,144,240,0.08)] hover:shadow-2xl focus:ring-2 focus:ring-purple-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-r before:from-purple-100/30 before:to-pink-100/13 before:opacity-0 group-hover:before:opacity-79 group-hover:before:blur group-hover:shadow-xl group-hover:ring-2 group-hover:ring-purple-200/30"
+                  triggerClassName="group relative flex flex-col items-start bg-transparent rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-none hover:bg-indigo-50/40 focus:ring-2 focus:ring-indigo-100 w-full min-h-[120px] text-left transition-all"
                 />
                 <StudyTipsDialog
-                  triggerClassName="group relative flex flex-col items-start bg-white/90 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-[0_7px_30px_0_rgba(155,144,240,0.08)] hover:shadow-2xl focus:ring-2 focus:ring-purple-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-r before:from-purple-100/30 before:to-sky-100/50 before:opacity-0 group-hover:before:opacity-70 group-hover:before:blur group-hover:shadow-xl group-hover:ring-2 group-hover:ring-purple-200/28"
+                  triggerClassName="group relative flex flex-col items-start bg-transparent rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-none hover:bg-indigo-50/40 focus:ring-2 focus:ring-indigo-100 w-full min-h-[120px] text-left transition-all"
                 />
                 <FlashcardsDialog
-                  triggerClassName="group relative flex flex-col items-start bg-white/90 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-[0_8px_28px_0_rgba(155,144,240,0.08)] hover:shadow-2xl focus:ring-2 focus:ring-purple-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-tl before:from-purple-100/28 before:to-indigo-100/10 before:opacity-0 group-hover:before:opacity-72 group-hover:before:blur group-hover:shadow-xl group-hover:ring-2 group-hover:ring-purple-100/16"
+                  triggerClassName="group relative flex flex-col items-start bg-transparent rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-none hover:bg-indigo-50/40 focus:ring-2 focus:ring-indigo-100 w-full min-h-[120px] text-left transition-all"
                 />
                 <ScreenTimeTrackerDialog
-                  triggerClassName="group relative flex flex-col items-start bg-white/90 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-[0_8px_30px_0_rgba(155,144,240,0.07)] hover:shadow-2xl focus:ring-2 focus:ring-purple-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-br before:from-purple-100/22 before:to-yellow-100/15 before:opacity-0 group-hover:before:opacity-65 group-hover:before:blur group-hover:shadow-xl group-hover:ring-2 group-hover:ring-purple-100/11"
+                  triggerClassName="group relative flex flex-col items-start bg-transparent rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-none hover:bg-indigo-50/40 focus:ring-2 focus:ring-indigo-100 w-full min-h-[120px] text-left transition-all"
                 />
               </div>
             </div>
