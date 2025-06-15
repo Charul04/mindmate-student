@@ -18,6 +18,21 @@ export default function BookStandingIllustration() {
   return (
     <div className="flex w-full items-end justify-center select-none relative">
       <style>{style}</style>
+      {/* Soft radial blue/purple glow in the background */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          left: "50%",
+          top: "52%",
+          transform: "translate(-50%, -50%)",
+          zIndex: 0,
+          width: "320px",
+          height: "230px",
+          background: "radial-gradient(circle at 60% 35%, #a5b4fc88 30%, #60a5fa44 70%, transparent 95%)",
+          filter: "blur(10px)",
+          opacity: 0.8,
+        }}
+      />
       {/* Main Book Image with bounce and glowing filter */}
       <img
         src="/lovable-uploads/0cbd4e41-525c-4065-b38f-2d99e102d63e.png"

@@ -31,9 +31,8 @@ export default function HeroSection() {
         </p>
       </div>
       <div className="flex-1 flex justify-center items-end min-h-[170px] sm:min-h-[220px]">
-        <div className="bg-sky-100/70 shadow-lg rounded-2xl p-3 sm:p-6">
-          <BookStandingIllustration />
-        </div>
+        {/* The book illustration now sits directly in the layout, no card, no shadow */}
+        <BookStandingIllustration />
       </div>
     </section>
   );
