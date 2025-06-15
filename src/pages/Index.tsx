@@ -25,6 +25,9 @@ import PomodoroTimerDialog from "@/components/PomodoroTimerDialog";
 import FlashcardsDialog from "@/components/FlashcardsDialog";
 import GoalsTrackerDialog from "@/components/GoalsTrackerDialog";
 import AIChatbotDialog from "@/components/AIChatbotDialog";
+import BreakWithMeDialog from "@/components/BreakWithMeDialog";
+import FocusMusicDialog from "@/components/FocusMusicDialog";
+import StudyTipsDialog from "@/components/StudyTipsDialog";
 import { useNavigate } from "react-router-dom";
 
 type DashboardFeature = {
@@ -89,11 +92,6 @@ const studySupportFeatures: DashboardFeature[] = [
 ];
 
 const bonusFeatures: DashboardFeature[] = [
-  {
-    icon: <Sun className="text-orange-500" size={28} />,
-    title: "Customizable Dashboard",
-    description: "Mix wellness & academic widgets."
-  },
   {
     icon: <Smile className="text-pink-500" size={28} />,
     title: "Break with Me",
@@ -269,16 +267,24 @@ export default function Index() {
             {/* BONUS FEATURES TAB */}
             <TabsContent value="bonus" className="px-6 py-7">
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-                {bonusFeatures.map((f) =>
-                  f.title === "AI Flashcards" ? (
-                    <FlashcardsDialog
-                      key={f.title}
-                      triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
-                    />
-                  ) : (
-                    <DashboardCard key={f.title} {...f} />
-                  )
-                )}
+                <BreakWithMeDialog
+                  triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+                />
+                <FocusMusicDialog
+                  triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+                />
+                {/* AI Check-in Reminder keeps default card */}
+                <DashboardCard
+                  icon={<Star className="text-indigo-600" size={28} />}
+                  title="AI Check-in Reminder"
+                  description="Gentle check-ins: 'How are you doing?'"
+                />
+                <StudyTipsDialog
+                  triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+                />
+                <FlashcardsDialog
+                  triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+                />
               </div>
             </TabsContent>
           </Tabs>
