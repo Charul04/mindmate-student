@@ -10,17 +10,8 @@ type JournalEntry = {
   date: string;
 };
 
-// Reflective questions for journaling, challenge/struggle topics removed
-const PROMPTS = [
-  "What made you smile this week?",
-  "What's something you're proud of but never say out loud?",
-  "If you could give your past self one piece of advice, what would it be?",
-  "Describe a moment when you felt truly at peace.",
-  "How are you really feeling today—beneath the surface?",
-  "What would you do tomorrow if you knew you couldn't fail?",
-  "Who inspires you and why?",
-  "Describe a time you surprised yourself."
-];
+// No reflective questions for journaling — prompts removed
+const PROMPTS: string[] = [];
 const SUPPORTIVE_MESSAGE = "There's power in knowing yourself. Keep going.";
 
 // Helpers for localStorage handling
@@ -39,7 +30,10 @@ function saveJournals(journals: JournalEntry[]) {
 
 export default function JournalingPromptDialog({ triggerClassName }: { triggerClassName?: string }) {
   const [open, setOpen] = useState(false);
-  const [prompt, setPrompt] = useState<string>(PROMPTS[Math.floor(Math.random() * PROMPTS.length)]);
+  // If PROMPTS is empty, fallback prompt is an empty string
+  const [prompt, setPrompt] = useState<string>(
+    PROMPTS.length > 0 ? PROMPTS[Math.floor(Math.random() * PROMPTS.length)] : ""
+  );
   const [journal, setJournal] = useState<string>("");
 
   // Journals state in dialog only
@@ -48,8 +42,8 @@ export default function JournalingPromptDialog({ triggerClassName }: { triggerCl
   const handleOpenChange = (isOpen: boolean) => {
     setOpen(isOpen);
     if (isOpen) {
-      // Pick a new random prompt and reset text
-      const newPrompt = PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
+      // Pick a new random prompt and reset text (remains blank if PROMPTS is empty)
+      const newPrompt = PROMPTS.length > 0 ? PROMPTS[Math.floor(Math.random() * PROMPTS.length)] : "";
       setPrompt(newPrompt);
       setJournal("");
     }
@@ -101,9 +95,12 @@ export default function JournalingPromptDialog({ triggerClassName }: { triggerCl
           </DialogDescription>
         </DialogHeader>
         <div className="mb-4">
-          <div className="font-medium text-base text-indigo-900 mb-2">
-            {prompt}
-          </div>
+          {/* Only show prompt if non-empty */}
+          {prompt && (
+            <div className="font-medium text-base text-indigo-900 mb-2">
+              {prompt}
+            </div>
+          )}
           <Textarea
             value={journal}
             onChange={e => setJournal(e.target.value)}
