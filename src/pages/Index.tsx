@@ -12,6 +12,7 @@ import {
   TabsTrigger,
   TabsContent,
 } from "@/components/ui/tabs";
+import MoodCheckinDialog from "@/components/MoodCheckinDialog";
 
 type DashboardFeature = {
   icon: React.ReactNode;
@@ -210,9 +211,17 @@ export default function Index() {
             </TabsList>
             <TabsContent value="mental" className="px-6 py-7">
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-                {mentalHealthFeatures.map((f) => (
-                  <DashboardCard key={f.title} {...f} />
-                ))}
+                {/* Override Mood Check-In card to open MoodCheckinDialog */}
+                {mentalHealthFeatures.map((f) =>
+                  f.title === "Mood Check-In" ? (
+                    <MoodCheckinDialog
+                      key={f.title}
+                      triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+                    />
+                  ) : (
+                    <DashboardCard key={f.title} {...f} />
+                  )
+                )}
               </div>
             </TabsContent>
             <TabsContent value="study" className="px-6 py-7">
