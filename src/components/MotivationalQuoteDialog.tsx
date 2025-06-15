@@ -2,64 +2,123 @@
 import React, { useState } from "react";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { MessageSquare } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { MessageSquare, Save, Search, Image as ImageIcon } from "lucide-react";
 
-// A collection of short, original, non-cliché motivational quotes for students
+// Add demo local images (public/ folder). You may replace these with your own images.
+const images = [
+  "/quote-bg1.jpg",
+  "/quote-bg2.jpg",
+  "/quote-bg3.jpg",
+  "/quote-bg4.jpg",
+];
+
+// Original short motivational quotes for students
 const quotes = [
   {
     quote: "Even on slow days, learning a little is still moving forward.",
-    comment: "Tiny steps = real progress. Every study session helps."
+    comment: "Tiny steps = real progress. Every study session helps.",
   },
   {
     quote: "You don't have to have all the answers—being curious beats being perfect.",
-    comment: "Student life is about questions, not perfection."
+    comment: "Student life is about questions, not perfection.",
   },
   {
     quote: "Burnout isn’t proof you’re weak; it’s a sign you care.",
-    comment: "Take a breath—your effort is what matters most."
+    comment: "Take a breath—your effort is what matters most.",
   },
   {
     quote: "Your best today might look different from yesterday, and that's okay.",
-    comment: "Grades don’t measure your growth—your grit does."
+    comment: "Grades don’t measure your growth—your grit does.",
   },
   {
     quote: "It’s normal to feel stuck sometimes. Sticking with it is where you get stronger.",
-    comment: "Every challenge you face adds to your story."
+    comment: "Every challenge you face adds to your story.",
   },
   {
     quote: "Getting tired doesn’t mean giving up. Rest, then try again.",
-    comment: "Balance is key—take breaks without guilt."
+    comment: "Balance is key—take breaks without guilt.",
   },
   {
     quote: "Focus on learning, not just the result—you'll be surprised what you achieve.",
-    comment: "Growth comes from the journey, not just the finish line."
+    comment: "Growth comes from the journey, not just the finish line.",
   },
   {
     quote: "No one gets it right every time. But showing up matters most.",
-    comment: "Keep going—showing up is a win."
+    comment: "Keep going—showing up is a win.",
   },
   {
     quote: "Messy notes, late nights, doubts—they’re part of the process.",
-    comment: "Every student has off days—including the top ones!"
+    comment: "Every student has off days—including the top ones!",
   },
   {
     quote: "It’s brave to ask for help or take a break. You deserve both.",
-    comment: "Supporting yourself is part of being a strong student."
+    comment: "Supporting yourself is part of being a strong student.",
   },
 ];
 
+// Returns a random quote object
 function getRandomQuote() {
   return quotes[Math.floor(Math.random() * quotes.length)];
 }
 
+// Returns a random image path
+function getRandomImage() {
+  return images[Math.floor(Math.random() * images.length)];
+}
+
+// Fake AI quote generator function
+async function generateAIQuote(topic: string): Promise<{ quote: string; comment: string }> {
+  // Replace this with a real API call if available.
+  // For now, return a demo AI-generated quote.
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve({
+        quote: `Even when studying about "${topic}", small steps lead to real growth.`,
+        comment: "Stay steady – it's okay to move at your own pace.",
+      });
+    }, 1100);
+  });
+}
+
 export default function MotivationalQuoteDialog({ triggerClassName }: { triggerClassName?: string }) {
   const [open, setOpen] = useState(false);
-  const [current, setCurrent] = useState(getRandomQuote());
+  const [current, setCurrent] = useState(() => ({ ...getRandomQuote(), image: getRandomImage(), isAI: false }));
+  const [search, setSearch] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
+  const [saved, setSaved] = useState<{ quote: string, comment: string, image: string, isAI: boolean }[]>([]);
 
-  // Refresh the quote every time the dialog opens
+  // Show a new random quote+image on open
   function handleOpenChange(val: boolean) {
     setOpen(val);
-    if (val) setCurrent(getRandomQuote());
+    if (val) {
+      const q = getRandomQuote();
+      setCurrent({ ...q, image: getRandomImage(), isAI: false });
+      setSearch("");
+    }
+  }
+
+  // Random quote button
+  function handleNewQuote() {
+    const q = getRandomQuote();
+    setCurrent({ ...q, image: getRandomImage(), isAI: false });
+    setSearch("");
+  }
+
+  // Generate AI quote
+  async function handleAIGenerate() {
+    if (!search.trim()) return;
+    setAiLoading(true);
+    const aiQ = await generateAIQuote(search.trim());
+    setCurrent({ ...aiQ, image: getRandomImage(), isAI: true });
+    setAiLoading(false);
+  }
+
+  // Save quote locally
+  function handleSaveQuote() {
+    setSaved(prev => [
+      ...(prev.some(q => q.quote === current.quote && q.comment === current.comment) ? prev : [...prev, current])
+    ]);
   }
 
   return (
@@ -72,38 +131,106 @@ export default function MotivationalQuoteDialog({ triggerClassName }: { triggerC
           <span className="flex items-center mb-2">
             <MessageSquare className="text-rose-500" size={28} />
           </span>
-          <span className="font-semibold text-indigo-900 text-[1.08rem]">Motivational Quote</span>
-          <span className="text-indigo-900/70 text-sm mt-1">Instant boost with inspiration!</span>
+          <span className="font-semibold text-indigo-900 text-[1.08rem]">Motivational Quote Generator</span>
+          <span className="text-indigo-900/70 text-sm mt-1">AI-powered, uplifting, and student-focused quotes</span>
         </button>
       </DialogTrigger>
-      <DialogContent className="max-w-md mx-auto">
+      <DialogContent className="max-w-lg mx-auto">
         <DialogHeader>
           <DialogTitle>
             <span className="flex items-center gap-2">
               <MessageSquare className="text-rose-500" size={26} />
-              Motivational Quote
+              Motivational Quote Generator
             </span>
           </DialogTitle>
           <DialogDescription>
-            Take a moment for yourself. Here’s an uplifting thought just for students:
+            For students who need a boost — pick a random quote or create a custom one!
           </DialogDescription>
         </DialogHeader>
-        <div className="py-5 flex flex-col gap-4 items-center">
-          <blockquote className="text-xl text-sky-800 text-center font-medium italic px-2">
-            “{current.quote}”
-          </blockquote>
-          <p className="text-indigo-600 text-sm font-semibold text-center">
-            {current.comment}
-          </p>
+        <div className="flex flex-col gap-6 items-center">
+          {/* Search & AI Generate */}
+          <form className="flex gap-2 w-full items-center" onSubmit={e => { e.preventDefault(); handleAIGenerate(); }}>
+            <Input
+              className="rounded-lg bg-white border border-indigo-100 text-base"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="enter topic (e.g. exams, burnout, friendship)..."
+              disabled={aiLoading}
+              autoFocus
+            />
+            <Button
+              type="submit"
+              variant="secondary"
+              className="flex gap-2"
+              disabled={aiLoading || !search.trim()}
+            >
+              <Search size={18} />
+              AI Generate
+            </Button>
+          </form>
+          {/* Quote display */}
+          <div className="relative rounded-2xl bg-gradient-to-br from-sky-50 via-white to-indigo-50 shadow transition overflow-hidden w-full flex flex-col md:flex-row md:items-center">
+            <img
+              src={current.image}
+              alt="Motivational visual"
+              className="object-cover w-full md:w-40 h-32 md:h-40 rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none"
+              style={{ minWidth: 120, background: "#f4f4fd" }}
+            />
+            <div className="flex-1 flex flex-col justify-center p-4 pb-3 md:pb-4 gap-2">
+              <blockquote className="text-xl text-sky-800 text-center md:text-left font-medium italic px-1">
+                “{current.quote}”
+              </blockquote>
+              <p className="text-indigo-600 text-xs md:text-sm font-semibold text-center md:text-left">
+                {current.comment}
+              </p>
+              {current.isAI && (
+                <span className="inline-block mt-1 text-rose-500 text-xs font-medium">AI generated</span>
+              )}
+            </div>
+            {/* Save button */}
+            <Button
+              size="sm"
+              variant="ghost"
+              className="absolute right-2 top-2 md:left-auto md:right-3 md:top-3 shadow-md rounded-full text-indigo-500 hover:bg-indigo-100"
+              title="Save this quote"
+              onClick={handleSaveQuote}
+              tabIndex={0}
+            >
+              <Save size={18} />
+            </Button>
+          </div>
+          <div className="flex gap-3 w-full justify-between">
+            <Button onClick={handleNewQuote} variant="secondary" className="flex-1">
+              New Random Quote
+            </Button>
+            <Button onClick={() => setOpen(false)} variant="default" className="flex-1">
+              Close
+            </Button>
+          </div>
         </div>
-        <DialogFooter className="flex items-center justify-between gap-3">
-          <Button onClick={() => setCurrent(getRandomQuote())} variant="secondary">
-            New Quote
-          </Button>
-          <Button onClick={() => setOpen(false)} variant="default">
-            Close
-          </Button>
-        </DialogFooter>
+        {/* Saved quotes */}
+        {saved.length > 0 && (
+          <div className="mt-6 border-t pt-4">
+            <h4 className="text-indigo-800 font-bold text-lg mb-2 flex gap-2 items-center">
+              <ImageIcon className="text-indigo-400" size={20} />
+              My Saved Quotes
+            </h4>
+            <div className="grid gap-3 max-h-40 overflow-y-auto">
+              {saved.map((q, i) => (
+                <div key={i} className="flex bg-gradient-to-l from-sky-50/70 to-white border border-indigo-100 rounded-lg items-start gap-3 p-2 shadow">
+                  <img src={q.image} alt="" className="w-9 h-9 rounded-md object-cover border" />
+                  <div className="flex-1">
+                    <blockquote className="text-base text-indigo-900 font-medium">&ldquo;{q.quote}&rdquo;</blockquote>
+                    <div className="text-indigo-500 text-xs">{q.comment}</div>
+                    {q.isAI && (
+                      <span className="inline-block mt-1 text-xs text-rose-500">AI</span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );
