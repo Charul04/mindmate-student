@@ -18,6 +18,8 @@ import ScreenTimeTrackerDialog from "@/components/ScreenTimeTrackerDialog";
 import { Smile, Wind, Quote, PenLine, CalendarDays, Clock, Book, ChartLine, Music, Lightbulb, ChevronRight } from "lucide-react";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import React from "react";
+import DashboardDoodle from "./DashboardDoodle";
+import DashboardFeatureCard from "./DashboardFeatureCard";
 
 type DashboardFeature = {
   icon: React.ReactNode;
@@ -158,6 +160,7 @@ export default function DashboardTabs() {
       <h2 className="text-3xl font-bold text-center text-indigo-900 mb-7 animate-fade-in">
         Your MindMate+ Dashboard
       </h2>
+      <DashboardDoodle />
       <div className="max-w-4xl mx-auto bg-sky-50/60 rounded-2xl shadow-md p-0 mb-6 animate-fade-in">
         <Tabs defaultValue="mental" className="w-full">
           <TabsList className="w-full flex justify-between items-center rounded-t-2xl border-b border-indigo-100 bg-gradient-to-r from-sky-100 via-indigo-50 to-white px-3 py-1">
