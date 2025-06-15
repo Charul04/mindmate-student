@@ -171,20 +171,108 @@ export default function DashboardTabs() {
               bg-gradient-to-r from-indigo-100/70 via-sky-50 to-white
               border-b border-indigo-100
               rounded-none sm:rounded-t-2xl pr-1 pl-1
-              min-h-[46px] sticky top-0 z-20 shadow-sm
+              min-h-[52px] sticky top-0 z-20 shadow-sm
+              gap-[0.45rem]
             "
             style={{
-              WebkitOverflowScrolling: "touch",
-              gap: "0.45rem",
+              WebkitOverflowScrolling: "touch"
             }}
           >
-            <TabsTrigger value="mental" className="flex-1 min-w-[115px] max-w-[200px] px-3 py-2 sm:py-2.5 rounded-xl font-semibold text-base data-[state=active]:bg-sky-100 data-[state=active]:text-sky-700 data-[state=active]:shadow-md transition-all">
+            {/* VIBRANT TAB BUTTONS */}
+            <TabsTrigger
+              value="mental"
+              className={`
+                flex-1 min-w-[115px] max-w-[200px] px-3 py-2 sm:py-2.5 rounded-xl font-semibold text-base
+                bg-white/60
+                transition-all duration-200
+                border-none
+                text-indigo-700
+                shadow-none
+                hover:scale-105 
+                hover:shadow-md
+                hover:z-10
+                hover:bg-gradient-to-br hover:from-pink-100 hover:via-purple-100 hover:to-yellow-50
+                focus-visible:ring-2 focus-visible:ring-pink-300 focus-visible:ring-offset-2
+
+                data-[state=active]:
+                  bg-gradient-to-br
+                  data-[state=active]:from-pink-400
+                  data-[state=active]:via-indigo-400
+                  data-[state=active]:to-yellow-300
+                  data-[state=active]:text-white
+                  data-[state=active]:shadow-xl
+                  data-[state=active]:shadow-pink-400/40
+                  data-[state=active]:scale-105
+                  data-[state=active]:ring-2
+                  data-[state=active]:ring-pink-200
+                  data-[state=active]:z-10
+              `}
+              style={{ transitionProperty: "all" }}
+            >
               🧠 Mental Health
             </TabsTrigger>
-            <TabsTrigger value="study" className="flex-1 min-w-[115px] max-w-[200px] px-3 py-2 sm:py-2.5 rounded-xl font-semibold text-base data-[state=active]:bg-sky-100 data-[state=active]:text-sky-700 data-[state=active]:shadow-md transition-all">
+            <TabsTrigger
+              value="study"
+              className={`
+                flex-1 min-w-[115px] max-w-[200px] px-3 py-2 sm:py-2.5 rounded-xl font-semibold text-base
+                bg-white/60
+                transition-all duration-200
+                border-none
+                text-indigo-700
+                shadow-none
+                hover:scale-105 
+                hover:shadow-md
+                hover:z-10
+                hover:bg-gradient-to-tr hover:from-sky-100 hover:via-blue-100 hover:to-fuchsia-100
+                focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2
+
+                data-[state=active]:
+                  bg-gradient-to-tr
+                  data-[state=active]:from-sky-400
+                  data-[state=active]:via-blue-400
+                  data-[state=active]:to-fuchsia-400
+                  data-[state=active]:text-white
+                  data-[state=active]:shadow-xl
+                  data-[state=active]:shadow-blue-300/40
+                  data-[state=active]:scale-105
+                  data-[state=active]:ring-2
+                  data-[state=active]:ring-blue-200
+                  data-[state=active]:z-10
+              `}
+              style={{ transitionProperty: "all" }}
+            >
               📚 Study Support
             </TabsTrigger>
-            <TabsTrigger value="bonus" className="flex-1 min-w-[120px] max-w-[210px] px-3 py-2 sm:py-2.5 rounded-xl font-semibold text-base data-[state=active]:bg-sky-100 data-[state=active]:text-sky-700 data-[state=active]:shadow-md transition-all">
+            <TabsTrigger
+              value="bonus"
+              className={`
+                flex-1 min-w-[120px] max-w-[210px] px-3 py-2 sm:py-2.5 rounded-xl font-semibold text-base
+                bg-white/60
+                transition-all duration-200
+                border-none
+                text-indigo-700
+                shadow-none
+                hover:scale-105 
+                hover:shadow-md
+                hover:z-10
+                hover:bg-gradient-to-tr hover:from-yellow-100 hover:via-fuchsia-100 hover:to-indigo-100
+                focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:ring-offset-2
+
+                data-[state=active]:
+                  bg-gradient-to-r
+                  data-[state=active]:from-yellow-400
+                  data-[state=active]:via-fuchsia-400
+                  data-[state=active]:to-indigo-400
+                  data-[state=active]:text-white
+                  data-[state=active]:shadow-xl
+                  data-[state=active]:shadow-yellow-400/30
+                  data-[state=active]:scale-105
+                  data-[state=active]:ring-2
+                  data-[state=active]:ring-yellow-200
+                  data-[state=active]:z-10
+              `}
+              style={{ transitionProperty: "all" }}
+            >
               🌟 Bonus Features
             </TabsTrigger>
           </TabsList>
