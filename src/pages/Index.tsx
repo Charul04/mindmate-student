@@ -185,9 +185,6 @@ export default function Index() {
             Study smarter. Feel better. The AI companion made for students.
           </p>
           <p className="font-semibold text-sky-500 mb-6 text-lg">100% Free & made for students!</p>
-          <a href="#" className="inline-block px-8 py-3 bg-indigo-600 hover:bg-sky-600 text-white text-lg rounded-xl font-bold shadow hover-scale transition">
-            Try MindMate+ Free
-          </a>
         </div>
         <div className="flex-1 flex justify-center items-center">
           <HeroIllustration />
