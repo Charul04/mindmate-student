@@ -16,6 +16,7 @@ import MoodCheckinDialog from "@/components/MoodCheckinDialog";
 import GuidedBreathingDialog from "@/components/GuidedBreathingDialog";
 import MotivationalQuoteDialog from "@/components/MotivationalQuoteDialog";
 import JournalingPromptDialog from "@/components/JournalingPromptDialog";
+import { useNavigate } from "react-router-dom";
 
 type DashboardFeature = {
   icon: React.ReactNode;
@@ -43,7 +44,6 @@ const mentalHealthFeatures: DashboardFeature[] = [
     description: "Instant boost with inspiration!",
     tooltip: "AI finds a motivational quote for you."
   },
-  // "Journaling Prompt" card will be handled by the new dialog, not here.
 ];
 
 const studySupportFeatures: DashboardFeature[] = [
@@ -169,6 +169,7 @@ const features = [
 ];
 
 export default function Index() {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-sky-50 to-white flex flex-col">
       {/* HEADER */}
@@ -181,6 +182,7 @@ export default function Index() {
           <a href="#dashboard" className="text-indigo-700 font-medium hover:text-indigo-900 transition story-link">Dashboard</a>
           <a href="#features" className="text-indigo-700 font-medium hover:text-indigo-900 transition story-link">Features</a>
           <a href="#testimonial" className="text-indigo-700 font-medium hover:text-indigo-900 transition story-link">Testimonials</a>
+          <a href="/journal" className="text-indigo-700 font-medium hover:text-indigo-900 transition story-link">My Journal</a>
           <a href="#" className="ml-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold shadow hover-scale transition">Get Started</a>
         </nav>
       </header>
@@ -230,11 +232,6 @@ export default function Index() {
                     <DashboardCard key={f.title} {...f} />
                   )
                 )}
-                {/* Add Journaling Prompt as a special dialog card */}
-                <JournalingPromptDialog
-                  key="Journaling Prompt"
-                  triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
-                />
               </div>
             </TabsContent>
             <TabsContent value="study" className="px-6 py-7">
