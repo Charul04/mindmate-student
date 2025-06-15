@@ -1,4 +1,3 @@
-
 import {
   Tabs,
   TabsList,
@@ -108,40 +107,44 @@ const bonusFeatures: DashboardFeature[] = [
   }
 ];
 
-// Reusable card style for dashboard features (for nice mobile look)
-const dashboardCardBaseClass =
-  "group flex flex-col items-start bg-white/85 backdrop-blur-md rounded-2xl border border-indigo-100 p-4 sm:p-5 shadow-lg hover:shadow-xl min-h-[110px] text-left transition duration-200 hover:scale-[1.025] active:scale-[0.98] ring-1 ring-sky-100 space-y-2 relative";
-
 function DashboardCard({ icon, title, description, tooltip }: DashboardFeature) {
   // Keep dialog triggers for specific features
   if (title === "Guided Breathing") {
     return (
-      <GuidedBreathingDialog triggerClassName={dashboardCardBaseClass} />
+      <GuidedBreathingDialog
+        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+      />
     );
   }
   if (title === "Motivational Quote") {
     return (
-      <MotivationalQuoteDialog triggerClassName={dashboardCardBaseClass} />
+      <MotivationalQuoteDialog
+        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+      />
     );
   }
   if (title === "Journaling Prompt") {
     return (
-      <JournalingPromptDialog triggerClassName={dashboardCardBaseClass} />
+      <JournalingPromptDialog
+        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+      />
     );
   }
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <button className={dashboardCardBaseClass}>
+          <button className="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left">
             <span className="flex items-center mb-2">{icon}</span>
-            <span className="font-bold text-indigo-900 text-lg">{title}</span>
-            <span className="text-indigo-900/70 text-[0.98rem]">{description}</span>
+            <span className="font-semibold text-indigo-900 text-[1.08rem]">{title}</span>
+            <span className="text-indigo-900/70 text-sm mt-1">{description}</span>
             <ChevronRight className="absolute right-4 top-4 text-indigo-200 group-hover:text-indigo-500 transition hidden md:block" size={20} />
           </button>
         </TooltipTrigger>
         {tooltip && (
-          <TooltipContent side="bottom">{tooltip}</TooltipContent>
+          <TooltipContent side="bottom">
+            {tooltip}
+          </TooltipContent>
         )}
       </Tooltip>
     </TooltipProvider>
@@ -152,92 +155,45 @@ export default function DashboardTabs() {
   return (
     <section
       id="dashboard"
-      className="w-full bg-white border-t border-indigo-100 py-5 sm:py-9 px-0"
+      className="w-full bg-white border-t border-indigo-100 py-7 sm:py-12 px-0"
       style={{ minHeight: 350 }}
     >
-      <h2 className="text-2xl sm:text-3xl font-extrabold text-center text-indigo-900 mb-4 sm:mb-8 animate-fade-in tracking-tight">
-        Your <span className="text-sky-500 font-extrabold">MindMate+</span> Dashboard
+      <h2 className="text-2xl sm:text-3xl font-bold text-center text-indigo-900 mb-5 sm:mb-7 animate-fade-in">
+        Your MindMate
+        <span className="text-sky-500 font-extrabold">+</span> Dashboard
       </h2>
-      <div className="w-full max-w-md sm:max-w-2xl md:max-w-4xl mx-auto bg-gradient-to-b from-sky-50/70 to-indigo-50/40 rounded-xl sm:rounded-2xl shadow-md px-0 mb-4 sm:mb-6 animate-fade-in">
+      <div className="w-full max-w-xl sm:max-w-4xl mx-auto bg-sky-50/60 rounded-xl sm:rounded-2xl shadow-sm sm:shadow-md px-0 mb-5 sm:mb-6 animate-fade-in">
         <Tabs defaultValue="mental" className="w-full">
           <TabsList
             className="
-              flex w-full overflow-x-auto scrollbar-thin scrollbar-thumb-indigo-200/60 scrollbar-track-transparent
-              bg-white/75 border-b border-indigo-100 rounded-t-2xl pr-1 pl-1 min-h-[50px] shadow-inner
-              relative z-10
-            "
+              flex w-full overflow-x-auto scrollbar-thin scrollbar-thumb-indigo-300/40 scrollbar-track-transparent bg-gradient-to-r from-sky-100 via-indigo-50 to-white border-b border-indigo-100
+              rounded-t-xl sm:rounded-t-2xl pr-2 pl-2
+              min-h-[46px]
+              "
             style={{
               WebkitOverflowScrolling: "touch",
               gap: "0.5rem",
             }}
           >
-            <TabsTrigger value="mental" className="
-                flex-1 min-w-[125px] max-w-[210px] px-4 py-2 sm:py-2.5
-                rounded-xl font-bold text-base
-                data-[state=active]:bg-gradient-to-tr
-                data-[state=active]:from-sky-100
-                data-[state=active]:to-indigo-50
-                data-[state=active]:text-sky-700
-                data-[state=active]:shadow-lg
-                data-[state=active]:ring-2
-                data-[state=active]:ring-sky-300
-                data-[state=active]:border-indigo-200
-                transition-all
-                focus-visible:outline-none
-                focus-visible:ring-2
-                focus-visible:ring-sky-300
-                whitespace-nowrap
-              ">
+            <TabsTrigger value="mental" className="flex-1 min-w-[120px] max-w-[210px] px-3 py-2 sm:py-2.5 rounded-lg font-semibold text-base data-[state=active]:bg-white data-[state=active]:text-sky-700 data-[state=active]:shadow transition-all">
               🧠 Mental Health
             </TabsTrigger>
-            <TabsTrigger value="study" className="
-                flex-1 min-w-[125px] max-w-[210px] px-4 py-2 sm:py-2.5
-                rounded-xl font-bold text-base
-                data-[state=active]:bg-gradient-to-tr
-                data-[state=active]:from-sky-100
-                data-[state=active]:to-indigo-50
-                data-[state=active]:text-sky-700
-                data-[state=active]:shadow-lg
-                data-[state=active]:ring-2
-                data-[state=active]:ring-sky-300
-                data-[state=active]:border-indigo-200
-                transition-all
-                focus-visible:outline-none
-                focus-visible:ring-2
-                focus-visible:ring-sky-300
-                whitespace-nowrap
-              ">
+            <TabsTrigger value="study" className="flex-1 min-w-[120px] max-w-[210px] px-3 py-2 sm:py-2.5 rounded-lg font-semibold text-base data-[state=active]:bg-white data-[state=active]:text-sky-700 data-[state=active]:shadow transition-all">
               📚 Study Support
             </TabsTrigger>
-            <TabsTrigger value="bonus" className="
-                flex-1 min-w-[135px] max-w-[225px] px-4 py-2 sm:py-2.5
-                rounded-xl font-bold text-base
-                data-[state=active]:bg-gradient-to-tr
-                data-[state=active]:from-sky-100
-                data-[state=active]:to-indigo-50
-                data-[state=active]:text-sky-700
-                data-[state=active]:shadow-lg
-                data-[state=active]:ring-2
-                data-[state=active]:ring-sky-300
-                data-[state=active]:border-indigo-200
-                transition-all
-                focus-visible:outline-none
-                focus-visible:ring-2
-                focus-visible:ring-sky-300
-                whitespace-nowrap
-              ">
+            <TabsTrigger value="bonus" className="flex-1 min-w-[130px] max-w-[225px] px-3 py-2 sm:py-2.5 rounded-lg font-semibold text-base data-[state=active]:bg-white data-[state=active]:text-sky-700 data-[state=active]:shadow transition-all">
               🌟 Bonus Features
             </TabsTrigger>
           </TabsList>
 
           {/* MENTAL HEALTH TAB */}
-          <TabsContent value="mental" className="px-1 sm:px-2 py-4 sm:py-7">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-5">
+          <TabsContent value="mental" className="px-1 sm:px-2 py-5 sm:py-7">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5">
               {mentalHealthFeatures.map((f) =>
                 f.title === "Mood Check-In" ? (
                   <MoodCheckinDialog
                     key={f.title}
-                    triggerClassName={dashboardCardBaseClass + " !bg-sky-50/75 ring-1 ring-sky-100"}
+                    triggerClassName="group flex flex-col items-start bg-white/80 backdrop-blur-sm rounded-xl border border-indigo-100 p-4 sm:p-5 shadow hover:shadow-lg transition-shadow hover:scale-[1.025] focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
                   />
                 ) : (
                   <DashboardCard key={f.title} {...f} />
@@ -246,30 +202,30 @@ export default function DashboardTabs() {
             </div>
           </TabsContent>
           {/* STUDY SUPPORT TAB */}
-          <TabsContent value="study" className="px-1 sm:px-2 py-4 sm:py-7">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-5">
-              <StudyPlannerDialog triggerClassName={dashboardCardBaseClass} />
-              <PomodoroTimerDialog triggerClassName={dashboardCardBaseClass} />
-              <GoalsTrackerDialog triggerClassName={dashboardCardBaseClass} />
+          <TabsContent value="study" className="px-1 sm:px-2 py-5 sm:py-7">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5">
+              <StudyPlannerDialog />
+              <PomodoroTimerDialog />
+              <GoalsTrackerDialog />
             </div>
           </TabsContent>
           {/* BONUS FEATURES TAB */}
-          <TabsContent value="bonus" className="px-1 sm:px-2 py-4 sm:py-7">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-5">
+          <TabsContent value="bonus" className="px-1 sm:px-2 py-5 sm:py-7">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5">
               <BreakWithMeDialog
-                triggerClassName={dashboardCardBaseClass}
+                triggerClassName="group flex flex-col items-start bg-white/80 backdrop-blur-sm rounded-xl border border-indigo-100 p-4 sm:p-5 shadow hover:shadow-lg transition-shadow hover:scale-[1.025] focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
               />
               <FocusMusicDialog
-                triggerClassName={dashboardCardBaseClass}
+                triggerClassName="group flex flex-col items-start bg-white/80 backdrop-blur-sm rounded-xl border border-indigo-100 p-4 sm:p-5 shadow hover:shadow-lg transition-shadow hover:scale-[1.025] focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
               />
               <StudyTipsDialog
-                triggerClassName={dashboardCardBaseClass}
+                triggerClassName="group flex flex-col items-start bg-white/80 backdrop-blur-sm rounded-xl border border-indigo-100 p-4 sm:p-5 shadow hover:shadow-lg transition-shadow hover:scale-[1.025] focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
               />
               <FlashcardsDialog
-                triggerClassName={dashboardCardBaseClass}
+                triggerClassName="group flex flex-col items-start bg-white/80 backdrop-blur-sm rounded-xl border border-indigo-100 p-4 sm:p-5 shadow hover:shadow-lg transition-shadow hover:scale-[1.025] focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
               />
               <ScreenTimeTrackerDialog
-                triggerClassName={dashboardCardBaseClass}
+                triggerClassName="group flex flex-col items-start bg-white/80 backdrop-blur-sm rounded-xl border border-indigo-100 p-4 sm:p-5 shadow hover:shadow-lg transition-shadow hover:scale-[1.025] focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
               />
             </div>
           </TabsContent>
@@ -278,5 +234,3 @@ export default function DashboardTabs() {
     </section>
   );
 }
-
-// The file is starting to get long. Consider refactoring into smaller files for maintainability.
