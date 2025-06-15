@@ -199,13 +199,6 @@ export default function Index() {
         <div>
           <AppLogo />
         </div>
-        <nav className="flex gap-7 items-center">
-          <span className="text-xs font-semibold text-sky-600 bg-sky-100 py-1 px-2 rounded-lg">Free App</span>
-          <a href="#dashboard" className="text-indigo-700 font-medium hover:text-indigo-900 transition story-link">Dashboard</a>
-          <a href="#features" className="text-indigo-700 font-medium hover:text-indigo-900 transition story-link">Features</a>
-          <a href="#testimonial" className="text-indigo-700 font-medium hover:text-indigo-900 transition story-link">Testimonials</a>
-          <a href="#" className="ml-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold shadow hover-scale transition">Get Started</a>
-        </nav>
       </header>
       {/* HERO */}
       <section className="flex flex-col-reverse md:flex-row md:items-center gap-10 px-8 pt-10 pb-6 max-w-6xl mx-auto w-full flex-grow">
@@ -216,7 +209,6 @@ export default function Index() {
           <p className="text-2xl text-indigo-700 font-medium mb-3 max-w-lg tracking-normal">
             Study smarter. Feel better. The AI companion made for students.
           </p>
-          <p className="font-semibold text-sky-500 mb-6 text-lg">100% Free & made for students!</p>
         </div>
         <div className="flex-1 flex justify-center items-center">
           <HeroIllustration />
@@ -273,12 +265,7 @@ export default function Index() {
                 <FocusMusicDialog
                   triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
                 />
-                {/* AI Check-in Reminder keeps default card */}
-                <DashboardCard
-                  icon={<Star className="text-indigo-600" size={28} />}
-                  title="AI Check-in Reminder"
-                  description="Gentle check-ins: 'How are you doing?'"
-                />
+                {/* Removed AI Check-in Reminder card */}
                 <StudyTipsDialog
                   triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
                 />
