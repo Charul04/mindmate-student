@@ -1,4 +1,3 @@
-
 import {
   Tabs,
   TabsList,
@@ -108,29 +107,66 @@ const bonusFeatures: DashboardFeature[] = [
   }
 ];
 
-// Flat feature button, no border/background
+// Improved: glassmorphism, colorful icon bg, hover effect
 function DashboardFeatureButton({ icon, title, description, tooltip, onClick }: DashboardFeature & { onClick?: () => void }) {
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
           <button
-            className="
+            className={`
               flex flex-col items-center justify-center w-full
-              bg-transparent border-0 shadow-none
-              p-2 sm:p-3 md:p-4
-              transition focus-visible:ring-2 focus-visible:ring-sky-200
-              hover:bg-sky-50/40 active:bg-sky-100
-              rounded-xl
-              min-h-[104px]
-            "
+              rounded-2xl
+              bg-white/50
+              backdrop-blur-sm
+              border border-indigo-100
+              shadow-md
+              p-3 sm:p-4
+              min-h-[124px]
+              transition
+              hover:scale-[1.04] hover:shadow-xl
+              active:scale-[0.98]
+              focus-visible:ring-2 focus-visible:ring-sky-200
+              outline-none
+              group
+            `}
             type="button"
             onClick={onClick}
             tabIndex={0}
           >
-            <span className="mb-1">{icon}</span>
-            <span className="block font-extrabold text-lg sm:text-xl text-indigo-900">{title}</span>
-            <span className="block text-indigo-800/80 text-[15px] sm:text-base font-normal text-center mt-0.5">{description}</span>
+            <span
+              className={`
+                flex items-center justify-center mb-2
+                w-12 h-12 rounded-full
+                bg-gradient-to-br ${
+                  title === "Mood Check-In" ? "from-sky-200 to-sky-400" :
+                  title === "Guided Breathing" ? "from-indigo-200 to-indigo-400" :
+                  title === "Motivational Quote" ? "from-yellow-100 to-yellow-300" :
+                  title === "Journaling Prompt" ? "from-indigo-100 to-indigo-300" :
+                  title === "Break with Me" ? "from-pink-100 to-pink-300" :
+                  title === "Focus Music Links" ? "from-blue-100 to-blue-300" :
+                  title === "Study Technique Tips" ? "from-amber-100 to-amber-300" :
+                  title === "AI Flashcards" ? "from-indigo-100 to-indigo-300" :
+                  title === "Daily Study Planner" ? "from-teal-100 to-teal-300" :
+                  title === "Pomodoro Suggestion" ? "from-sky-100 to-sky-300" :
+                  title === "AI Study Assistant" ? "from-indigo-100 to-indigo-400" :
+                  title === "Goals Tracker" ? "from-green-100 to-green-300" :
+                  "from-sky-100 to-indigo-100"
+                }
+                shadow-inner
+                group-hover:shadow-lg
+                transition
+              `}
+            >
+              {/* Render passed icon, which is colored already */}
+              <span className="">{icon}</span>
+            </span>
+            <span className="block font-bold text-base sm:text-lg text-indigo-900 text-center leading-tight">
+              {title}
+            </span>
+            <span className="block text-indigo-800/80 text-[15px] sm:text-base font-normal text-center mt-1">
+              {description}
+            </span>
           </button>
         </TooltipTrigger>
         {tooltip && (
@@ -241,7 +277,7 @@ export default function DashboardTabs() {
           </TabsList>
           {/* MENTAL HEALTH TAB */}
           <TabsContent value="mental" className="px-1 sm:px-4 py-7">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-y-5 gap-x-3 sm:gap-x-5">
+            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-y-5 gap-x-3 sm:gap-x-5">
               {mentalHealthFeatures.map((f) => (
                 <FeatureDialogOrButton key={f.title} {...f} />
               ))}
@@ -249,7 +285,7 @@ export default function DashboardTabs() {
           </TabsContent>
           {/* STUDY SUPPORT TAB */}
           <TabsContent value="study" className="px-1 sm:px-4 py-7">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-y-5 gap-x-3 sm:gap-x-5">
+            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-y-5 gap-x-3 sm:gap-x-5">
               {studySupportFeatures.map((f) => (
                 <FeatureDialogOrButton key={f.title} {...f} />
               ))}
@@ -257,7 +293,7 @@ export default function DashboardTabs() {
           </TabsContent>
           {/* BONUS FEATURES TAB */}
           <TabsContent value="bonus" className="px-1 sm:px-4 py-7">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-y-5 gap-x-3 sm:gap-x-5">
+            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-y-5 gap-x-3 sm:gap-x-5">
               {bonusFeatures.map((f) => (
                 <FeatureDialogOrButton key={f.title} {...f} />
               ))}
@@ -271,5 +307,3 @@ export default function DashboardTabs() {
     </section>
   );
 }
-
-// ... end of file
