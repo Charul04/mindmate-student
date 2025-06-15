@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ChevronRight } from "lucide-react";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
@@ -11,7 +10,7 @@ type DashboardFeature = {
   children?: React.ReactNode;
 };
 
-// Restored to low-key original UI — card is plain, with no glow, highlight, animated gradient, etc.
+// Restored to display clear boundaries for all cards: border, subtle shadow, rounded corners, background, and separation.
 export default function DashboardFeatureCard({
   icon,
   title,
@@ -21,7 +20,7 @@ export default function DashboardFeatureCard({
 }: DashboardFeature) {
   const content = (
     <div
-      className="group flex flex-col items-start w-full min-h-[104px] p-5 md:p-6 bg-white/70 rounded-xl border border-indigo-100 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 text-left relative"
+      className="group flex flex-col items-start w-full min-h-[104px] p-5 md:p-6 bg-white/70 rounded-xl border border-indigo-100 shadow-sm hover:shadow-md transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 text-left relative"
       tabIndex={0}
     >
       <span className="flex items-center mb-2">{icon}</span>

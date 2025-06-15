@@ -94,52 +94,28 @@ const bonusFeatures: DashboardFeature[] = [
 
 function DashboardCard({ icon, title, description, tooltip }: DashboardFeature) {
   if (title === "Guided Breathing") {
-    return (
-      <GuidedBreathingDialog
-        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
-      />
-    );
+    return <GuidedBreathingDialog triggerClassName="w-full h-full" />;
   }
   if (title === "Motivational Quote") {
-    return (
-      <MotivationalQuoteDialog
-        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
-      />
-    );
+    return <MotivationalQuoteDialog triggerClassName="w-full h-full" />;
   }
   if (title === "Journaling Prompt") {
-    return (
-      <JournalingPromptDialog
-        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
-      />
-    );
+    return <JournalingPromptDialog triggerClassName="w-full h-full" />;
   }
   if (title === "Focus Music Links") {
-    return (
-      <FocusMusicDialog
-        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
-      />
-    );
+    return <FocusMusicDialog triggerClassName="w-full h-full" />;
   }
   if (title === "Study Technique Tips") {
-    return (
-      <StudyTipsDialog
-        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
-      />
-    );
+    return <StudyTipsDialog triggerClassName="w-full h-full" />;
   }
   if (title === "Goals Tracker") {
-    return (
-      <GoalsTrackerDialog
-        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
-      />
-    );
+    return <GoalsTrackerDialog triggerClassName="w-full h-full" />;
   }
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <button className="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left">
+          <button className="w-full h-full outline-none">
             <span className="flex items-center mb-2">{icon}</span>
             <span className="font-semibold text-indigo-900 text-[1.08rem]">{title}</span>
             <span className="text-indigo-900/70 text-sm mt-1">{description}</span>
