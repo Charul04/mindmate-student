@@ -15,7 +15,7 @@ type JournalEntry = {
 const PROMPTS = [
   "What made you smile this week?",
   "What's something you're proud of but never say out loud?",
-  "What challenge did you overcome recently, and what did you learn from it?",
+  // Removed: "What challenge did you overcome recently, and what did you learn from it?",
   "If you could give your past self one piece of advice, what would it be?",
   "Describe a moment when you felt truly at peace.",
   "How are you really feeling today—beneath the surface?",
