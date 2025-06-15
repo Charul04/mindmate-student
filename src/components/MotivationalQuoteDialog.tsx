@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { MessageSquare, Save, Search, Image as ImageIcon } from "lucide-react";
+import { MessageSquare, Save, Search, Image as ImageIcon, Minus } from "lucide-react";
 
 // Add demo local images (public/ folder). You may replace these with your own images.
 const images = [
@@ -120,6 +120,11 @@ export default function MotivationalQuoteDialog({ triggerClassName }: { triggerC
     ]);
   }
 
+  // Handler to remove a saved quote by index
+  function handleRemoveSaved(index: number) {
+    setSaved(prev => prev.filter((_, i) => i !== index));
+  }
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
@@ -224,9 +229,9 @@ export default function MotivationalQuoteDialog({ triggerClassName }: { triggerC
               {saved.map((q, i) => (
                 <div
                   key={i}
-                  className="flex bg-gradient-to-l from-sky-50/70 to-white border border-indigo-100 rounded-lg items-start gap-2 p-2 shadow"
+                  className="flex bg-gradient-to-l from-sky-50/70 to-white border border-indigo-100 rounded-lg items-start gap-2 p-2 shadow relative"
                 >
-                  <div className="flex-1">
+                  <div className="flex-1 pr-1">
                     <blockquote className="text-sm text-indigo-900 font-medium break-words">
                       &ldquo;{q.quote}&rdquo;
                     </blockquote>
@@ -237,6 +242,16 @@ export default function MotivationalQuoteDialog({ triggerClassName }: { triggerC
                       </span>
                     )}
                   </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="w-6 h-6 min-w-0 p-0 text-rose-500 hover:bg-rose-50 absolute right-2 top-2"
+                    aria-label="Remove quote"
+                    title="Remove this quote"
+                    onClick={() => handleRemoveSaved(i)}
+                  >
+                    <Minus size={16} />
+                  </Button>
                 </div>
               ))}
             </div>
