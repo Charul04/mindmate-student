@@ -18,7 +18,9 @@ import ScreenTimeTrackerDialog from "@/components/ScreenTimeTrackerDialog";
 import { Smile, Wind, Quote, PenLine, CalendarDays, Clock, Book, ChartLine, Music, Lightbulb, ChevronRight } from "lucide-react";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import React from "react";
+import DashboardBgDoodle from "./DashboardBgDoodle";
 import DashboardDoodle from "./DashboardDoodle";
+import DashboardDividerDoodle from "./DashboardDividerDoodle";
 import DashboardFeatureCard from "./DashboardFeatureCard";
 
 type DashboardFeature = {
@@ -156,63 +158,67 @@ function DashboardCard({ icon, title, description, tooltip }: DashboardFeature) 
 
 export default function DashboardTabs() {
   return (
-    <section id="dashboard" className="w-full bg-white border-t border-indigo-100 py-12 px-3 sm:px-8">
-      <h2 className="text-3xl font-bold text-center text-indigo-900 mb-7 animate-fade-in">
-        Your MindMate+ Dashboard
-      </h2>
+    <section id="dashboard" className="relative w-full min-h-[576px] border-t border-indigo-100 py-12 px-3 sm:px-8 overflow-hidden bg-gradient-to-br from-[rgba(221,236,255,0.55)] via-sky-50/70 to-white dark:from-gray-900 dark:to-gray-800">
+      <DashboardBgDoodle />
+      <div className="relative z-10">
+        <h2 className="text-4xl md:text-5xl font-extrabold text-center text-indigo-900 mb-4 tracking-tight drop-shadow-2xl animate-fade-in">
+          Your MindMate<span className="text-sky-500 duration-150">+</span> Dashboard
+        </h2>
+        <DashboardDividerDoodle />
+      </div>
       <DashboardDoodle />
-      <div className="max-w-4xl mx-auto bg-sky-50/60 rounded-2xl shadow-md p-0 mb-6 animate-fade-in">
+      <div className="max-w-4xl mx-auto bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl p-0 mb-6 border border-indigo-100/80 animate-fade-in relative z-10 drop-shadow-2xl">
         <Tabs defaultValue="mental" className="w-full">
-          <TabsList className="w-full flex justify-between items-center rounded-t-2xl border-b border-indigo-100 bg-gradient-to-r from-sky-100 via-indigo-50 to-white px-3 py-1">
-            <TabsTrigger value="mental" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700">
+          <TabsList className="w-full flex justify-between items-center rounded-t-2xl border-b border-indigo-100 bg-gradient-to-r from-sky-100 via-indigo-50 to-white px-3 py-1 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-gradient-to-r after:from-sky-300/60 after:to-indigo-300/60 animate-fade-in">
+            <TabsTrigger value="mental" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700 animate-fade-in">
               🧠 Mental Health
             </TabsTrigger>
-            <TabsTrigger value="study" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700">
+            <TabsTrigger value="study" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700 animate-fade-in">
               📚 Study Support
             </TabsTrigger>
-            <TabsTrigger value="bonus" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700">
+            <TabsTrigger value="bonus" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700 animate-fade-in">
               🌟 Bonus Features
             </TabsTrigger>
           </TabsList>
           {/* MENTAL HEALTH TAB */}
-          <TabsContent value="mental" className="px-6 py-7">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+          <TabsContent value="mental" className="px-6 py-7 animate-fade-in">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               <GuidedBreathingDialog
-                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+                triggerClassName=""
               />
               <MotivationalQuoteDialog
-                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+                triggerClassName=""
               />
               <JournalingPromptDialog
-                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+                triggerClassName=""
               />
             </div>
           </TabsContent>
           {/* STUDY SUPPORT TAB */}
-          <TabsContent value="study" className="px-6 py-7">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+          <TabsContent value="study" className="px-6 py-7 animate-fade-in">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               <StudyPlannerDialog />
               <PomodoroTimerDialog />
               <GoalsTrackerDialog />
             </div>
           </TabsContent>
           {/* BONUS FEATURES TAB */}
-          <TabsContent value="bonus" className="px-6 py-7">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+          <TabsContent value="bonus" className="px-6 py-7 animate-fade-in">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               <ScreenTimeTrackerDialog
-                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+                triggerClassName=""
               />
               <BreakWithMeDialog
-                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+                triggerClassName=""
               />
               <FocusMusicDialog
-                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+                triggerClassName=""
               />
               <StudyTipsDialog
-                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+                triggerClassName=""
               />
               <FlashcardsDialog
-                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+                triggerClassName=""
               />
             </div>
           </TabsContent>
