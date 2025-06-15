@@ -12,8 +12,9 @@ type DashboardFeature = {
 };
 
 /**
- * Generic card UI for dashboard features; Dialogs can use as children (for trigger asChild).
- * Adds lively gradient, shadow, and animated hover/focus.
+ * Visually distinct, attractive card UI for dashboard features.
+ * - Glowing gradient border, inner soft-shadow, rounded glass-effect background.
+ * - Animates on hover, focus, and scale.
  */
 export default function DashboardFeatureCard({
   icon,
@@ -22,20 +23,38 @@ export default function DashboardFeatureCard({
   tooltip,
   children,
 }: DashboardFeature) {
+  // Gradient-glow border + animated background
   const content = (
-    <div className="group relative flex flex-col items-start isolate bg-gradient-to-tr from-indigo-50 via-sky-100 to-white/80 rounded-xl border border-indigo-100 shadow-sm hover:shadow-2xl hover:scale-[1.045] active:scale-[0.98] transition-all duration-200 w-full min-h-[112px] text-left
-      before:absolute before:inset-0 before:-z-10 before:rounded-xl before:bg-gradient-to-br before:from-sky-300/5 before:via-indigo-200/15 before:to-indigo-300/0
-      after:content-[''] after:absolute after:inset-0 after:border after:border-sky-200/25 after:rounded-xl
-      " tabIndex={0}
+    <div
+      className="relative group flex flex-col items-start justify-start w-full min-h-[120px] p-5 md:p-6
+        bg-gradient-to-br from-white/85 via-sky-50/80 to-indigo-50/70 dark:from-gray-800/90 dark:to-sky-900/50
+        rounded-2xl border-2 border-transparent
+        shadow-lg
+        before:absolute before:inset-0 before:rounded-2xl before:z-[-1]
+        before:bg-gradient-to-br before:from-sky-200/50 before:via-indigo-300/20 before:to-white/5
+        before:shadow-[0_4px_32px_0_rgba(56,189,248,0.09)]
+        hover:before:shadow-[0_6px_36px_0_rgba(56,189,248,0.25)]
+        focus-visible:border-sky-400 focus-visible:ring-2 focus-visible:ring-sky-200/60
+        transition-all duration-200
+        outline-none
+        "
+      tabIndex={0}
     >
       <span className="flex items-center mb-2 drop-shadow-glow-sky animate-fade-in">
         {icon}
       </span>
-      <span className="font-semibold text-indigo-900 text-[1.11rem] animate-fade-in">{title}</span>
-      <span className="text-indigo-900/70 text-[0.97rem] mt-1 animate-fade-in">{description}</span>
-      <ChevronRight className="absolute right-3 top-3 text-indigo-200 group-hover:text-indigo-500 transition hidden md:block animate-slide-in-right" size={20} />
-      {/* Sparkle doodles */}
+      <span className="font-semibold text-indigo-900 text-[1.11rem] drop-shadow-sm animate-fade-in">
+        {title}
+      </span>
+      <span className="text-indigo-900/70 text-[0.97rem] mt-1 animate-fade-in">
+        {description}
+      </span>
+      {/* animated chevron for navigation indication */}
+      <ChevronRight className="absolute right-3 top-3 text-indigo-200 group-hover:text-sky-500 transition hidden md:block animate-slide-in-right" size={20} />
+      {/* SVG sparkle doodles for playful vibe */}
       <svg width="24" height="18" className="absolute -right-2 -top-2 animate-fade-in" fill="none"><path d="M10 15L12 9L14 15" stroke="#38bdf8" strokeWidth="1.6" strokeLinecap="round"/><circle cx="20" cy="4" r="2.2" fill="#818cf8" opacity="0.11"/><circle cx="4" cy="4" r="1.1" fill="#fbbf24" opacity="0.15"/></svg>
+      {/* New: card-glow animated border (playful highlight) */}
+      <span className="pointer-events-none absolute -inset-1 rounded-2xl z-[-2] bg-gradient-to-br from-sky-400/30 via-indigo-400/20 to-transparent blur-sm opacity-80 group-hover:opacity-100 transition-all duration-300" />
     </div>
   );
 
