@@ -158,14 +158,16 @@ export default function DashboardTabs() {
       className="relative w-full bg-gradient-to-b from-sky-50/70 via-white/90 to-white border-t border-indigo-100 pt-2 pb-8 sm:pt-7 sm:pb-12 px-0 overflow-x-hidden"
       style={{ minHeight: 340 }}
     >
-      {/* Animated vibrant blurred gradient glow */}
+      {/* Enhanced, vibrant blurred-glow gradient background */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 z-0"
       >
-        <div className="absolute left-1/2 top-1/2 w-[100vw] h-[50vh] -translate-x-1/2 -translate-y-1/2 rounded-3xl bg-gradient-to-tr from-pink-200 via-indigo-100 to-sky-200 blur-3xl opacity-60 animate-fade-in" />
-        <div className="absolute left-10 top-24 w-72 h-52 bg-gradient-to-br from-yellow-200 via-pink-100 to-fuchsia-100 blur-3xl opacity-40 rotate-12" />
-        <div className="absolute right-10 bottom-14 w-60 h-56 bg-gradient-to-bl from-sky-200 via-blue-100 to-purple-100 blur-2xl opacity-40 -rotate-12" />
+        {/* Main background glow */}
+        <div className="absolute left-1/2 top-1/2 w-[120vw] h-[60vh] -translate-x-1/2 -translate-y-1/2 rounded-3xl bg-gradient-to-tr from-pink-300 via-indigo-200/80 to-sky-200 blur-[60px] opacity-75 animate-fade-in" />
+        {/* Extra scattered color spots for playfulness */}
+        <div className="absolute left-12 top-16 w-80 h-64 bg-gradient-to-br from-yellow-200/90 via-pink-100/80 to-fuchsia-100/80 blur-3xl opacity-45 rotate-12" />
+        <div className="absolute right-10 bottom-16 w-72 h-60 bg-gradient-to-bl from-sky-200 via-blue-100 to-purple-100 blur-[54px] opacity-60 -rotate-12" />
       </div>
 
       <h2 className="relative z-10 text-2xl sm:text-3xl font-bold text-center text-indigo-900 mb-4 sm:mb-8 animate-fade-in drop-shadow-[0_2px_8px_rgba(109,40,217,0.14)]">
@@ -173,9 +175,10 @@ export default function DashboardTabs() {
         <span className="text-sky-500 font-extrabold">+</span> Dashboard
       </h2>
       <div className="relative z-10 w-full max-w-xl sm:max-w-4xl mx-auto px-0 mb-3 sm:mb-6">
-        {/* Glassy card behind the content */}
-        <div className="absolute inset-0 -top-3 rounded-2xl bg-white/70 backdrop-blur-[4px] border border-indigo-100/60 shadow-[0_8px_32px_0_rgba(63,81,181,0.10)]" aria-hidden="true" />
+        {/* Frosted-glass, glowing card container (new/updated) */}
+        <div className="absolute inset-0 -top-3 rounded-2xl bg-white/80 border border-indigo-100/70 shadow-[0_12px_34px_rgba(63,81,181,0.12)] backdrop-blur-[8px] backdrop-saturate-[1.2] ring-2 ring-pink-100/30 ring-inset" aria-hidden="true" />
         <Tabs defaultValue="mental" className="relative z-10 w-full">
+          {/* VIBRANT TAB BUTTONS */}
           <TabsList
             className="
               flex w-full overflow-x-auto
@@ -290,55 +293,64 @@ export default function DashboardTabs() {
           </TabsList>
           {/* MENTAL HEALTH TAB */}
           <TabsContent value="mental" className="relative z-10 px-1 sm:px-3 py-5 sm:py-7">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
-              {mentalHealthFeatures.map((f) =>
-                f.title === "Mood Check-In" ? (
-                  <MoodCheckinDialog
-                    key={f.title}
-                    triggerClassName="group relative flex flex-col items-start bg-white/80 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-xl hover:shadow-2xl focus:ring-2 focus:ring-sky-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-br before:from-pink-200/30 before:to-sky-100/20 before:opacity-0 group-hover:before:opacity-100 group-hover:before:blur-sm"
-                  />
-                ) : (
-                  <DashboardCard
-                    key={f.title}
-                    {...f}
-                    // Extra pop effect and inner glow
-                  />
-                )
-              )}
+            {/* Glass grid container for the area */}
+            <div className="relative overflow-visible">
+              <div className="absolute inset-1 -z-10 rounded-2xl bg-gradient-to-br from-pink-100/60 via-indigo-50/70 to-sky-100/60 shadow-2xl shadow-pink-200/30 blur-sm" aria-hidden="true" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
+                {mentalHealthFeatures.map((f) =>
+                  f.title === "Mood Check-In" ? (
+                    <MoodCheckinDialog
+                      key={f.title}
+                      triggerClassName="group relative flex flex-col items-start bg-white/90 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-[0_8px_36px_0_rgba(190,49,255,0.11)] hover:shadow-2xl focus:ring-2 focus:ring-sky-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-br before:from-pink-200/50 before:to-sky-100/40 before:opacity-0 group-hover:before:opacity-100 group-hover:before:blur before:transition group-hover:shadow-xl group-hover:ring-2 group-hover:ring-pink-200/50"
+                    />
+                  ) : (
+                    <DashboardCard
+                      key={f.title}
+                      {...f}
+                    />
+                  )
+                )}
+              </div>
             </div>
           </TabsContent>
           {/* STUDY SUPPORT TAB */}
           <TabsContent value="study" className="relative z-10 px-1 sm:px-3 py-5 sm:py-7">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
-              <StudyPlannerDialog 
-                triggerClassName="group relative flex flex-col items-start bg-white/80 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-xl hover:shadow-2xl focus:ring-2 focus:ring-sky-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-tr before:from-blue-200/30 before:to-fuchsia-100/20 before:opacity-0 group-hover:before:opacity-100 group-hover:before:blur-sm"
-              />
-              <PomodoroTimerDialog 
-                triggerClassName="group relative flex flex-col items-start bg-white/80 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-xl hover:shadow-2xl focus:ring-2 focus:ring-sky-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-tl before:from-teal-200/30 before:to-indigo-100/20 before:opacity-0 group-hover:before:opacity-100 group-hover:before:blur-sm"
-              />
-              <GoalsTrackerDialog
-                triggerClassName="group relative flex flex-col items-start bg-white/80 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-xl hover:shadow-2xl focus:ring-2 focus:ring-sky-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-br before:from-green-200/25 before:to-yellow-100/20 before:opacity-0 group-hover:before:opacity-100 group-hover:before:blur-sm"
-              />
+            <div className="relative overflow-visible">
+              <div className="absolute inset-1 -z-10 rounded-2xl bg-gradient-to-tr from-blue-100/50 via-sky-100/80 to-fuchsia-100/40 shadow-2xl shadow-blue-200/30 blur-sm" aria-hidden="true" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
+                <StudyPlannerDialog 
+                  triggerClassName="group relative flex flex-col items-start bg-white/90 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-[0_8px_32px_0_rgba(63,81,181,0.10)] hover:shadow-2xl focus:ring-2 focus:ring-sky-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-tr before:from-blue-200/40 before:to-fuchsia-100/20 before:opacity-0 group-hover:before:opacity-100 group-hover:before:blur group-hover:shadow-xl group-hover:ring-2 group-hover:ring-blue-200/50"
+                />
+                <PomodoroTimerDialog 
+                  triggerClassName="group relative flex flex-col items-start bg-white/90 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-[0_8px_32px_0_rgba(63,181,181,0.12)] hover:shadow-2xl focus:ring-2 focus:ring-sky-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-tl before:from-teal-200/40 before:to-indigo-100/30 before:opacity-0 group-hover:before:opacity-100 group-hover:before:blur group-hover:shadow-xl group-hover:ring-2 group-hover:ring-sky-200/50"
+                />
+                <GoalsTrackerDialog
+                  triggerClassName="group relative flex flex-col items-start bg-white/90 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-[0_10px_38px_0_rgba(63,181,81,0.11)] hover:shadow-2xl focus:ring-2 focus:ring-green-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-br before:from-green-200/40 before:to-yellow-100/20 before:opacity-0 group-hover:before:opacity-90 group-hover:before:blur group-hover:shadow-xl group-hover:ring-2 group-hover:ring-green-200/40"
+                />
+              </div>
             </div>
           </TabsContent>
           {/* BONUS FEATURES TAB */}
           <TabsContent value="bonus" className="relative z-10 px-1 sm:px-3 py-5 sm:py-7">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
-              <BreakWithMeDialog
-                triggerClassName="group relative flex flex-col items-start bg-white/80 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-xl hover:shadow-2xl focus:ring-2 focus:ring-sky-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-br before:from-fuchsia-100/30 before:to-indigo-100/15 before:opacity-0 group-hover:before:opacity-100 group-hover:before:blur-sm"
-              />
-              <FocusMusicDialog
-                triggerClassName="group relative flex flex-col items-start bg-white/80 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-xl hover:shadow-2xl focus:ring-2 focus:ring-sky-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-r before:from-blue-200/25 before:to-pink-100/15 before:opacity-0 group-hover:before:opacity-100 group-hover:before:blur-sm"
-              />
-              <StudyTipsDialog
-                triggerClassName="group relative flex flex-col items-start bg-white/80 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-xl hover:shadow-2xl focus:ring-2 focus:ring-sky-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-r before:from-yellow-200/30 before:to-sky-100/15 before:opacity-0 group-hover:before:opacity-100 group-hover:before:blur-sm"
-              />
-              <FlashcardsDialog
-                triggerClassName="group relative flex flex-col items-start bg-white/80 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-xl hover:shadow-2xl focus:ring-2 focus:ring-sky-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-tl before:from-pink-100/30 before:to-indigo-100/15 before:opacity-0 group-hover:before:opacity-100 group-hover:before:blur-sm"
-              />
-              <ScreenTimeTrackerDialog
-                triggerClassName="group relative flex flex-col items-start bg-white/80 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-xl hover:shadow-2xl focus:ring-2 focus:ring-sky-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-br before:from-fuchsia-200/25 before:to-yellow-100/15 before:opacity-0 group-hover:before:opacity-100 group-hover:before:blur-sm"
-              />
+            <div className="relative overflow-visible">
+              <div className="absolute inset-1 -z-10 rounded-2xl bg-gradient-to-bl from-yellow-100/50 via-fuchsia-100/80 to-indigo-100/40 shadow-2xl shadow-fuchsia-100/30 blur-sm" aria-hidden="true" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
+                <BreakWithMeDialog
+                  triggerClassName="group relative flex flex-col items-start bg-white/90 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-[0_8px_38px_0_rgba(220,70,255,0.09)] hover:shadow-2xl focus:ring-2 focus:ring-fuchsia-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-br before:from-fuchsia-100/60 before:to-indigo-100/30 before:opacity-0 group-hover:before:opacity-100 group-hover:before:blur group-hover:shadow-xl group-hover:ring-2 group-hover:ring-fuchsia-200/30"
+                />
+                <FocusMusicDialog
+                  triggerClassName="group relative flex flex-col items-start bg-white/90 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-[0_10px_36px_0_rgba(95,149,255,0.09)] hover:shadow-2xl focus:ring-2 focus:ring-blue-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-r before:from-blue-200/50 before:to-pink-100/30 before:opacity-0 group-hover:before:opacity-90 group-hover:before:blur group-hover:shadow-xl group-hover:ring-2 group-hover:ring-blue-200/30"
+                />
+                <StudyTipsDialog
+                  triggerClassName="group relative flex flex-col items-start bg-white/90 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-[0_7px_30px_0_rgba(231,189,48,0.09)] hover:shadow-2xl focus:ring-2 focus:ring-yellow-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-r before:from-yellow-200/60 before:to-sky-100/30 before:opacity-0 group-hover:before:opacity-100 group-hover:before:blur group-hover:shadow-xl group-hover:ring-2 group-hover:ring-yellow-200/30"
+                />
+                <FlashcardsDialog
+                  triggerClassName="group relative flex flex-col items-start bg-white/90 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-[0_8px_28px_0_rgba(159,92,254,0.09)] hover:shadow-2xl focus:ring-2 focus:ring-pink-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-tl before:from-pink-100/52 before:to-indigo-100/18 before:opacity-0 group-hover:before:opacity-100 group-hover:before:blur group-hover:shadow-xl group-hover:ring-2 group-hover:ring-pink-200/20"
+                />
+                <ScreenTimeTrackerDialog
+                  triggerClassName="group relative flex flex-col items-start bg-white/90 backdrop-blur-xl rounded-2xl border border-indigo-100 p-4 sm:p-6 shadow-[0_8px_30px_0_rgba(255,215,60,0.08)] hover:shadow-2xl focus:ring-2 focus:ring-fuchsia-200 w-full min-h-[120px] text-left transition-all before:content-[''] before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-gradient-to-br before:from-fuchsia-200/40 before:to-yellow-100/16 before:opacity-0 group-hover:before:opacity-100 group-hover:before:blur group-hover:shadow-xl group-hover:ring-2 group-hover:ring-yellow-100/20"
+                />
+              </div>
             </div>
           </TabsContent>
         </Tabs>
