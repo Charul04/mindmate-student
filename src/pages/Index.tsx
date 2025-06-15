@@ -1,9 +1,132 @@
-
 import AppLogo from "@/components/AppLogo";
 import HeroIllustration from "@/components/HeroIllustration";
-import FeatureCard from "@/components/FeatureCard";
-import QuoteCard from "@/components/QuoteCard";
-import { Book, Brain, Star, HeartPulse } from "lucide-react";
+import { Book, Brain, Star, HeartPulse, Smile, Wind, Quote, PenLine, Sun, Target, Clock, Music, MessageSquare, ChevronRight, Lightbulb, ChartLine, CalendarDays } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import React from "react";
+
+type DashboardFeature = {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  tooltip?: string;
+};
+
+const mentalHealthFeatures: DashboardFeature[] = [
+  {
+    icon: <Smile className="text-sky-600" size={28} />,
+    title: "Mood Check-In",
+    description: "Select your mood to get tailored advice.",
+    tooltip: "Track your mood & get helpful support."
+  },
+  {
+    icon: <Wind className="text-indigo-600" size={28} />,
+    title: "Guided Breathing",
+    description: "3–5 min calming breathing session.",
+    tooltip: "Follow a script for relaxation."
+  },
+  {
+    icon: <Quote className="text-yellow-500" size={28} />,
+    title: "Motivational Quote",
+    description: "Instant boost with inspiration!",
+    tooltip: "AI finds a motivational quote for you."
+  },
+  {
+    icon: <MessageSquare className="text-rose-500" size={28} />,
+    title: 'I\'m Feeling...',
+    description: "Get quick tips for feelings like 'anxious', 'tired', etc.",
+    tooltip: "Click for targeted wellness advice."
+  },
+  {
+    icon: <PenLine className="text-indigo-400" size={28} />,
+    title: "Journaling Prompt",
+    description: "Reflect with a daily writing activity.",
+    tooltip: "Build reflection habits with prompts."
+  },
+];
+
+const studySupportFeatures: DashboardFeature[] = [
+  {
+    icon: <CalendarDays className="text-teal-600" size={28} />,
+    title: "Daily Study Planner",
+    description: "Simple to-do & AI smart suggestions.",
+    tooltip: "Organize your study tasks."
+  },
+  {
+    icon: <Clock className="text-sky-600" size={28} />,
+    title: "Pomodoro Suggestion",
+    description: "AI recommends focus & break cycles.",
+    tooltip: "Boost focus with smart timers."
+  },
+  {
+    icon: <Lightbulb className="text-amber-500" size={28} />,
+    title: "Study Technique Tips",
+    description: "Feynman, flashcards, and other strategies.",
+    tooltip: "Get smarter with proven techniques."
+  },
+  {
+    icon: <Book className="text-indigo-700" size={28} />,
+    title: "AI Flashcards",
+    description: "AI generates flashcards per your subject.",
+    tooltip: "Type your subject/topic for instant cards."
+  },
+  {
+    icon: <Target className="text-green-600" size={28} />,
+    title: "Exam Stress Mode",
+    description: "Calming advice and focus prioritization.",
+    tooltip: "Take a breath, get study order + calm."
+  },
+];
+
+const bonusFeatures: DashboardFeature[] = [
+  {
+    icon: <Sun className="text-orange-500" size={28} />,
+    title: "Customizable Dashboard",
+    description: "Mix wellness & academic widgets."
+  },
+  {
+    icon: <ChartLine className="text-sky-800" size={28} />,
+    title: "Progress Tracker",
+    description: "See your mood & study trends."
+  },
+  {
+    icon: <Smile className="text-pink-500" size={28} />,
+    title: "Break with Me",
+    description: "Fun facts, jokes, and mindful breaks."
+  },
+  {
+    icon: <Music className="text-blue-600" size={28} />,
+    title: "Focus Music Links",
+    description: "Curated YouTube/Spotify playlists."
+  },
+  {
+    icon: <Star className="text-indigo-600" size={28} />,
+    title: "AI Check-in Reminder",
+    description: "Gentle check-ins: 'How are you doing?'"
+  },
+];
+
+function DashboardCard({ icon, title, description, tooltip }: DashboardFeature) {
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button className="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left">
+            <span className="flex items-center mb-2">{icon}</span>
+            <span className="font-semibold text-indigo-900 text-[1.08rem]">{title}</span>
+            <span className="text-indigo-900/70 text-sm mt-1">{description}</span>
+            <ChevronRight className="absolute right-4 top-4 text-indigo-200 group-hover:text-indigo-500 transition hidden md:block" size={20} />
+          </button>
+        </TooltipTrigger>
+        {tooltip && (
+          <TooltipContent side="bottom">
+            {tooltip}
+          </TooltipContent>
+        )}
+      </Tooltip>
+    </TooltipProvider>
+  );
+}
 
 const features = [
   {
@@ -37,6 +160,8 @@ export default function Index() {
           <AppLogo />
         </div>
         <nav className="flex gap-7 items-center">
+          <span className="text-xs font-semibold text-sky-600 bg-sky-100 py-1 px-2 rounded-lg">Free App</span>
+          <a href="#dashboard" className="text-indigo-700 font-medium hover:text-indigo-900 transition story-link">Dashboard</a>
           <a href="#features" className="text-indigo-700 font-medium hover:text-indigo-900 transition story-link">Features</a>
           <a href="#testimonial" className="text-indigo-700 font-medium hover:text-indigo-900 transition story-link">Testimonials</a>
           <a href="#" className="ml-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold shadow hover-scale transition">Get Started</a>
@@ -48,15 +173,49 @@ export default function Index() {
           <h1 className="text-5xl font-extrabold tracking-tight leading-tight text-indigo-900 mb-4">
             MindMate<span className="text-sky-500">+</span>
           </h1>
-          <p className="text-2xl text-indigo-700 font-medium mb-7 max-w-lg tracking-normal">
+          <p className="text-2xl text-indigo-700 font-medium mb-3 max-w-lg tracking-normal">
             Study smarter. Feel better. The AI companion made for students.
           </p>
+          <p className="font-semibold text-sky-500 mb-6 text-lg">100% Free & made for students!</p>
           <a href="#" className="inline-block px-8 py-3 bg-indigo-600 hover:bg-sky-600 text-white text-lg rounded-xl font-bold shadow hover-scale transition">
             Try MindMate+ Free
           </a>
         </div>
         <div className="flex-1 flex justify-center items-center">
           <HeroIllustration />
+        </div>
+      </section>
+      {/* DASHBOARD */}
+      <section id="dashboard" className="w-full bg-white border-t border-indigo-100 py-12 px-3 sm:px-8">
+        <h2 className="text-3xl font-bold text-center text-indigo-900 mb-7 animate-fade-in">
+          Your MindMate+ Dashboard
+        </h2>
+        {/* MENTAL HEALTH */}
+        <div className="mb-8">
+          <h3 className="text-lg font-bold text-indigo-800 mb-3">🧠 Mental Health</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-2">
+            {mentalHealthFeatures.map((f) => (
+              <DashboardCard key={f.title} {...f} />
+            ))}
+          </div>
+        </div>
+        {/* STUDY SUPPORT */}
+        <div className="mb-8">
+          <h3 className="text-lg font-bold text-indigo-800 mb-3">📚 Study Support</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-2">
+            {studySupportFeatures.map((f) => (
+              <DashboardCard key={f.title} {...f} />
+            ))}
+          </div>
+        </div>
+        {/* BONUS */}
+        <div>
+          <h3 className="text-lg font-bold text-indigo-800 mb-3">🌟 Bonus Features</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {bonusFeatures.map((f) => (
+              <DashboardCard key={f.title} {...f} />
+            ))}
+          </div>
         </div>
       </section>
       {/* FEATURES */}
