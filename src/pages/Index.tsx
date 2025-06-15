@@ -9,13 +9,12 @@ import React from "react";
 import "@/i18n";
 
 export default function Index() {
-  // The outer div ensures full-screen height and correct stacking for mobile/web.
+  // Add overflow-x-hidden to prevent unwanted horizontal scroll in mobile apps
   return (
     <div
-      className="min-h-screen flex flex-col w-full max-w-full bg-gradient-to-br from-indigo-50 via-sky-50 to-white dark:from-gray-900 dark:to-gray-800"
+      className="min-h-screen flex flex-col w-full max-w-full bg-gradient-to-br from-indigo-50 via-sky-50 to-white dark:from-gray-900 dark:to-gray-800 overflow-x-hidden"
       style={{
         minHeight: "100dvh",
-        // Extra padding to handle mobile-safe areas (notch, home bar)
         paddingBottom: "env(safe-area-inset-bottom, 0px)",
         paddingTop: "env(safe-area-inset-top, 0px)",
       }}

@@ -153,25 +153,25 @@ function DashboardCard({ icon, title, description, tooltip }: DashboardFeature) 
 
 export default function DashboardTabs() {
   return (
-    <section id="dashboard" className="w-full bg-white border-t border-indigo-100 py-12 px-3 sm:px-8">
+    <section id="dashboard" className="w-full bg-white border-t border-indigo-100 py-12 px-0 sm:px-2">
       <h2 className="text-3xl font-bold text-center text-indigo-900 mb-7 animate-fade-in">
         Your MindMate+ Dashboard
       </h2>
-      <div className="max-w-4xl mx-auto bg-sky-50/60 rounded-2xl shadow-md p-0 mb-6 animate-fade-in">
+      <div className="max-w-4xl mx-auto bg-sky-50/60 rounded-2xl shadow-md p-0 mb-6 animate-fade-in w-full">
         <Tabs defaultValue="mental" className="w-full">
-          <TabsList className="w-full flex justify-between items-center rounded-t-2xl border-b border-indigo-100 bg-gradient-to-r from-sky-100 via-indigo-50 to-white px-3 py-1">
-            <TabsTrigger value="mental" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700">
+          <TabsList className="w-full flex justify-between items-center rounded-t-2xl border-b border-indigo-100 bg-gradient-to-r from-sky-100 via-indigo-50 to-white px-2 py-1 overflow-x-auto">
+            <TabsTrigger value="mental" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700 min-w-[120px]">
               🧠 Mental Health
             </TabsTrigger>
-            <TabsTrigger value="study" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700">
+            <TabsTrigger value="study" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700 min-w-[120px]">
               📚 Study Support
             </TabsTrigger>
-            <TabsTrigger value="bonus" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700">
+            <TabsTrigger value="bonus" className="flex-1 text-lg data-[state=active]:bg-white data-[state=active]:text-sky-700 min-w-[120px]">
               🌟 Bonus Features
             </TabsTrigger>
           </TabsList>
           {/* MENTAL HEALTH TAB */}
-          <TabsContent value="mental" className="px-6 py-7">
+          <TabsContent value="mental" className="px-2 py-7">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
               {mentalHealthFeatures.map((f) =>
                 f.title === "Mood Check-In" ? (
@@ -186,7 +186,7 @@ export default function DashboardTabs() {
             </div>
           </TabsContent>
           {/* STUDY SUPPORT TAB */}
-          <TabsContent value="study" className="px-6 py-7">
+          <TabsContent value="study" className="px-2 py-7">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
               <StudyPlannerDialog />
               <PomodoroTimerDialog />
@@ -195,7 +195,7 @@ export default function DashboardTabs() {
             </div>
           </TabsContent>
           {/* BONUS FEATURES TAB */}
-          <TabsContent value="bonus" className="px-6 py-7">
+          <TabsContent value="bonus" className="px-2 py-7">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
               <BreakWithMeDialog
                 triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"

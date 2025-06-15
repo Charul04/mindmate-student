@@ -1,4 +1,3 @@
-
 import BookStandingIllustration from "@/components/BookStandingIllustration";
 import { useTranslation } from "react-i18next";
 import "@/i18n";
@@ -10,13 +9,12 @@ export default function HeroSection() {
       className="
         flex flex-col-reverse md:flex-row md:items-center 
         gap-8 md:gap-10 
-        px-4 sm:px-6 md:px-8 
+        px-2 sm:px-4 md:px-8 
         pt-8 sm:pt-10 pb-5 
         max-w-6xl mx-auto w-full 
         flex-grow
       "
       style={{
-        // Squeeze in even better on small screens and avoid top notch
         paddingTop: "calc(env(safe-area-inset-top, 0px) + 1.5rem)",
       }}
     >
