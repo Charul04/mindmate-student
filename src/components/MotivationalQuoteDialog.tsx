@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -125,36 +124,48 @@ export default function MotivationalQuoteDialog({ triggerClassName }: { triggerC
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <button
-          className={triggerClassName ||
-            "group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"}
+          className={
+            triggerClassName ||
+            "group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+          }
         >
           <span className="flex items-center mb-2">
             <MessageSquare className="text-rose-500" size={28} />
           </span>
-          <span className="font-semibold text-indigo-900 text-[1.08rem]">Motivational Quote Generator</span>
-          <span className="text-indigo-900/70 text-sm mt-1">AI-powered, uplifting, and student-focused quotes</span>
+          <span className="font-semibold text-indigo-900 text-[1.08rem]">
+            Motivational Quote Generator
+          </span>
+          <span className="text-indigo-900/70 text-sm mt-1">
+            AI-powered, uplifting, and student-focused quotes
+          </span>
         </button>
       </DialogTrigger>
-      <DialogContent className="max-w-lg mx-auto">
+      <DialogContent className="max-w-xs p-3 mx-auto rounded-lg">
         <DialogHeader>
           <DialogTitle>
             <span className="flex items-center gap-2">
-              <MessageSquare className="text-rose-500" size={26} />
+              <MessageSquare className="text-rose-500" size={22} />
               Motivational Quote Generator
             </span>
           </DialogTitle>
           <DialogDescription>
-            For students who need a boost — pick a random quote or create a custom one!
+            Pick a random quote or create a custom one!
           </DialogDescription>
         </DialogHeader>
-        <div className="flex flex-col gap-6 items-center">
+        <div className="flex flex-col gap-4 items-center w-full">
           {/* Search & AI Generate */}
-          <form className="flex gap-2 w-full items-center" onSubmit={e => { e.preventDefault(); handleAIGenerate(); }}>
+          <form
+            className="flex gap-2 w-full items-center"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleAIGenerate();
+            }}
+          >
             <Input
               className="rounded-lg bg-white border border-indigo-100 text-base"
               value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="enter topic (e.g. exams, burnout, friendship)..."
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="enter topic (e.g. exams, burnout)..."
               disabled={aiLoading}
               autoFocus
             />
@@ -164,66 +175,66 @@ export default function MotivationalQuoteDialog({ triggerClassName }: { triggerC
               className="flex gap-2"
               disabled={aiLoading || !search.trim()}
             >
-              <Search size={18} />
-              AI Generate
+              <Search size={16} />
+              AI
             </Button>
           </form>
           {/* Quote display */}
-          <div className="relative rounded-2xl bg-gradient-to-br from-sky-50 via-white to-indigo-50 shadow transition overflow-hidden w-full flex flex-col md:flex-row md:items-center">
-            <img
-              src={current.image}
-              alt="Motivational visual"
-              className="object-cover w-full md:w-40 h-32 md:h-40 rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none"
-              style={{ minWidth: 120, background: "#f4f4fd" }}
-            />
-            <div className="flex-1 flex flex-col justify-center p-4 pb-3 md:pb-4 gap-2">
-              <blockquote className="text-xl text-sky-800 text-center md:text-left font-medium italic px-1">
-                “{current.quote}”
-              </blockquote>
-              <p className="text-indigo-600 text-xs md:text-sm font-semibold text-center md:text-left">
-                {current.comment}
-              </p>
-              {current.isAI && (
-                <span className="inline-block mt-1 text-rose-500 text-xs font-medium">AI generated</span>
-              )}
-            </div>
+          <div className="relative rounded-xl bg-gradient-to-br from-sky-50 via-white to-indigo-50 shadow transition overflow-hidden w-full flex flex-col items-center px-2 py-3 min-h-[78px]">
+            <blockquote className="text-base text-sky-800 text-center font-medium italic px-1 break-words">
+              “{current.quote}”
+            </blockquote>
+            <p className="text-indigo-600 text-xs font-semibold text-center mt-1">
+              {current.comment}
+            </p>
+            {current.isAI && (
+              <span className="inline-block mt-1 text-rose-500 text-xs font-medium">
+                AI generated
+              </span>
+            )}
             {/* Save button */}
             <Button
               size="sm"
               variant="ghost"
-              className="absolute right-2 top-2 md:left-auto md:right-3 md:top-3 shadow-md rounded-full text-indigo-500 hover:bg-indigo-100"
+              className="absolute right-2 top-2 shadow-md rounded-full text-indigo-500 hover:bg-indigo-100"
               title="Save this quote"
               onClick={handleSaveQuote}
               tabIndex={0}
             >
-              <Save size={18} />
+              <Save size={16} />
             </Button>
           </div>
-          <div className="flex gap-3 w-full justify-between">
-            <Button onClick={handleNewQuote} variant="secondary" className="flex-1">
-              New Random Quote
+          <div className="flex gap-2 w-full justify-between">
+            <Button onClick={handleNewQuote} variant="secondary" className="flex-1 py-2 text-xs">
+              New Random
             </Button>
-            <Button onClick={() => setOpen(false)} variant="default" className="flex-1">
+            <Button onClick={() => setOpen(false)} variant="default" className="flex-1 py-2 text-xs">
               Close
             </Button>
           </div>
         </div>
         {/* Saved quotes */}
         {saved.length > 0 && (
-          <div className="mt-6 border-t pt-4">
-            <h4 className="text-indigo-800 font-bold text-lg mb-2 flex gap-2 items-center">
-              <ImageIcon className="text-indigo-400" size={20} />
+          <div className="mt-4 border-t pt-3">
+            <h4 className="text-indigo-800 font-bold text-base mb-1 flex gap-2 items-center">
+              <ImageIcon className="text-indigo-400" size={16} />
               My Saved Quotes
             </h4>
-            <div className="grid gap-3 max-h-40 overflow-y-auto">
+            <div className="grid gap-2 max-h-32 overflow-y-auto">
               {saved.map((q, i) => (
-                <div key={i} className="flex bg-gradient-to-l from-sky-50/70 to-white border border-indigo-100 rounded-lg items-start gap-3 p-2 shadow">
-                  <img src={q.image} alt="" className="w-9 h-9 rounded-md object-cover border" />
+                <div
+                  key={i}
+                  className="flex bg-gradient-to-l from-sky-50/70 to-white border border-indigo-100 rounded-lg items-start gap-2 p-2 shadow"
+                >
                   <div className="flex-1">
-                    <blockquote className="text-base text-indigo-900 font-medium">&ldquo;{q.quote}&rdquo;</blockquote>
+                    <blockquote className="text-sm text-indigo-900 font-medium break-words">
+                      &ldquo;{q.quote}&rdquo;
+                    </blockquote>
                     <div className="text-indigo-500 text-xs">{q.comment}</div>
                     {q.isAI && (
-                      <span className="inline-block mt-1 text-xs text-rose-500">AI</span>
+                      <span className="inline-block mt-1 text-xs text-rose-500">
+                        AI
+                      </span>
                     )}
                   </div>
                 </div>
