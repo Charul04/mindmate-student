@@ -154,7 +154,7 @@ function DashboardCard({ icon, title, description, tooltip }: DashboardFeature) 
 
 export default function DashboardTabs() {
   return (
-    <section id="dashboard" className="w-full bg-primary py-12 px-3 sm:px-8 border-t border-indigo-100">
+    <section id="dashboard" className="w-full bg-white border-t border-indigo-100 py-12 px-3 sm:px-8">
       <h2 className="text-3xl font-bold text-center text-indigo-900 mb-7 animate-fade-in">
         Your MindMate+ Dashboard
       </h2>
