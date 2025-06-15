@@ -23,6 +23,10 @@ import DashboardDoodle from "./DashboardDoodle";
 import DashboardDividerDoodle from "./DashboardDividerDoodle";
 import DashboardFeatureCard from "./DashboardFeatureCard";
 
+// Common card visual style—match Guided Breathing style
+const CARD_CLASS =
+  "group flex flex-col items-start w-full min-h-[104px] p-5 md:p-6 bg-white/70 rounded-xl border border-indigo-100 shadow-sm hover:shadow-md transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 text-left outline-none";
+
 type DashboardFeature = {
   icon: React.ReactNode;
   title: string;
@@ -92,30 +96,42 @@ const bonusFeatures: DashboardFeature[] = [
   },
 ];
 
+// Helper—provide a consistent feature card wrapper to dialog-based triggers
 function DashboardCard({ icon, title, description, tooltip }: DashboardFeature) {
   if (title === "Guided Breathing") {
-    return <GuidedBreathingDialog triggerClassName="w-full h-full" />;
+    return <GuidedBreathingDialog triggerClassName={CARD_CLASS} />;
   }
   if (title === "Motivational Quote") {
-    return <MotivationalQuoteDialog triggerClassName="w-full h-full" />;
+    return <MotivationalQuoteDialog triggerClassName={CARD_CLASS} />;
   }
   if (title === "Journaling Prompt") {
-    return <JournalingPromptDialog triggerClassName="w-full h-full" />;
+    return <JournalingPromptDialog triggerClassName={CARD_CLASS} />;
   }
   if (title === "Focus Music Links") {
-    return <FocusMusicDialog triggerClassName="w-full h-full" />;
+    return <FocusMusicDialog triggerClassName={CARD_CLASS} />;
   }
   if (title === "Study Technique Tips") {
-    return <StudyTipsDialog triggerClassName="w-full h-full" />;
+    return <StudyTipsDialog triggerClassName={CARD_CLASS} />;
   }
   if (title === "Goals Tracker") {
-    return <GoalsTrackerDialog triggerClassName="w-full h-full" />;
+    return <GoalsTrackerDialog triggerClassName={CARD_CLASS} />;
   }
+  if (title === "Screen Time Tracker") {
+    return <ScreenTimeTrackerDialog triggerClassName={CARD_CLASS} />;
+  }
+  if (title === "Break with Me") {
+    return <BreakWithMeDialog triggerClassName={CARD_CLASS} />;
+  }
+  if (title === "AI Flashcards") {
+    return <FlashcardsDialog triggerClassName={CARD_CLASS} />;
+  }
+
+  // fallback: regular (non-dialog) feature with visual card boundary
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <button className="w-full h-full outline-none">
+          <button className={CARD_CLASS}>
             <span className="flex items-center mb-2">{icon}</span>
             <span className="font-semibold text-indigo-900 text-[1.08rem]">{title}</span>
             <span className="text-indigo-900/70 text-sm mt-1">{description}</span>

@@ -10,7 +10,7 @@ type DashboardFeature = {
   children?: React.ReactNode;
 };
 
-// Restored to display clear boundaries for all cards: border, subtle shadow, rounded corners, background, and separation.
+// Visual card boundary—make this the ONLY wrapper style for all DashboardFeatureCard instances
 export default function DashboardFeatureCard({
   icon,
   title,
@@ -18,11 +18,11 @@ export default function DashboardFeatureCard({
   tooltip,
   children,
 }: DashboardFeature) {
+  const cardClass =
+    "group flex flex-col items-start w-full min-h-[104px] p-5 md:p-6 bg-white/70 rounded-xl border border-indigo-100 shadow-sm hover:shadow-md transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 text-left relative outline-none";
+
   const content = (
-    <div
-      className="group flex flex-col items-start w-full min-h-[104px] p-5 md:p-6 bg-white/70 rounded-xl border border-indigo-100 shadow-sm hover:shadow-md transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 text-left relative"
-      tabIndex={0}
-    >
+    <div className={cardClass} tabIndex={0}>
       <span className="flex items-center mb-2">{icon}</span>
       <span className="font-semibold text-indigo-900 text-[1.08rem]">{title}</span>
       <span className="text-indigo-900/70 text-sm mt-1">{description}</span>
