@@ -12,7 +12,6 @@ import StudyPlannerDialog from "@/components/StudyPlannerDialog";
 import PomodoroTimerDialog from "@/components/PomodoroTimerDialog";
 import FlashcardsDialog from "@/components/FlashcardsDialog";
 import GoalsTrackerDialog from "@/components/GoalsTrackerDialog";
-import AIChatbotDialog from "@/components/AIChatbotDialog";
 import BreakWithMeDialog from "@/components/BreakWithMeDialog";
 import FocusMusicDialog from "@/components/FocusMusicDialog";
 import StudyTipsDialog from "@/components/StudyTipsDialog";
@@ -189,7 +188,7 @@ export default function DashboardTabs() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
               <StudyPlannerDialog />
               <PomodoroTimerDialog />
-              <AIChatbotDialog />
+              {/* Removed <AIChatbotDialog /> */}
               <GoalsTrackerDialog />
             </div>
           </TabsContent>
