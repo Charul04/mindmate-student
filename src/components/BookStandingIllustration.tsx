@@ -1,7 +1,7 @@
 
 import React from "react";
 
-// Animation styles for bounce, *stronger* glow, scale, and rocking rotation
+// Animation styles for bounce, *extra-strong* glow, scale, and rocking rotation
 const style = `
 @keyframes hero-bounce {
   0%, 100% { transform: translateY(0);}
@@ -11,15 +11,31 @@ const style = `
 @keyframes hero-glow {
   0%, 100% {
     filter:
-      drop-shadow(0 0 50px #ffe066cc)
-      drop-shadow(0 0 24px #60eaffcc)
-      drop-shadow(0 0 10px #fffbe6aa);
+      drop-shadow(0 0 0px #fffbe6)
+      drop-shadow(0 0 64px #ffe066)
+      drop-shadow(0 0 92px #fff9cf)
+      drop-shadow(0 0 0px #ff278f00);
+  }
+  30% {
+    filter:
+      drop-shadow(0 0 0px #fffbe6)
+      drop-shadow(0 0 96px #ffe066bb)
+      drop-shadow(0 0 180px #fffbe670)
+      drop-shadow(0 0 0px #ff278f00);
   }
   50% {
     filter:
-      drop-shadow(0 0 120px #ff278faa)
-      drop-shadow(0 0 60px #38bdf8cc)
-      drop-shadow(0 0 20px #fffbe6);
+      drop-shadow(0 0 0px #fffbe6)
+      drop-shadow(0 0 140px #ffe066cc)
+      drop-shadow(0 0 220px #fffde899)
+      drop-shadow(0 0 32px #ffb4ec88);
+  }
+  70% {
+    filter:
+      drop-shadow(0 0 0px #fffbe6)
+      drop-shadow(0 0 110px #ffe066b0)
+      drop-shadow(0 0 150px #fffde699)
+      drop-shadow(0 0 0px #ff278f00);
   }
 }
 @keyframes hero-scale {
@@ -38,21 +54,7 @@ export default function BookStandingIllustration() {
   return (
     <div className="flex w-full items-end justify-center select-none relative">
       <style>{style}</style>
-      {/* More intense radiant blue/purple glow in the background */}
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          left: "50%",
-          top: "53%",
-          transform: "translate(-50%, -50%)",
-          zIndex: 0,
-          width: "400px",
-          height: "280px",
-          background: "radial-gradient(circle at 60% 30%, #9ecbffcc 20%, #a5b4fccc 50%, #60a5fad5 82%, transparent 100%)",
-          filter: "blur(30px)",
-          opacity: 1,
-        }}
-      />
+      {/* No colored background glow */}
       {/* Subtle soft shadow under the book */}
       <div
         className="absolute"
@@ -68,7 +70,7 @@ export default function BookStandingIllustration() {
           filter: "blur(6px)",
         }}
       />
-      {/* Book Image: bounce, *brighter glow*, scale, rock */}
+      {/* Book Image: extra intense animated glow effect */}
       <img
         src="/lovable-uploads/0cbd4e41-525c-4065-b38f-2d99e102d63e.png"
         alt="Cheerful cartoon book"
@@ -77,7 +79,7 @@ export default function BookStandingIllustration() {
           maxWidth: "96vw",
           height: "auto",
           animation:
-            "hero-bounce 1.7s cubic-bezier(.62,1.11,.5,1) infinite, hero-glow 2.7s ease-in-out infinite, hero-scale 2.2s ease-in-out infinite, hero-rock 3.6s cubic-bezier(.55,.32,.49,1.13) infinite",
+            "hero-bounce 1.7s cubic-bezier(.62,1.11,.5,1) infinite, hero-glow 2.2s ease-in-out infinite, hero-scale 2.2s ease-in-out infinite, hero-rock 3.6s cubic-bezier(.55,.32,.49,1.13) infinite",
           zIndex: 2,
           position: "relative",
         }}
@@ -86,3 +88,4 @@ export default function BookStandingIllustration() {
     </div>
   );
 }
+
