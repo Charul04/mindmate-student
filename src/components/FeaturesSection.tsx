@@ -1,6 +1,6 @@
 
 import FeatureCard from "@/components/FeatureCard";
-import { Book, Brain, Star, HeartPulse } from "lucide-react";
+import { Book, Brain, Star, HeartPulse, PenLine } from "lucide-react";
 
 const features = [
   {
@@ -12,6 +12,11 @@ const features = [
     icon: Star,
     title: "Progress Insights",
     description: "Visualize learning goals, track time spent, and celebrate wins.",
+  },
+  {
+    icon: PenLine,
+    title: "Journaling Prompt",
+    description: "Reflect daily with guided journaling to boost clarity and emotional awareness.",
   },
 ];
 
