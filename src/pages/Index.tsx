@@ -44,6 +44,12 @@ const mentalHealthFeatures: DashboardFeature[] = [
     description: "Instant boost with inspiration!",
     tooltip: "AI finds a motivational quote for you."
   },
+  {
+    icon: <PenLine className="text-indigo-400" size={28} />,
+    title: "Journaling Prompt",
+    description: "Reflect with a daily writing activity.",
+    tooltip: "Get thoughtful prompts to guide your journaling."
+  },
 ];
 
 const studySupportFeatures: DashboardFeature[] = [
@@ -120,6 +126,14 @@ function DashboardCard({ icon, title, description, tooltip }: DashboardFeature) 
   if (title === "Motivational Quote") {
     return (
       <MotivationalQuoteDialog
+        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+      />
+    );
+  }
+  // Journaling Prompt triggers its dialog as a card
+  if (title === "Journaling Prompt") {
+    return (
+      <JournalingPromptDialog
         triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
       />
     );
