@@ -37,12 +37,12 @@ export default function GoalsTracker() {
   }
 
   return (
-    <div className="flex flex-row bg-white/70 rounded-xl border border-indigo-100 p-3 shadow-sm w-full max-w-2xl min-h-[194px]">
+    <div className="flex flex-row bg-white/70 rounded-xl border border-indigo-100 p-3 shadow-sm w-full max-w-3xl min-h-[240px] md:min-h-[300px]">
       {/* Left: goals form and list */}
-      <div className="flex-1 flex flex-col min-w-[180px] max-w-[260px] mr-4">
+      <div className="flex-1 flex flex-col min-w-[220px] max-w-[340px] mr-6">
         <div className="flex gap-2 items-center mb-2">
-          <ChartLine className="text-green-600" size={20} />
-          <span className="font-semibold text-indigo-900 text-[1rem]">Goals Tracker</span>
+          <ChartLine className="text-green-600" size={22} />
+          <span className="font-semibold text-indigo-900 text-[1.05rem]">Goals Tracker</span>
         </div>
         <div className="flex gap-2 mb-2">
           <input
@@ -65,7 +65,7 @@ export default function GoalsTracker() {
             <Plus size={14} />
           </Button>
         </div>
-        <ul className="space-y-1 mb-2 max-h-20 overflow-auto">
+        <ul className="space-y-1 mb-2 max-h-32 overflow-auto">
           {goals.length === 0 && <li className="text-sm text-sky-700">No goals yet.</li>}
           {goals.map(g => (
             <li key={g.id} className="flex justify-between items-center bg-sky-50 rounded px-2 py-1">
@@ -82,9 +82,9 @@ export default function GoalsTracker() {
         </ul>
         <div className="text-xs text-indigo-700">Set and track your goals for today, this week, month, or year!</div>
       </div>
-      {/* Right: progress chart */}
-      <div className="flex items-center justify-center w-[64%] min-w-[220px]">
-        <div className="w-full h-40 md:h-56 bg-white rounded-lg border border-indigo-100 shadow-sm p-2">
+      {/* Right: progress chart -- flex increases at larger screens */}
+      <div className="flex items-center justify-center w-[68%] min-w-[260px]">
+        <div className="w-full h-52 md:h-72 bg-white rounded-lg border border-indigo-100 shadow-sm p-3">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={progress}>
               <CartesianGrid strokeDasharray="3 3" />

@@ -25,7 +25,7 @@ export default function GoalsTrackerDialog({ triggerClassName }: { triggerClassN
           </span>
         </button>
       </DialogTrigger>
-      <DialogContent className="max-w-lg w-full">
+      <DialogContent className="max-w-2xl w-full"> {/* Increased max width */}
         <DialogHeader>
           <DialogTitle>Goals Tracker</DialogTitle>
           <DialogDescription>
