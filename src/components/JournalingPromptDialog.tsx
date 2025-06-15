@@ -5,6 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { PenLine } from "lucide-react";
 
+type JournalEntry = {
+  id: string;
+  content: string;
+  date: string;
+};
+
 // Example reflective questions for journaling
 const PROMPTS = [
   "What made you smile this week?",
@@ -19,10 +25,27 @@ const PROMPTS = [
 ];
 const SUPPORTIVE_MESSAGE = "There's power in knowing yourself. Keep going.";
 
+// Helpers for localStorage handling
+function getSavedJournals(): JournalEntry[] {
+  try {
+    const data = localStorage.getItem("journals");
+    return data ? JSON.parse(data) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveJournals(journals: JournalEntry[]) {
+  localStorage.setItem("journals", JSON.stringify(journals));
+}
+
 export default function JournalingPromptDialog({ triggerClassName }: { triggerClassName?: string }) {
   const [open, setOpen] = useState(false);
   const [prompt, setPrompt] = useState<string>(PROMPTS[Math.floor(Math.random() * PROMPTS.length)]);
   const [journal, setJournal] = useState<string>("");
+
+  // Journals state in dialog only
+  const [savedJournals, setSavedJournals] = useState<JournalEntry[]>(() => getSavedJournals());
 
   const handleOpenChange = (isOpen: boolean) => {
     setOpen(isOpen);
@@ -32,6 +55,26 @@ export default function JournalingPromptDialog({ triggerClassName }: { triggerCl
       setPrompt(newPrompt);
       setJournal("");
     }
+  };
+
+  const handleSave = () => {
+    if (journal.trim().length > 0) {
+      const newEntry: JournalEntry = {
+        id: `${Date.now()}`,
+        content: journal.trim(),
+        date: new Date().toLocaleString(),
+      };
+      const journals = [newEntry, ...savedJournals];
+      saveJournals(journals);
+      setSavedJournals(journals);
+      setJournal("");
+    }
+  };
+
+  const handleRemove = (id: string) => {
+    const journals = savedJournals.filter(j => j.id !== id);
+    saveJournals(journals);
+    setSavedJournals(journals);
   };
 
   return (
@@ -70,7 +113,45 @@ export default function JournalingPromptDialog({ triggerClassName }: { triggerCl
             rows={6}
             className="resize-vertical"
           />
+          <div className="flex gap-2 justify-end mt-2">
+            <Button
+              variant="secondary"
+              onClick={handleSave}
+              disabled={journal.trim().length === 0}
+            >
+              Save
+            </Button>
+          </div>
           <div className="mt-4 text-sky-600 font-semibold text-sm text-center">{SUPPORTIVE_MESSAGE}</div>
+        </div>
+        {/* Saved journals */}
+        <div>
+          <h3 className="text-base font-semibold text-indigo-900 mb-2">Saved Journals</h3>
+          {savedJournals.length === 0 ? (
+            <div className="text-sky-700 mb-4 text-sm">No saved journals yet.</div>
+          ) : (
+            <div className="space-y-3 mb-2 max-h-56 overflow-auto">
+              {savedJournals.map(entry => (
+                <div key={entry.id} className="relative border border-indigo-100 rounded-lg bg-white shadow-sm px-3 py-2">
+                  <div className="absolute top-2 right-2">
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleRemove(entry.id)}
+                      className="opacity-80"
+                      title="Remove journal"
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                  <div className="whitespace-pre-wrap text-sm text-indigo-900">
+                    {entry.content}
+                  </div>
+                  <div className="text-xs text-sky-700 mt-1">{entry.date}</div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
         <DialogFooter>
           <Button variant="secondary" onClick={() => setOpen(false)}>
@@ -81,4 +162,3 @@ export default function JournalingPromptDialog({ triggerClassName }: { triggerCl
     </Dialog>
   );
 }
-

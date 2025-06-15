@@ -196,7 +196,6 @@ export default function Index() {
           <a href="#dashboard" className="text-indigo-700 font-medium hover:text-indigo-900 transition story-link">Dashboard</a>
           <a href="#features" className="text-indigo-700 font-medium hover:text-indigo-900 transition story-link">Features</a>
           <a href="#testimonial" className="text-indigo-700 font-medium hover:text-indigo-900 transition story-link">Testimonials</a>
-          <a href="/journal" className="text-indigo-700 font-medium hover:text-indigo-900 transition story-link">My Journal</a>
           <a href="#" className="ml-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold shadow hover-scale transition">Get Started</a>
         </nav>
       </header>
