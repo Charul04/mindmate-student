@@ -43,12 +43,6 @@ const mentalHealthFeatures: DashboardFeature[] = [
     tooltip: "AI finds a motivational quote for you."
   },
   {
-    icon: <MessageSquare className="text-rose-500" size={28} />,
-    title: 'I\'m Feeling...',
-    description: "Get quick tips for feelings like 'anxious', 'tired', etc.",
-    tooltip: "Click for targeted wellness advice."
-  },
-  {
     icon: <PenLine className="text-indigo-400" size={28} />,
     title: "Journaling Prompt",
     description: "Reflect with a daily writing activity.",
