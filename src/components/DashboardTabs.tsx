@@ -4,16 +4,18 @@ import {
   TabsTrigger,
   TabsContent,
 } from "@/components/ui/tabs";
+import MoodCheckinDialog from "@/components/MoodCheckinDialog";
 import GuidedBreathingDialog from "@/components/GuidedBreathingDialog";
 import MotivationalQuoteDialog from "@/components/MotivationalQuoteDialog";
 import JournalingPromptDialog from "@/components/JournalingPromptDialog";
 import StudyPlannerDialog from "@/components/StudyPlannerDialog";
 import PomodoroTimerDialog from "@/components/PomodoroTimerDialog";
+import FlashcardsDialog from "@/components/FlashcardsDialog";
 import GoalsTrackerDialog from "@/components/GoalsTrackerDialog";
 import BreakWithMeDialog from "@/components/BreakWithMeDialog";
 import FocusMusicDialog from "@/components/FocusMusicDialog";
 import StudyTipsDialog from "@/components/StudyTipsDialog";
-import FlashcardsDialog from "@/components/FlashcardsDialog";
+import VoiceAiCompanionDialog from "@/components/VoiceAiCompanionDialog";
 import ScreenTimeTrackerDialog from "@/components/ScreenTimeTrackerDialog";
 import { Smile, Wind, Quote, PenLine, CalendarDays, Clock, Book, ChartLine, Music, Lightbulb, ChevronRight } from "lucide-react";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
@@ -27,6 +29,12 @@ type DashboardFeature = {
 };
 
 const mentalHealthFeatures: DashboardFeature[] = [
+  {
+    icon: <Smile className="text-sky-600" size={28} />,
+    title: "Mood Check-In",
+    description: "Select your mood to get tailored advice.",
+    tooltip: "Track your mood & get helpful support."
+  },
   {
     icon: <Wind className="text-indigo-600" size={28} />,
     title: "Guided Breathing",
@@ -61,6 +69,12 @@ const studySupportFeatures: DashboardFeature[] = [
     tooltip: "Boost focus with timers and sessions."
   },
   {
+    icon: <Book className="text-indigo-700" size={28} />,
+    title: "AI Study Assistant",
+    description: "Get personalized support, notes, and answers—instantly, 24/7.",
+    tooltip: "Type your study question for instant help."
+  },
+  {
     icon: <ChartLine className="text-green-600" size={28} />,
     title: "Goals Tracker",
     description: "Track goals for day, week, month, year. Remove & view progress.",
@@ -69,6 +83,11 @@ const studySupportFeatures: DashboardFeature[] = [
 ];
 
 const bonusFeatures: DashboardFeature[] = [
+  {
+    icon: <Smile className="text-pink-500" size={28} />,
+    title: "Break with Me",
+    description: "Fun facts, jokes, and mindful breaks."
+  },
   {
     icon: <Music className="text-blue-600" size={28} />,
     title: "Focus Music Links",
@@ -81,14 +100,15 @@ const bonusFeatures: DashboardFeature[] = [
     tooltip: "Get smarter with proven techniques."
   },
   {
-    icon: <ChartLine className="text-green-600" size={28} />,
-    title: "Goals Tracker",
-    description: "Track your study goals.",
-    tooltip: "Track progress and set new goals."
-  },
+    icon: <Book className="text-indigo-700" size={28} />,
+    title: "AI Flashcards",
+    description: "AI generates flashcards per your subject with save/remove.",
+    tooltip: "Type your subject/topic for instant cards."
+  }
 ];
 
 function DashboardCard({ icon, title, description, tooltip }: DashboardFeature) {
+  // Keep dialog triggers for specific features
   if (title === "Guided Breathing") {
     return (
       <GuidedBreathingDialog
@@ -106,27 +126,6 @@ function DashboardCard({ icon, title, description, tooltip }: DashboardFeature) 
   if (title === "Journaling Prompt") {
     return (
       <JournalingPromptDialog
-        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
-      />
-    );
-  }
-  if (title === "Focus Music Links") {
-    return (
-      <FocusMusicDialog
-        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
-      />
-    );
-  }
-  if (title === "Study Technique Tips") {
-    return (
-      <StudyTipsDialog
-        triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
-      />
-    );
-  }
-  if (title === "Goals Tracker") {
-    return (
-      <GoalsTrackerDialog
         triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
       />
     );
@@ -174,15 +173,16 @@ export default function DashboardTabs() {
           {/* MENTAL HEALTH TAB */}
           <TabsContent value="mental" className="px-6 py-7">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-              <GuidedBreathingDialog
-                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
-              />
-              <MotivationalQuoteDialog
-                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
-              />
-              <JournalingPromptDialog
-                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
-              />
+              {mentalHealthFeatures.map((f) =>
+                f.title === "Mood Check-In" ? (
+                  <MoodCheckinDialog
+                    key={f.title}
+                    triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+                  />
+                ) : (
+                  <DashboardCard key={f.title} {...f} />
+                )
+              )}
             </div>
           </TabsContent>
           {/* STUDY SUPPORT TAB */}
@@ -190,25 +190,29 @@ export default function DashboardTabs() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
               <StudyPlannerDialog />
               <PomodoroTimerDialog />
+              {/* Removed <AIChatbotDialog /> */}
               <GoalsTrackerDialog />
             </div>
           </TabsContent>
           {/* BONUS FEATURES TAB */}
           <TabsContent value="bonus" className="px-6 py-7">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-              <ScreenTimeTrackerDialog
-                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
-              />
               <BreakWithMeDialog
                 triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
               />
               <FocusMusicDialog
                 triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
               />
+              <VoiceAiCompanionDialog
+                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+              />
               <StudyTipsDialog
                 triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
               />
               <FlashcardsDialog
+                triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
+              />
+              <ScreenTimeTrackerDialog
                 triggerClassName="group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left"
               />
             </div>
