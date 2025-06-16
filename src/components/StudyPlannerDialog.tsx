@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import StudyPlanner from "./StudyPlanner";
@@ -24,7 +25,7 @@ export default function StudyPlannerDialog({ triggerClassName }: { triggerClassN
           </span>
         </button>
       </DialogTrigger>
-      <DialogContent className="max-w-lg w-full">
+      <DialogContent className="w-[95vw] max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Daily Study Planner</DialogTitle>
           <DialogDescription>

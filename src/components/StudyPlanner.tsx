@@ -22,39 +22,53 @@ export default function StudyPlanner() {
   }
 
   return (
-    <div className="flex flex-col bg-white/80 rounded-lg border border-indigo-100 p-2 min-h-[80px] shadow-sm w-full max-w-[260px] md:max-w-[230px]" style={{ minWidth: 180 }}>
-      <div className="flex items-center gap-2 mb-1">
-        <CalendarDays className="text-teal-600" size={18} />
-        <span className="font-semibold text-indigo-900 text-base">Daily Study Planner</span>
+    <div className="flex flex-col bg-white/80 rounded-lg border border-indigo-100 p-4 shadow-sm w-full">
+      <div className="flex items-center gap-2 mb-4">
+        <CalendarDays className="text-teal-600" size={20} />
+        <span className="font-semibold text-indigo-900 text-lg">Daily Study Planner</span>
       </div>
-      <div className="flex items-center mb-1 gap-1">
+      
+      <div className="flex flex-col sm:flex-row gap-2 mb-4">
         <input
-          className="border rounded px-2 py-1 flex-1 text-xs"
+          className="border rounded px-3 py-2 flex-1 text-sm"
           value={task}
           onChange={e => setTask(e.target.value)}
           placeholder="Add a study task..."
           onKeyDown={e => e.key === "Enter" ? addTask() : undefined}
         />
-        <Button size="sm" onClick={addTask} title="Add Task">
-          <Plus size={13} />
+        <Button onClick={addTask} className="w-full sm:w-auto" title="Add Task">
+          <Plus size={16} className="mr-1" />
+          Add Task
         </Button>
       </div>
-      <ul className="space-y-1 mb-1 max-h-16 overflow-auto">
-        {todos.length === 0 && <li className="text-xs text-sky-700">No planned tasks yet.</li>}
-        {todos.map(t => (
-          <li key={t.id} className="flex justify-between items-center bg-sky-50 rounded px-2 py-[3px]">
-            <span className="text-xs">{t.task}</span>
-            <Button variant="destructive" size="sm" onClick={() => removeTask(t.id)} className="px-2 py-0 text-xs">Remove</Button>
-          </li>
-        ))}
-      </ul>
-      <Calendar
-        mode="single"
-        selected={calendarDate}
-        onSelect={setCalendarDate}
-        className="p-1 pointer-events-auto mb-1"
-      />
-      <div className="text-[11px] text-indigo-700">Add tasks & optionally pick a study date.</div>
+      
+      <div className="mb-4">
+        <h3 className="font-medium text-indigo-900 mb-2">Your Tasks</h3>
+        <ul className="space-y-2 max-h-32 overflow-auto">
+          {todos.length === 0 && <li className="text-sm text-sky-700">No planned tasks yet.</li>}
+          {todos.map(t => (
+            <li key={t.id} className="flex justify-between items-center bg-sky-50 rounded px-3 py-2">
+              <span className="text-sm flex-1">{t.task}</span>
+              <Button variant="destructive" size="sm" onClick={() => removeTask(t.id)} className="ml-2">
+                Remove
+              </Button>
+            </li>
+          ))}
+        </ul>
+      </div>
+      
+      <div className="flex justify-center">
+        <Calendar
+          mode="single"
+          selected={calendarDate}
+          onSelect={setCalendarDate}
+          className="rounded-md border w-full max-w-sm"
+        />
+      </div>
+      
+      <div className="text-xs text-indigo-700 mt-4 text-center">
+        Add tasks & optionally pick a study date.
+      </div>
     </div>
   );
 }
