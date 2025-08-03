@@ -99,10 +99,6 @@ export default function ThemeAndLanguageSwitcher() {
       {/* Language Button */}
       
       {/* Dark Mode Switch */}
-      <button onClick={() => setIsDark(d => !d)} className={`flex items-center rounded-lg px-3 h-10 border shadow transition 
-          ${isDark ? "bg-slate-900/80 border-slate-700" : "bg-slate-200/90 border-slate-300 hover:bg-slate-100"}
-        `} aria-label="Toggle dark mode">
-        
-      </button>
+      
     </div>;
 }
