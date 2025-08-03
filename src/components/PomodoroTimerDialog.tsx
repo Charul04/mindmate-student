@@ -10,25 +10,27 @@ export default function PomodoroTimerDialog({ triggerClassName }: { triggerClass
       <DialogTrigger asChild>
         <button
           className={`
-            group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm
-            hover:shadow-lg transition-shadow focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left
+            group flex flex-col items-start bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl border border-emerald-200 p-5 md:p-6 shadow-sm
+            hover:shadow-lg transition-all duration-300 focus:ring-2 focus:ring-emerald-200 w-full min-h-[104px] text-left hover:scale-105
             ${triggerClassName ?? ""}
           `}
         >
           <span className="flex items-center mb-2">
-            <Clock className="text-sky-600" size={28} />
-            <span className="font-semibold text-indigo-900 text-[1.08rem] ml-2">Pomodoro Suggestion</span>
+            <div className="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center mr-2">
+              <Clock className="text-emerald-600" size={16} />
+            </div>
+            <span className="font-semibold text-emerald-800 text-[1.08rem]">Forest Focus Timer</span>
           </span>
-          <span className="text-indigo-900/70 text-sm mt-1">
-            AI recommends focus & break cycles. Stopwatch & clock added.
+          <span className="text-emerald-700/80 text-sm mt-1">
+            Plant trees while you study! Track focus sessions with Pomodoro technique.
           </span>
         </button>
       </DialogTrigger>
-      <DialogContent className="max-w-lg w-full">
+      <DialogContent className="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Pomodoro Suggestion</DialogTitle>
-          <DialogDescription>
-            Set custom work and break timers to boost focus with stopwatch and clock functionality.
+          <DialogTitle className="text-emerald-800">Forest Focus Timer 🌱</DialogTitle>
+          <DialogDescription className="text-emerald-600">
+            Use the Pomodoro technique to grow your focus forest. Complete study sessions to plant trees!
           </DialogDescription>
         </DialogHeader>
         <PomodoroTimer />
