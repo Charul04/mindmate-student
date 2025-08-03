@@ -14,7 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      mood_entries: {
+        Row: {
+          created_at: string
+          description: string | null
+          energy_level: number | null
+          entry_date: string
+          id: string
+          mood: string
+          trigger: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          energy_level?: number | null
+          entry_date?: string
+          id?: string
+          mood: string
+          trigger?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          energy_level?: number | null
+          entry_date?: string
+          id?: string
+          mood?: string
+          trigger?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
