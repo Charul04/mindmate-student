@@ -11,7 +11,8 @@ import {
   DialogFooter
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Smile } from "lucide-react";
+import { Smile, Calendar } from "lucide-react";
+import MoodTracker from "./MoodTracker";
 
 const moods = [
   { value: "happy", label: "😊 Happy" },
@@ -59,6 +60,7 @@ const suggestions: Record<string, { acknowledge: string; suggestion: string; enc
 export default function MoodCheckinDialog({ triggerClassName }: { triggerClassName?: string }) {
   const [open, setOpen] = useState(false);
   const [selectedMood, setSelectedMood] = useState<string | null>(null);
+  const [showTracker, setShowTracker] = useState(false);
 
   const handleMoodSelect = (mood: string) => {
     setSelectedMood(mood);
@@ -66,9 +68,16 @@ export default function MoodCheckinDialog({ triggerClassName }: { triggerClassNa
 
   const handleDialogOpenChange = (isOpen: boolean) => {
     if (!isOpen) {
-      setTimeout(() => setSelectedMood(null), 300); // Reset after closing (with animation)
+      setTimeout(() => {
+        setSelectedMood(null);
+        setShowTracker(false);
+      }, 300); // Reset after closing (with animation)
     }
     setOpen(isOpen);
+  };
+
+  const handleOpenTracker = () => {
+    setShowTracker(true);
   };
 
   return (
@@ -93,52 +102,105 @@ export default function MoodCheckinDialog({ triggerClassName }: { triggerClassNa
           </span>
         </button>
       </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>
-            {selectedMood == null ? "How are you feeling right now?" : "Thanks for sharing!"}
-          </DialogTitle>
-          <DialogDescription>
-            {selectedMood == null
-              ? "Choose the mood that best matches how you feel in this moment. No judgment—just support."
-              : suggestions[selectedMood].acknowledge}
-          </DialogDescription>
-        </DialogHeader>
-        <div className="my-6">
-          {selectedMood == null ? (
-            <div className="grid gap-3">
-              {moods.map((m) => (
-                <Button
-                  key={m.value}
-                  type="button"
-                  variant="outline"
-                  size="lg"
-                  className="w-full text-xl flex justify-start gap-3"
-                  onClick={() => handleMoodSelect(m.value)}
-                >
-                  {m.label}
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+        {showTracker ? (
+          <>
+            <DialogHeader>
+              <DialogTitle>Mood Tracker</DialogTitle>
+              <DialogDescription>
+                Track your mood, add details, and view your mood history
+              </DialogDescription>
+            </DialogHeader>
+            <MoodTracker />
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setShowTracker(false)}>
+                Back to Quick Check-in
+              </Button>
+              <DialogClose asChild>
+                <Button type="button" variant="secondary">
+                  Close
                 </Button>
-              ))}
+              </DialogClose>
+            </DialogFooter>
+          </>
+        ) : (
+          <>
+            <DialogHeader>
+              <DialogTitle>
+                {selectedMood == null ? "How are you feeling right now?" : "Thanks for sharing!"}
+              </DialogTitle>
+              <DialogDescription>
+                {selectedMood == null
+                  ? "Choose the mood that best matches how you feel in this moment. No judgment—just support."
+                  : suggestions[selectedMood].acknowledge}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="my-6">
+              {selectedMood == null ? (
+                <div className="space-y-4">
+                  <div className="grid gap-3">
+                    {moods.map((m) => (
+                      <Button
+                        key={m.value}
+                        type="button"
+                        variant="outline"
+                        size="lg"
+                        className="w-full text-xl flex justify-start gap-3"
+                        onClick={() => handleMoodSelect(m.value)}
+                      >
+                        {m.label}
+                      </Button>
+                    ))}
+                  </div>
+                  <div className="pt-4 border-t">
+                    <Button
+                      type="button"
+                      variant="default"
+                      size="lg"
+                      className="w-full flex items-center gap-2"
+                      onClick={handleOpenTracker}
+                    >
+                      <Calendar className="w-5 h-5" />
+                      Advanced Mood Tracking
+                    </Button>
+                    <p className="text-sm text-muted-foreground text-center mt-2">
+                      Track detailed mood entries with descriptions, triggers, and view your mood calendar
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div>
+                    <span className="block font-medium text-indigo-700 mb-1">Suggestion:</span>
+                    <span className="block text-base">{suggestions[selectedMood].suggestion}</span>
+                  </div>
+                  <div>
+                    <span className="block font-semibold text-sky-700">{suggestions[selectedMood].encouragement}</span>
+                  </div>
+                  <div className="pt-4 border-t">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="lg"
+                      className="w-full flex items-center gap-2"
+                      onClick={handleOpenTracker}
+                    >
+                      <Calendar className="w-5 h-5" />
+                      Track This Mood in Detail
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="space-y-4">
-              <div>
-                <span className="block font-medium text-indigo-700 mb-1">Suggestion:</span>
-                <span className="block text-base">{suggestions[selectedMood].suggestion}</span>
-              </div>
-              <div>
-                <span className="block font-semibold text-sky-700">{suggestions[selectedMood].encouragement}</span>
-              </div>
-            </div>
-          )}
-        </div>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button type="button" variant="secondary">
-              {selectedMood == null ? "Cancel" : "Close"}
-            </Button>
-          </DialogClose>
-        </DialogFooter>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button type="button" variant="secondary">
+                  {selectedMood == null ? "Cancel" : "Close"}
+                </Button>
+              </DialogClose>
+            </DialogFooter>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );
