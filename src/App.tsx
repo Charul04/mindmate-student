@@ -8,6 +8,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import JournalPage from "./pages/Journal";
+import Auth from "./pages/Auth";
+import AuthGuard from "./components/AuthGuard";
 import { useTranslation } from "react-i18next";
 import "@/i18n";
 
@@ -90,7 +92,9 @@ const App = () => {
           <Sonner />
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<Index />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/" element={<AuthGuard><Index /></AuthGuard>} />
+              <Route path="/journal" element={<AuthGuard><JournalPage /></AuthGuard>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
