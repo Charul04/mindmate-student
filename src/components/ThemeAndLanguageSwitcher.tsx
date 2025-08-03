@@ -102,7 +102,7 @@ export default function ThemeAndLanguageSwitcher() {
       <button onClick={() => setIsDark(d => !d)} className={`flex items-center rounded-lg px-3 h-10 border shadow transition 
           ${isDark ? "bg-slate-900/80 border-slate-700" : "bg-slate-200/90 border-slate-300 hover:bg-slate-100"}
         `} aria-label="Toggle dark mode">
-        <Moon size={20} className={`${isDark ? "text-yellow-200" : "text-indigo-700"}`} />
+        
       </button>
     </div>;
 }
