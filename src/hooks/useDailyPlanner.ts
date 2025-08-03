@@ -64,7 +64,7 @@ export function useDailyPlanner() {
 
       if (error) throw error;
 
-      setTasks(prev => [data, ...prev]);
+      setTasks(prev => [data as DailyTask, ...prev]);
       toast({
         title: "Success",
         description: "Task added successfully",
@@ -92,7 +92,7 @@ export function useDailyPlanner() {
 
       if (error) throw error;
 
-      setTasks(prev => prev.map(task => task.id === id ? data : task));
+      setTasks(prev => prev.map(task => task.id === id ? data as DailyTask : task));
       return true;
     } catch (error) {
       console.error('Error updating task:', error);

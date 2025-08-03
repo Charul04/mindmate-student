@@ -65,7 +65,7 @@ export function useGoals() {
 
       if (error) throw error;
 
-      setGoals(prev => [data, ...prev]);
+      setGoals(prev => [data as Goal, ...prev]);
       toast({
         title: "Success",
         description: "Goal added successfully",
@@ -93,7 +93,7 @@ export function useGoals() {
 
       if (error) throw error;
 
-      setGoals(prev => prev.map(goal => goal.id === id ? data : goal));
+      setGoals(prev => prev.map(goal => goal.id === id ? data as Goal : goal));
       toast({
         title: "Success",
         description: "Goal updated successfully",

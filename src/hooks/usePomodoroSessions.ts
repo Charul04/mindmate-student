@@ -62,7 +62,7 @@ export function usePomodoroSessions() {
 
       if (error) throw error;
 
-      setSessions(prev => [data, ...prev]);
+      setSessions(prev => [data as PomodoroSession, ...prev]);
       return true;
     } catch (error) {
       console.error('Error saving pomodoro session:', error);
