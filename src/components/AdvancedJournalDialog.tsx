@@ -91,16 +91,16 @@ export default function AdvancedJournalDialog({ triggerClassName }: Props) {
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="ghost" className={triggerClassName}>
-          <div className="flex items-center gap-3 w-full">
-            <div className="flex-shrink-0 w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
-              <BookOpen className="h-4 w-4 text-indigo-600" />
+          <div className="flex items-start gap-4 w-full">
+            <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center mt-1">
+              <BookOpen className="h-5 w-5 text-white" />
             </div>
             <div className="flex-1 text-left">
-              <h3 className="font-medium text-indigo-900 group-hover:text-indigo-700 transition-colors">
-                Advanced Journal
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Journaling Prompt
               </h3>
-              <p className="text-sm text-indigo-600 mt-1">
-                Write, save & track your thoughts
+              <p className="text-gray-600 text-sm leading-relaxed">
+                Reflect daily with guided journaling to boost clarity and emotional awareness.
               </p>
             </div>
           </div>
@@ -108,9 +108,11 @@ export default function AdvancedJournalDialog({ triggerClassName }: Props) {
       </DialogTrigger>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <BookOpen className="h-5 w-5 text-indigo-600" />
-            Advanced Journal
+          <DialogTitle className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center">
+              <BookOpen className="h-4 w-4 text-white" />
+            </div>
+            Journaling Prompt
           </DialogTitle>
         </DialogHeader>
 
