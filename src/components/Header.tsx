@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { LogOut, User } from "lucide-react";
+import { LogOut, User, BookOpen } from "lucide-react";
 import AppLogo from "./AppLogo";
 import ThemeAndLanguageSwitcher from "./ThemeAndLanguageSwitcher";
 import { useAuth } from "@/hooks/useAuth";
@@ -35,7 +35,23 @@ export default function Header() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <AppLogo />
         
-        
+        {user && (
+          <nav className="hidden md:flex items-center gap-6">
+            <Link 
+              to="/" 
+              className="text-indigo-600 hover:text-indigo-700 font-medium transition-colors"
+            >
+              Dashboard
+            </Link>
+            <Link 
+              to="/journal" 
+              className="flex items-center gap-2 text-indigo-600 hover:text-indigo-700 font-medium transition-colors"
+            >
+              <BookOpen className="w-4 h-4" />
+              Journal
+            </Link>
+          </nav>
+        )}
 
         <div className="flex items-center gap-3">
           {user && <div className="flex items-center gap-2">
