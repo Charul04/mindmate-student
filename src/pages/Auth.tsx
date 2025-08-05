@@ -43,15 +43,19 @@ export default function Auth() {
     }
   }, [user, navigate]);
   const onSubmit = async (data: AuthFormData) => {
+    console.log('Auth form submitted', { activeTab, email: data.email });
     setIsLoading(true);
     setError(null);
     setSuccess(null);
     try {
       if (activeTab === 'signin') {
+        console.log('Attempting sign in...');
         const {
           error
         } = await signIn(data.email, data.password);
+        console.log('Sign in result:', { error });
         if (error) {
+          console.error('Sign in error:', error);
           if (error.message.includes('Invalid login credentials')) {
             setError('Invalid email or password. Please check your credentials and try again.');
           } else if (error.message.includes('Email not confirmed')) {
@@ -60,6 +64,7 @@ export default function Auth() {
             setError(error.message);
           }
         } else {
+          console.log('Sign in successful, navigating to home');
           navigate('/');
         }
       } else {
