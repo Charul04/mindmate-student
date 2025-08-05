@@ -131,21 +131,33 @@ export default function Auth() {
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" placeholder="Enter your email" {...register('email', {
-                    required: 'Email is required',
-                    pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: 'Invalid email address'
-                    }
-                  })} className={errors.email ? 'border-red-500' : ''} />
+                    <Input 
+                      id="email" 
+                      type="email" 
+                      placeholder="Enter your email" 
+                      {...register('email', {
+                        required: 'Email is required',
+                        pattern: {
+                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                          message: 'Invalid email address'
+                        }
+                      })} 
+                      className={errors.email ? 'border-red-500' : ''} 
+                    />
                     {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="password">Password</Label>
-                    <Input id="password" type="password" placeholder="Enter your password" {...register('password', {
-                    required: 'Password is required'
-                  })} className={errors.password ? 'border-red-500' : ''} />
+                    <Input 
+                      id="password" 
+                      type="password" 
+                      placeholder="Enter your password" 
+                      {...register('password', {
+                        required: 'Password is required'
+                      })} 
+                      className={errors.password ? 'border-red-500' : ''} 
+                    />
                     {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
                   </div>
 
@@ -153,12 +165,19 @@ export default function Auth() {
                     type="submit" 
                     className="w-full" 
                     disabled={isLoading}
-                    onClick={() => console.log('Sign in button clicked')}
+                    onClick={(e) => {
+                      console.log('Button clicked!', { errors, isLoading });
+                      console.log('Form data:', { email: watch('email'), password: watch('password') });
+                    }}
                   >
-                    {isLoading ? <>
+                    {isLoading ? (
+                      <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Signing In...
-                      </> : 'Sign In'}
+                      </>
+                    ) : (
+                      'Sign In'
+                    )}
                   </Button>
                 </form>
               </TabsContent>
