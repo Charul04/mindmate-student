@@ -92,14 +92,14 @@ export default function AdvancedJournalDialog({ triggerClassName }: Props) {
       <DialogTrigger asChild>
         <Button variant="ghost" className={triggerClassName}>
           <div className="flex items-start gap-4 w-full">
-            <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center mt-1">
-              <BookOpen className="h-5 w-5 text-white" />
+            <div className="flex-shrink-0 w-12 h-12 bg-purple-600 rounded-2xl flex items-center justify-center">
+              <BookOpen className="h-6 w-6 text-white" />
             </div>
             <div className="flex-1 text-left">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">
                 Journaling Prompt
               </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
+              <p className="text-gray-500 text-sm leading-relaxed">
                 Reflect daily with guided journaling to boost clarity and emotional awareness.
               </p>
             </div>
