@@ -1,40 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Brain, ArrowLeft } from 'lucide-react';
+import { Loader2, Brain } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import { Link } from 'react-router-dom';
-interface AuthFormData {
-  email: string;
-  password: string;
-  confirmPassword?: string;
-}
+import { useToast } from '@/hooks/use-toast';
+
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('signin');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  
   const navigate = useNavigate();
-  const {
-    user,
-    signIn,
-    signUp
-  } = useAuth();
-  const {
-    register,
-    handleSubmit,
-    formState: {
-      errors
-    },
-    watch,
-    reset
-  } = useForm<AuthFormData>();
+  const { user, signIn, signUp } = useAuth();
+  const { toast } = useToast();
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -42,60 +28,104 @@ export default function Auth() {
       navigate('/');
     }
   }, [user, navigate]);
-  const onSubmit = async (data: AuthFormData) => {
-    console.log('Auth form submitted', { activeTab, email: data.email });
+
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Sign in attempted', { email });
+    
+    if (!email || !password) {
+      setError('Please fill in all fields');
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
-    setSuccess(null);
+
     try {
-      if (activeTab === 'signin') {
-        console.log('Attempting sign in...');
-        const {
-          error
-        } = await signIn(data.email, data.password);
-        console.log('Sign in result:', { error });
-        if (error) {
-          console.error('Sign in error:', error);
-          if (error.message.includes('Invalid login credentials')) {
-            setError('Invalid email or password. Please check your credentials and try again.');
-          } else if (error.message.includes('Email not confirmed')) {
-            setError('Please check your email and click the confirmation link before signing in.');
-          } else {
-            setError(error.message);
-          }
-        } else {
-          console.log('Sign in successful, navigating to home');
-          navigate('/');
-        }
+      const { error } = await signIn(email, password);
+      
+      if (error) {
+        console.error('Sign in error:', error);
+        setError(error.message);
+        toast({
+          title: "Sign In Failed",
+          description: error.message,
+          variant: "destructive",
+        });
       } else {
-        const {
-          error
-        } = await signUp(data.email, data.password);
-        if (error) {
-          if (error.message.includes('User already registered')) {
-            setError('An account with this email already exists. Please sign in instead.');
-          } else if (error.message.includes('Password should be at least')) {
-            setError('Password should be at least 6 characters long.');
-          } else {
-            setError(error.message);
-          }
-        } else {
-          setSuccess('Account created successfully! Please check your email for a confirmation link.');
-          reset();
-        }
+        console.log('Sign in successful');
+        toast({
+          title: "Welcome back!",
+          description: "You have successfully signed in.",
+        });
+        navigate('/');
       }
     } catch (err) {
-      setError('An unexpected error occurred. Please try again.');
+      console.error('Unexpected error:', err);
+      setError('An unexpected error occurred');
     } finally {
       setIsLoading(false);
     }
   };
-  const password = watch('password');
-  return <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50 flex items-center justify-center p-4">
+
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Sign up attempted', { email });
+    
+    if (!email || !password || !confirmPassword) {
+      setError('Please fill in all fields');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long');
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const { error } = await signUp(email, password);
+      
+      if (error) {
+        console.error('Sign up error:', error);
+        setError(error.message);
+        toast({
+          title: "Sign Up Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        console.log('Sign up successful');
+        toast({
+          title: "Account Created!",
+          description: "Please check your email for a confirmation link.",
+        });
+        // Clear form
+        setEmail('');
+        setPassword('');
+        setConfirmPassword('');
+        setActiveTab('signin');
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      setError('An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-6">
         {/* Header */}
         <div className="text-center space-y-4">
-          
           <div className="flex items-center justify-center gap-2">
             <Brain className="w-8 h-8 text-indigo-600" />
             <h1 className="text-2xl font-bold text-gray-900">MindMate</h1>
@@ -119,57 +149,39 @@ export default function Auth() {
                 <TabsTrigger value="signup">Sign Up</TabsTrigger>
               </TabsList>
 
-              {error && <Alert className="mb-4 border-red-200 bg-red-50">
+              {error && (
+                <Alert className="mb-4 border-red-200 bg-red-50">
                   <AlertDescription className="text-red-700">{error}</AlertDescription>
-                </Alert>}
-
-              {success && <Alert className="mb-4 border-green-200 bg-green-50">
-                  <AlertDescription className="text-green-700">{success}</AlertDescription>
-                </Alert>}
+                </Alert>
+              )}
 
               <TabsContent value="signin">
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <form onSubmit={handleSignIn} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input 
-                      id="email" 
-                      type="email" 
-                      placeholder="Enter your email" 
-                      {...register('email', {
-                        required: 'Email is required',
-                        pattern: {
-                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                          message: 'Invalid email address'
-                        }
-                      })} 
-                      className={errors.email ? 'border-red-500' : ''} 
+                    <Label htmlFor="signin-email">Email</Label>
+                    <Input
+                      id="signin-email"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
                     />
-                    {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
-                    <Input 
-                      id="password" 
-                      type="password" 
-                      placeholder="Enter your password" 
-                      {...register('password', {
-                        required: 'Password is required'
-                      })} 
-                      className={errors.password ? 'border-red-500' : ''} 
+                    <Label htmlFor="signin-password">Password</Label>
+                    <Input
+                      id="signin-password"
+                      type="password"
+                      placeholder="Enter your password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
                     />
-                    {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
                   </div>
 
-                  <Button 
-                    type="submit" 
-                    className="w-full" 
-                    disabled={isLoading}
-                    onClick={(e) => {
-                      console.log('Button clicked!', { errors, isLoading });
-                      console.log('Form data:', { email: watch('email'), password: watch('password') });
-                    }}
-                  >
+                  <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -183,45 +195,53 @@ export default function Auth() {
               </TabsContent>
 
               <TabsContent value="signup">
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <form onSubmit={handleSignUp} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="signup-email">Email</Label>
-                    <Input id="signup-email" type="email" placeholder="Enter your email" {...register('email', {
-                    required: 'Email is required',
-                    pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: 'Invalid email address'
-                    }
-                  })} className={errors.email ? 'border-red-500' : ''} />
-                    {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
+                    <Input
+                      id="signup-email"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="signup-password">Password</Label>
-                    <Input id="signup-password" type="password" placeholder="Create a password" {...register('password', {
-                    required: 'Password is required',
-                    minLength: {
-                      value: 6,
-                      message: 'Password must be at least 6 characters'
-                    }
-                  })} className={errors.password ? 'border-red-500' : ''} />
-                    {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
+                    <Input
+                      id="signup-password"
+                      type="password"
+                      placeholder="Create a password (min 6 characters)"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      minLength={6}
+                    />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="confirm-password">Confirm Password</Label>
-                    <Input id="confirm-password" type="password" placeholder="Confirm your password" {...register('confirmPassword', {
-                    required: 'Please confirm your password',
-                    validate: value => value === password || 'Passwords do not match'
-                  })} className={errors.confirmPassword ? 'border-red-500' : ''} />
-                    {errors.confirmPassword && <p className="text-sm text-red-500">{errors.confirmPassword.message}</p>}
+                    <Label htmlFor="signup-confirm">Confirm Password</Label>
+                    <Input
+                      id="signup-confirm"
+                      type="password"
+                      placeholder="Confirm your password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      required
+                    />
                   </div>
 
                   <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? <>
+                    {isLoading ? (
+                      <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Creating Account...
-                      </> : 'Create Account'}
+                      </>
+                    ) : (
+                      'Create Account'
+                    )}
                   </Button>
                 </form>
               </TabsContent>
@@ -234,5 +254,6 @@ export default function Auth() {
           By continuing, you agree to our terms of service and privacy policy.
         </p>
       </div>
-    </div>;
+    </div>
+  );
 }
