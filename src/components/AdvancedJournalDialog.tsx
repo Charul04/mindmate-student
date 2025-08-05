@@ -90,21 +90,24 @@ export default function AdvancedJournalDialog({ triggerClassName }: Props) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost" className={triggerClassName}>
-          <div className="flex items-start gap-4 w-full">
-            <div className="flex-shrink-0 w-12 h-12 bg-purple-600 rounded-2xl flex items-center justify-center">
-              <BookOpen className="h-6 w-6 text-white" />
-            </div>
-            <div className="flex-1 text-left">
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                Journaling Prompt
-              </h3>
-              <p className="text-gray-500 text-sm leading-relaxed">
-                Reflect daily with guided journaling to boost clarity and emotional awareness.
-              </p>
-            </div>
-          </div>
-        </Button>
+        <button
+          type="button"
+          className={`
+            group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm
+            hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left outline-none
+            ${triggerClassName ?? ""}
+          `}
+          tabIndex={0}
+          aria-label="Start Journaling Prompt"
+        >
+          <span className="flex items-center mb-2">
+            <BookOpen className="text-purple-600 mr-2" size={28} />
+            <span className="font-semibold text-indigo-900 text-[1.08rem]">Journaling Prompt</span>
+          </span>
+          <span className="text-indigo-900/70 text-sm mt-1">
+            Reflect daily with guided journaling to boost clarity and emotional awareness.
+          </span>
+        </button>
       </DialogTrigger>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
