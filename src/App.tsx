@@ -36,18 +36,18 @@ const App = () => {
   );
   const [i18nReady, setI18nReady] = useState(false);
 
-  // Initialize i18n and wait for it to be ready
+  // Initialize i18n synchronously
   useEffect(() => {
-    const initI18n = async () => {
-      try {
-        await import("@/i18n");
+    // Import i18n to trigger initialization
+    import("@/i18n").then(() => {
+      // Add a small delay to ensure i18n is fully ready
+      setTimeout(() => {
         setI18nReady(true);
-      } catch (error) {
-        console.error("Failed to initialize i18n:", error);
-        setI18nReady(true); // Still proceed to avoid getting stuck
-      }
-    };
-    initI18n();
+      }, 100);
+    }).catch((error) => {
+      console.error("Failed to initialize i18n:", error);
+      setI18nReady(true); // Still proceed to avoid getting stuck
+    });
   }, []);
 
   // Listen to theme changes and update tailwind class

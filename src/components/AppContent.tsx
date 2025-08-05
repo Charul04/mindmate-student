@@ -13,7 +13,7 @@ export default function AppContent() {
   // Update i18n language when needed
   React.useEffect(() => {
     const savedLanguage = localStorage.getItem("language");
-    if (savedLanguage && i18n.language !== savedLanguage) {
+    if (savedLanguage && i18n && i18n.changeLanguage && i18n.language !== savedLanguage) {
       i18n.changeLanguage(savedLanguage);
     }
   }, [i18n]);
