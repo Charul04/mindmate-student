@@ -17,15 +17,21 @@ export function useJournals() {
 
   const fetchJournals = async () => {
     try {
+      console.log('🔍 Fetching journals...');
+      const { data: { user } } = await supabase.auth.getUser();
+      console.log('👤 Current user:', user?.email || 'Not signed in');
+      
       const { data, error } = await supabase
         .from('journals')
         .select('*')
         .order('entry_date', { ascending: false });
 
+      console.log('📊 Journal query result:', { data: data?.length || 0, error });
+      
       if (error) throw error;
       setJournals(data || []);
     } catch (error) {
-      console.error('Error fetching journals:', error);
+      console.error('❌ Error fetching journals:', error);
       toast({
         title: "Error",
         description: "Failed to load journals",
@@ -38,7 +44,9 @@ export function useJournals() {
 
   const saveJournal = async (content: string, entryDate: string) => {
     try {
+      console.log('💾 Saving journal entry...', { content: content.substring(0, 50) + '...', entryDate });
       const { data: { user } } = await supabase.auth.getUser();
+      console.log('👤 User for saving:', user?.email || 'Not signed in');
       
       if (!user) {
         toast({
@@ -59,6 +67,8 @@ export function useJournals() {
         .select()
         .single();
 
+      console.log('💾 Save result:', { data: !!data, error });
+
       if (error) throw error;
 
       setJournals(prev => [data, ...prev]);
@@ -68,7 +78,7 @@ export function useJournals() {
       });
       return true;
     } catch (error) {
-      console.error('Error saving journal:', error);
+      console.error('❌ Error saving journal:', error);
       toast({
         title: "Error",
         description: "Failed to save journal entry",
