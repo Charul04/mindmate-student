@@ -1,12 +1,14 @@
-import React, { useRef, useState, useEffect } from "react";
-import { Clock, Play, Pause, RotateCcw, Sprout, Calendar as CalendarIcon, BarChart3 } from "lucide-react";
+import React, { useRef, useState, useEffect, ReactNode } from "react";
+import { Clock, Play, Pause, RotateCcw, Sprout, Calendar as CalendarIcon, BarChart3, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { usePomodoroSessions } from "@/hooks/usePomodoroSessions";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useFocusSessions } from "@/hooks/useFocusSessions";
 import { useToast } from "@/hooks/use-toast";
 import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, eachDayOfInterval } from "date-fns";
@@ -47,7 +49,7 @@ const PlantVisualization = ({ progress, isRunning }: { progress: number; isRunni
           cy="100"
           r="85"
           fill="none"
-          stroke="#10b981"
+          stroke="#6366f1"
           strokeWidth="6"
           strokeDasharray={`${(progress / 100) * 534.07} 534.07`}
           strokeLinecap="round"
@@ -121,7 +123,7 @@ const PlantVisualization = ({ progress, isRunning }: { progress: number; isRunni
       
       {/* Growth stage indicator */}
       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-        <Badge variant="secondary" className="bg-emerald-100 text-emerald-800">
+        <Badge variant="secondary" className="bg-indigo-100 text-indigo-800">
           {stage === "seed" && "🌱 Seed"}
           {stage === "sprout" && "🌿 Sprout"}
           {stage === "sapling" && "🌳 Sapling"}
@@ -133,6 +135,8 @@ const PlantVisualization = ({ progress, isRunning }: { progress: number; isRunni
 };
 
 export default function FocusTimer() {
+  const [focusMinutes, setFocusMinutes] = useState(25);
+  const [breakMinutes, setBreakMinutes] = useState(5);
   const [timer, setTimer] = useState(1500); // 25 minutes
   const [initialTime, setInitialTime] = useState(1500);
   const [isRunning, setIsRunning] = useState(false);
@@ -145,6 +149,15 @@ export default function FocusTimer() {
 
   // Calculate progress percentage
   const progressPercentage = ((initialTime - timer) / initialTime) * 100;
+
+  // Update timer when settings change
+  useEffect(() => {
+    if (!isRunning) {
+      const newTime = mode === "work" ? focusMinutes * 60 : breakMinutes * 60;
+      setTimer(newTime);
+      setInitialTime(newTime);
+    }
+  }, [focusMinutes, breakMinutes, mode, isRunning]);
 
   function start() {
     if (isRunning) return;
@@ -182,15 +195,16 @@ export default function FocusTimer() {
 
   function reset() {
     pause();
-    setTimer(mode === "work" ? 1500 : 300);
-    setInitialTime(mode === "work" ? 1500 : 300);
+    const newTime = mode === "work" ? focusMinutes * 60 : breakMinutes * 60;
+    setTimer(newTime);
+    setInitialTime(newTime);
     setSessionStartTime(null);
   }
 
   function switchMode(newMode: "work" | "break") {
     pause();
     setMode(newMode);
-    const newTime = newMode === "work" ? 1500 : 300;
+    const newTime = newMode === "work" ? focusMinutes * 60 : breakMinutes * 60;
     setTimer(newTime);
     setInitialTime(newTime);
     setSessionStartTime(null);
@@ -214,7 +228,7 @@ export default function FocusTimer() {
       // Auto-switch mode after completion
       const nextMode = mode === "work" ? "break" : "work";
       setMode(nextMode);
-      const newTime = nextMode === "work" ? 1500 : 300;
+      const newTime = nextMode === "work" ? focusMinutes * 60 : breakMinutes * 60;
       setTimer(newTime);
       setInitialTime(newTime);
       setSessionStartTime(null);
@@ -277,13 +291,54 @@ export default function FocusTimer() {
         </TabsList>
 
         <TabsContent value="timer" className="space-y-6">
-          <div className="flex flex-col items-center p-6 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl border border-emerald-200 shadow-lg min-h-[600px] w-full max-w-md mx-auto">
-            {/* Header */}
-            <div className="flex items-center gap-2 mb-4">
-              <Sprout className="text-emerald-600" size={24} />
-              <h3 className="font-semibold text-emerald-800 text-lg">
-                {mode === "work" ? "Start planting today!" : "Take a rest!"}
-              </h3>
+          <div className="flex flex-col items-center p-6 bg-gradient-to-br from-indigo-50 to-sky-50 rounded-2xl border border-indigo-200 shadow-lg min-h-[600px] w-full max-w-md mx-auto">
+            {/* Header with Settings */}
+            <div className="flex items-center justify-between w-full mb-4">
+              <div className="flex items-center gap-2">
+                <Sprout className="text-indigo-600" size={24} />
+                <h3 className="font-semibold text-indigo-800 text-lg">
+                  {mode === "work" ? "Start planting today!" : "Take a rest!"}
+                </h3>
+              </div>
+              
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="ghost" size="sm" className="text-indigo-600 hover:bg-indigo-100">
+                    <Settings className="w-4 h-4" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-sm">
+                  <DialogHeader>
+                    <DialogTitle>Timer Settings</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="focus-time">Focus Time (minutes)</Label>
+                      <Input
+                        id="focus-time"
+                        type="number"
+                        min="1"
+                        max="120"
+                        value={focusMinutes}
+                        onChange={(e) => setFocusMinutes(parseInt(e.target.value) || 25)}
+                        disabled={isRunning}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="break-time">Break Time (minutes)</Label>
+                      <Input
+                        id="break-time"
+                        type="number"
+                        min="1"
+                        max="30"
+                        value={breakMinutes}
+                        onChange={(e) => setBreakMinutes(parseInt(e.target.value) || 5)}
+                        disabled={isRunning}
+                      />
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
 
             {/* Mode Switcher */}
@@ -291,20 +346,20 @@ export default function FocusTimer() {
               <Button
                 variant={mode === "work" ? "default" : "outline"}
                 onClick={() => switchMode("work")}
-                className={mode === "work" ? "bg-emerald-600 hover:bg-emerald-700" : "border-emerald-300 text-emerald-700 hover:bg-emerald-50"}
+                className={mode === "work" ? "bg-indigo-600 hover:bg-indigo-700" : "border-indigo-300 text-indigo-700 hover:bg-indigo-50"}
                 disabled={isRunning}
               >
                 <Sprout className="w-4 h-4 mr-1" />
-                Study
+                Study ({focusMinutes}m)
               </Button>
               <Button
                 variant={mode === "break" ? "default" : "outline"}
                 onClick={() => switchMode("break")}
-                className={mode === "break" ? "bg-emerald-600 hover:bg-emerald-700" : "border-emerald-300 text-emerald-700 hover:bg-emerald-50"}
+                className={mode === "break" ? "bg-indigo-600 hover:bg-indigo-700" : "border-indigo-300 text-indigo-700 hover:bg-indigo-50"}
                 disabled={isRunning}
               >
                 <Clock className="w-4 h-4 mr-1" />
-                Break
+                Break ({breakMinutes}m)
               </Button>
             </div>
 
@@ -315,12 +370,12 @@ export default function FocusTimer() {
             <div className="w-full mb-4">
               <Progress 
                 value={progressPercentage} 
-                className="h-3 bg-emerald-100" 
+                className="h-3 bg-indigo-100" 
               />
             </div>
 
             {/* Timer Display */}
-            <div className="text-6xl font-mono text-emerald-800 mb-6 tracking-wide">
+            <div className="text-6xl font-mono text-indigo-800 mb-6 tracking-wide">
               {formatTime(timer)}
             </div>
 
@@ -330,7 +385,7 @@ export default function FocusTimer() {
                 <Button 
                   onClick={start} 
                   size="lg"
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 text-lg font-medium rounded-xl shadow-lg"
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 text-lg font-medium rounded-xl shadow-lg"
                 >
                   <Play className="w-5 h-5 mr-2" />
                   Plant
@@ -340,7 +395,7 @@ export default function FocusTimer() {
                   onClick={pause} 
                   size="lg"
                   variant="outline"
-                  className="border-emerald-600 text-emerald-700 hover:bg-emerald-50 px-8 py-3 text-lg font-medium rounded-xl"
+                  className="border-indigo-600 text-indigo-700 hover:bg-indigo-50 px-8 py-3 text-lg font-medium rounded-xl"
                 >
                   <Pause className="w-5 h-5 mr-2" />
                   Pause
@@ -351,109 +406,74 @@ export default function FocusTimer() {
                 onClick={reset}
                 size="lg"
                 variant="outline"
-                className="border-emerald-300 text-emerald-600 hover:bg-emerald-50 px-6 py-3 rounded-xl"
+                className="border-indigo-300 text-indigo-600 hover:bg-indigo-50 px-6 py-3 rounded-xl"
               >
                 <RotateCcw className="w-5 h-5" />
               </Button>
             </div>
 
             {/* Session Info */}
-            <div className="mt-4 text-center text-emerald-700 text-sm">
+            <div className="mt-4 text-center text-indigo-700 text-sm">
               {mode === "work" 
-                ? "25 min focus session - grow your knowledge tree!" 
-                : "5 min break - let your mind rest and recharge!"
+                ? `${focusMinutes} min focus session - grow your knowledge tree!` 
+                : `${breakMinutes} min break - let your mind rest and recharge!`
               }
             </div>
 
             {/* Today's Progress */}
-            <div className="mt-4 p-3 bg-white/60 rounded-lg border border-emerald-200 w-full">
+            <div className="mt-4 p-3 bg-white/60 rounded-lg border border-indigo-200 w-full">
               <div className="text-center">
-                <p className="text-sm text-emerald-700 font-medium">Today's Focus Time</p>
-                <p className="text-2xl font-bold text-emerald-800">{todayFocusTime} min</p>
+                <p className="text-sm text-indigo-700 font-medium">Today's Focus Time</p>
+                <p className="text-2xl font-bold text-indigo-800">{todayFocusTime} min</p>
               </div>
             </div>
           </div>
         </TabsContent>
 
         <TabsContent value="calendar" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <CalendarIcon className="w-5 h-5 text-emerald-600" />
-                  Focus Calendar
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={(date) => date && setSelectedDate(date)}
-                  modifiers={{
-                    hasSessions: sessions
-                      .filter(s => s.completed && s.session_type === 'work')
-                      .map(s => new Date(s.session_date))
-                  }}
-                  modifiersStyles={{
-                    hasSessions: {
-                      backgroundColor: '#10b981',
-                      color: 'white',
-                      fontWeight: 'bold'
-                    }
-                  }}
-                  className="rounded-md border"
-                />
-                <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
-                  <div className="w-3 h-3 bg-emerald-500 rounded"></div>
-                  <span>Days with completed focus sessions</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>
-                  {format(selectedDate, 'MMMM d, yyyy')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="text-center p-4 bg-emerald-50 rounded-lg">
-                  <p className="text-sm text-emerald-700 font-medium">Focus Time</p>
-                  <p className="text-3xl font-bold text-emerald-800">{selectedDateFocusTime} min</p>
-                </div>
-                
-                {selectedDateSessions.length > 0 ? (
-                  <div className="space-y-2">
-                    <h4 className="font-medium text-gray-900">Sessions</h4>
-                    {selectedDateSessions.map((session, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                        <div className="flex items-center gap-2">
-                          {session.session_type === 'work' ? (
-                            <Sprout className="w-4 h-4 text-emerald-600" />
-                          ) : (
-                            <Clock className="w-4 h-4 text-blue-600" />
-                          )}
-                          <span className="text-sm capitalize">{session.session_type}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm">{session.duration_minutes} min</span>
-                          {session.completed && (
-                            <Badge variant="secondary" className="bg-emerald-100 text-emerald-800">
-                              ✓
-                            </Badge>
-                          )}
-                        </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                {format(selectedDate, 'MMMM d, yyyy')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="text-center p-4 bg-indigo-50 rounded-lg">
+                <p className="text-sm text-indigo-700 font-medium">Focus Time</p>
+                <p className="text-3xl font-bold text-indigo-800">{selectedDateFocusTime} min</p>
+              </div>
+              
+              {selectedDateSessions.length > 0 ? (
+                <div className="space-y-2">
+                  <h4 className="font-medium text-gray-900">Sessions</h4>
+                  {selectedDateSessions.map((session, index) => (
+                    <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <div className="flex items-center gap-2">
+                        {session.session_type === 'work' ? (
+                          <Sprout className="w-4 h-4 text-indigo-600" />
+                        ) : (
+                          <Clock className="w-4 h-4 text-blue-600" />
+                        )}
+                        <span className="text-sm capitalize">{session.session_type}</span>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-center text-muted-foreground py-4">
-                    No sessions recorded for this date
-                  </p>
-                )}
-              </CardContent>
-            </Card>
-          </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm">{session.duration_minutes} min</span>
+                        {session.completed && (
+                          <Badge variant="secondary" className="bg-indigo-100 text-indigo-800">
+                            ✓
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-center text-muted-foreground py-4">
+                  No sessions recorded for this date
+                </p>
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="stats" className="space-y-6">
@@ -465,9 +485,9 @@ export default function FocusTimer() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  <div className="text-center p-4 bg-emerald-50 rounded-lg">
-                    <p className="text-2xl font-bold text-emerald-800">{todayFocusTime}</p>
-                    <p className="text-sm text-emerald-600">minutes focused</p>
+                  <div className="text-center p-4 bg-indigo-50 rounded-lg">
+                    <p className="text-2xl font-bold text-indigo-800">{todayFocusTime}</p>
+                    <p className="text-sm text-indigo-600">minutes focused</p>
                   </div>
                   <div className="text-center p-4 bg-blue-50 rounded-lg">
                     <p className="text-2xl font-bold text-blue-800">
@@ -496,7 +516,7 @@ export default function FocusTimer() {
                       <div className="flex items-center gap-2">
                         <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
                           <div 
-                            className="h-full bg-emerald-500 transition-all duration-300"
+                            className="h-full bg-indigo-500 transition-all duration-300"
                             style={{ width: `${Math.min((day.minutes / 120) * 100, 100)}%` }}
                           />
                         </div>
@@ -543,22 +563,22 @@ export default function FocusTimer() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className={`text-center p-4 rounded-lg border-2 ${todayFocusTime >= 25 ? 'bg-emerald-50 border-emerald-200' : 'bg-gray-50 border-gray-200'}`}>
+                <div className={`text-center p-4 rounded-lg border-2 ${todayFocusTime >= 25 ? 'bg-indigo-50 border-indigo-200' : 'bg-gray-50 border-gray-200'}`}>
                   <div className="text-2xl mb-2">🌱</div>
                   <p className="text-sm font-medium">First Sprout</p>
                   <p className="text-xs text-gray-600">25 min today</p>
                 </div>
-                <div className={`text-center p-4 rounded-lg border-2 ${todayFocusTime >= 60 ? 'bg-emerald-50 border-emerald-200' : 'bg-gray-50 border-gray-200'}`}>
+                <div className={`text-center p-4 rounded-lg border-2 ${todayFocusTime >= 60 ? 'bg-indigo-50 border-indigo-200' : 'bg-gray-50 border-gray-200'}`}>
                   <div className="text-2xl mb-2">🌿</div>
                   <p className="text-sm font-medium">Growing Strong</p>
                   <p className="text-xs text-gray-600">1 hour today</p>
                 </div>
-                <div className={`text-center p-4 rounded-lg border-2 ${totalMonthlyMinutes >= 300 ? 'bg-emerald-50 border-emerald-200' : 'bg-gray-50 border-gray-200'}`}>
+                <div className={`text-center p-4 rounded-lg border-2 ${totalMonthlyMinutes >= 300 ? 'bg-indigo-50 border-indigo-200' : 'bg-gray-50 border-gray-200'}`}>
                   <div className="text-2xl mb-2">🌳</div>
                   <p className="text-sm font-medium">Forest Builder</p>
                   <p className="text-xs text-gray-600">5 hours this month</p>
                 </div>
-                <div className={`text-center p-4 rounded-lg border-2 ${monthSessions.filter(s => s.session_type === 'work').length >= 20 ? 'bg-emerald-50 border-emerald-200' : 'bg-gray-50 border-gray-200'}`}>
+                <div className={`text-center p-4 rounded-lg border-2 ${monthSessions.filter(s => s.session_type === 'work').length >= 20 ? 'bg-indigo-50 border-indigo-200' : 'bg-gray-50 border-gray-200'}`}>
                   <div className="text-2xl mb-2">🏆</div>
                   <p className="text-sm font-medium">Consistency King</p>
                   <p className="text-xs text-gray-600">20 sessions this month</p>
@@ -569,84 +589,38 @@ export default function FocusTimer() {
         </TabsContent>
 
         <TabsContent value="calendar" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <CalendarIcon className="w-5 h-5 text-emerald-600" />
-                  Focus Calendar
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={(date) => date && setSelectedDate(date)}
-                  modifiers={{
-                    hasSessions: sessions
-                      .filter(s => s.completed && s.session_type === 'work')
-                      .map(s => new Date(s.session_date))
-                  }}
-                  modifiersStyles={{
-                    hasSessions: {
-                      backgroundColor: '#10b981',
-                      color: 'white',
-                      fontWeight: 'bold'
-                    }
-                  }}
-                  className="rounded-md border"
-                />
-                <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
-                  <div className="w-3 h-3 bg-emerald-500 rounded"></div>
-                  <span>Days with completed focus sessions</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>
-                  {format(selectedDate, 'MMMM d, yyyy')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="text-center p-4 bg-emerald-50 rounded-lg">
-                  <p className="text-sm text-emerald-700 font-medium">Focus Time</p>
-                  <p className="text-3xl font-bold text-emerald-800">{selectedDateFocusTime} min</p>
-                </div>
-                
-                {selectedDateSessions.length > 0 ? (
-                  <div className="space-y-2">
-                    <h4 className="font-medium text-gray-900">Sessions</h4>
-                    {selectedDateSessions.map((session, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                        <div className="flex items-center gap-2">
-                          {session.session_type === 'work' ? (
-                            <Sprout className="w-4 h-4 text-emerald-600" />
-                          ) : (
-                            <Clock className="w-4 h-4 text-blue-600" />
-                          )}
-                          <span className="text-sm capitalize">{session.session_type}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm">{session.duration_minutes} min</span>
-                          {session.completed && (
-                            <Badge variant="secondary" className="bg-emerald-100 text-emerald-800">
-                              ✓
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-center text-muted-foreground py-4">
-                    No sessions recorded for this date
-                  </p>
-                )}
-              </CardContent>
-            </Card>
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <CalendarIcon className="w-5 h-5 text-indigo-600" />
+                Focus Calendar
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Calendar
+                mode="single"
+                selected={selectedDate}
+                onSelect={(date) => date && setSelectedDate(date)}
+                modifiers={{
+                  hasSessions: sessions
+                    .filter(s => s.completed && s.session_type === 'work')
+                    .map(s => new Date(s.session_date))
+                }}
+                modifiersStyles={{
+                  hasSessions: {
+                    backgroundColor: '#6366f1',
+                    color: 'white',
+                    fontWeight: 'bold'
+                  }
+                }}
+                className="rounded-md border"
+              />
+              <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
+                <div className="w-3 h-3 bg-indigo-500 rounded"></div>
+                <span>Days with completed focus sessions</span>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
