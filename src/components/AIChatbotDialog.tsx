@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { MessageSquare, Send, Bot } from "lucide-react";
+import { MessageSquare, Send, Bot, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type ChatMessage = {
@@ -30,6 +30,14 @@ export default function AIChatbotDialog({ triggerClassName }: { triggerClassName
   const [apiKey, setApiKey] = useState<string>(getStoredAPIKey());
   const [apiKeyInput, setApiKeyInput] = useState("");
   const [error, setError] = useState<string | null>(null);
+
+  const clearChat = () => {
+    setMessages([
+      { sender: "ai", text: "👋 Hey! I'm your AI Study Assistant. Ask me anything—study help, summaries, explanations, ideas, motivation and more!" }
+    ]);
+    setInput("");
+    setError(null);
+  };
 
   // Scroll to bottom on new message or dialog open
   useEffect(() => {
@@ -150,6 +158,15 @@ export default function AIChatbotDialog({ triggerClassName }: { triggerClassName
             <span className="flex items-center gap-2">
               <Bot className="text-indigo-700" size={20} />
               <span className="text-base font-medium">AI Study Assistant</span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearChat}
+                className="ml-auto text-red-500 hover:text-red-700 hover:bg-red-50"
+                title="Clear chat history"
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
             </span>
           </DialogTitle>
           <DialogDescription>
