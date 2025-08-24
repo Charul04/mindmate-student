@@ -24,7 +24,7 @@ export default function ChatbaseChatbotDialog({
           </span>
         </button>
       </DialogTrigger>
-      <DialogContent className="max-w-4xl w-full max-h-[90vh] overflow-hidden mx-[50px] my-[60px] px-[50px] py-[40px]">
+      <DialogContent className="max-w-4xl w-full max-h-[90vh] overflow-hidden mx-0 my-0 px-[50px] py-[40px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <MessageSquare className="w-5 h-5 text-blue-600" />
