@@ -9,7 +9,7 @@ import GuidedBreathingDialog from "@/components/GuidedBreathingDialog";
 import MotivationalQuoteDialog from "@/components/MotivationalQuoteDialog";
 import JournalingPromptDialog from "@/components/JournalingPromptDialog";
 import StudyPlannerDialog from "@/components/StudyPlannerDialog";
-import PomodoroTimerDialog from "@/components/PomodoroTimerDialog";
+import FocusTimerDialog from "@/components/FocusTimerDialog";
 import FlashcardsDialog from "@/components/FlashcardsDialog";
 import GoalsTrackerDialog from "@/components/GoalsTrackerDialog";
 import BreakWithMeDialog from "@/components/BreakWithMeDialog";
