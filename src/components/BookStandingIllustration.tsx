@@ -72,7 +72,7 @@ export default function BookStandingIllustration() {
       />
       {/* Book Image: extra intense animated glow effect */}
       <img
-        src="/lovable-uploads/0cbd4e41-525c-4065-b38f-2d99e102d63e.png"
+        src="/public/lovable-uploads/0cbd4e41-525c-4065-b38f-2d99e102d63e.png"
         alt="Cheerful cartoon book"
         style={{
           width: "240px",

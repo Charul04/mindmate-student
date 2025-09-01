@@ -193,30 +193,23 @@ export default function HabitTracker() {
                       <p className="text-sm text-gray-600 mb-3">{habit.description}</p>
                     )}
                     
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-gray-600">
-                        {todayProgress} / {habit.target_frequency} completed today
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleHabitProgress(habit.id!, new Date(), false)}
-                          disabled={todayProgress === 0}
-                        >
-                          <Minus size={14} />
-                        </Button>
-                        <Button
-                          size="sm"
-                          onClick={() => handleHabitProgress(habit.id!, new Date(), true)}
-                          disabled={todayProgress >= habit.target_frequency}
-                          style={{ backgroundColor: habit.color }}
-                          className="text-white"
-                        >
-                          <Plus size={14} />
-                        </Button>
-                      </div>
-                    </div>
+                     <div className="flex items-center justify-between mb-2">
+                       <span className="text-sm text-gray-600">
+                         {todayProgress} / {habit.target_frequency} completed today
+                       </span>
+                       <div className="flex items-center gap-2">
+                         <input
+                           type="checkbox"
+                           checked={todayProgress >= habit.target_frequency}
+                           onChange={() => {
+                             const newCount = todayProgress >= habit.target_frequency ? 0 : habit.target_frequency;
+                             updateHabitEntry(habit.id!, format(new Date(), 'yyyy-MM-dd'), newCount);
+                           }}
+                           className="h-5 w-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                           style={{ accentColor: habit.color }}
+                         />
+                       </div>
+                     </div>
                     
                     <Progress value={progressPercentage} className="h-2" />
                   </div>
@@ -321,26 +314,18 @@ export default function HabitTracker() {
                             />
                             <span className="font-medium text-sm">{habit.name}</span>
                           </div>
-                          <div className="flex items-center gap-1">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleHabitProgress(habit.id!, selectedDate, false)}
-                              disabled={dayProgress === 0}
-                              className="h-6 w-6 p-0"
-                            >
-                              <Minus size={10} />
-                            </Button>
-                            <Button
-                              size="sm"
-                              onClick={() => handleHabitProgress(habit.id!, selectedDate, true)}
-                              disabled={dayProgress >= habit.target_frequency}
-                              style={{ backgroundColor: habit.color }}
-                              className="text-white h-6 w-6 p-0"
-                            >
-                              <Plus size={10} />
-                            </Button>
-                          </div>
+                           <div className="flex items-center gap-1">
+                             <input
+                               type="checkbox"
+                               checked={dayProgress >= habit.target_frequency}
+                               onChange={() => {
+                                 const newCount = dayProgress >= habit.target_frequency ? 0 : habit.target_frequency;
+                                 updateHabitEntry(habit.id!, format(selectedDate, 'yyyy-MM-dd'), newCount);
+                               }}
+                               className="h-4 w-4 rounded border-gray-300 focus:ring-2"
+                               style={{ accentColor: habit.color }}
+                             />
+                           </div>
                         </div>
                         <div className="text-xs text-gray-600 mb-1">
                           {dayProgress} / {habit.target_frequency} completed

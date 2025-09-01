@@ -48,6 +48,7 @@ export default function AdvancedJournalDialog({
   const {
     journals,
     saveJournal,
+    deleteJournal,
     getJournalsByDate
   } = useJournals();
   const {
@@ -193,12 +194,22 @@ export default function AdvancedJournalDialog({
                   Entries for {format(selectedDate, 'MMMM d, yyyy')}
                 </h3>
                 {selectedDateJournals.length > 0 ? <div className="space-y-3">
-                    {selectedDateJournals.map(journal => <div key={journal.id} className="p-3 bg-gray-50 rounded-lg">
+                    {selectedDateJournals.map(journal => <div key={journal.id} className="p-3 bg-gray-50 rounded-lg border">
+                        <div className="flex items-start justify-between mb-2">
+                          <p className="text-xs text-gray-500">
+                            {format(new Date(journal.created_at), 'h:mm a')}
+                          </p>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => deleteJournal(journal.id)}
+                            className="text-xs px-2 py-1 h-auto"
+                          >
+                            Delete
+                          </Button>
+                        </div>
                         <p className="text-sm text-gray-700 line-clamp-3">
                           {journal.content}
-                        </p>
-                        <p className="text-xs text-gray-500 mt-2">
-                          {format(new Date(journal.created_at), 'h:mm a')}
                         </p>
                       </div>)}
                   </div> : <p className="text-sm text-muted-foreground">
