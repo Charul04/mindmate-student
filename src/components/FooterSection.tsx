@@ -3,6 +3,13 @@ import AppLogo from "@/components/AppLogo";
 import { useTranslation } from "react-i18next";
 import "@/i18n";
 
+// Extend the Window interface to include chatbase
+declare global {
+  interface Window {
+    chatbase?: (action: string) => void;
+  }
+}
+
 export default function FooterSection() {
   const { t } = useTranslation();
   return (
@@ -20,12 +27,16 @@ export default function FooterSection() {
         </span>
       </div>
       <div className="flex gap-5 relative z-10">
-        <a
-          href="mailto:c8556403@gmail.com?subject=MindMate Support Request"
-          className="hover:underline text-indigo-700 transition-colors"
+        <button
+          onClick={() => {
+            if (window.chatbase) {
+              window.chatbase('open');
+            }
+          }}
+          className="hover:underline text-indigo-700 transition-colors bg-transparent border-none cursor-pointer"
         >
           {t("support")}
-        </a>
+        </button>
         <a
           href="https://mail.google.com/mail/?view=cm&to=c8556403@gmail.com&su=MindMate Contact"
           target="_blank"
