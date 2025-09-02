@@ -21,7 +21,7 @@ export default function FooterSection() {
       </div>
       <div className="flex gap-5 relative z-10">
         <a
-          href="#"
+          href="mailto:c8556403@gmail.com?subject=MindMate Support Request"
           className="hover:underline text-indigo-700 transition-colors"
         >
           {t("support")}
