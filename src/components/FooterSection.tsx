@@ -27,7 +27,9 @@ export default function FooterSection() {
           {t("support")}
         </a>
         <a
-          href="mailto:c8556403@gmail.com?subject=MindMate Contact"
+          href="https://mail.google.com/mail/?view=cm&to=c8556403@gmail.com&su=MindMate Contact"
+          target="_blank"
+          rel="noopener noreferrer"
           className="hover:underline text-indigo-700 transition-colors"
         >
           {t("contact")}
