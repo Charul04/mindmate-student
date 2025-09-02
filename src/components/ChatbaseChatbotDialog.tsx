@@ -10,19 +10,7 @@ export default function ChatbaseChatbotDialog({
   const [open, setOpen] = useState(false);
   return <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className={`
-            group flex flex-col items-start bg-white/70 rounded-xl border border-indigo-100 p-5 md:p-6 shadow-sm
-            hover:shadow-lg transition-shadow hover:scale-105 focus:ring-2 focus:ring-sky-200 w-full min-h-[104px] text-left
-            ${triggerClassName ?? ""}
-          `}>
-          <span className="flex items-center mb-2">
-            <MessageSquare className="text-blue-600" size={28} />
-            <span className="font-semibold text-indigo-900 text-[1.08rem] ml-2">MindGuide Chatbot</span>
-          </span>
-          <span className="text-indigo-900/70 text-sm mt-1">
-            Advanced AI chatbot with specialized student support and guidance.
-          </span>
-        </button>
+        
       </DialogTrigger>
       <DialogContent className="max-w-4xl w-full max-h-[90vh] overflow-hidden mx-0 my-0 px-[50px] py-[40px]">
         <DialogHeader>
