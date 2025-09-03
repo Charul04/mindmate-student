@@ -134,30 +134,12 @@ export default function AdvancedJournalDialog({
               </div>}
 
             <div>
-              <h4 className="text-sm font-medium mb-2">Quick Templates</h4>
+              
               <div className="grid grid-cols-2 gap-2">
                 {journalTemplates.map(template => {
-                  const Icon = template.icon;
-                  return (
-                    <Button
-                      key={template.id}
-                      variant="outline"
-                      size="sm"
-                      onClick={() => applyTemplate(template)}
-                      className={`h-auto p-3 text-left ${template.color} ${selectedTemplate === template.id ? 'ring-2 ring-blue-500' : ''}`}
-                    >
-                      <div className="flex items-start gap-2">
-                        <Icon className="h-4 w-4 mt-0.5 text-gray-600" />
-                        <div>
-                          <p className="font-medium text-xs">{template.title}</p>
-                          <p className="text-xs text-gray-600 mt-1 line-clamp-2">
-                            {template.prompt.substring(0, 60)}...
-                          </p>
-                        </div>
-                      </div>
-                    </Button>
-                  );
-                })}
+                const Icon = template.icon;
+                return;
+              })}
               </div>
             </div>
 
@@ -199,12 +181,7 @@ export default function AdvancedJournalDialog({
                           <p className="text-xs text-gray-500">
                             {format(new Date(journal.created_at), 'h:mm a')}
                           </p>
-                          <Button
-                            variant="destructive"
-                            size="sm"
-                            onClick={() => deleteJournal(journal.id)}
-                            className="text-xs px-2 py-1 h-auto"
-                          >
+                          <Button variant="destructive" size="sm" onClick={() => deleteJournal(journal.id)} className="text-xs px-2 py-1 h-auto">
                             Delete
                           </Button>
                         </div>
