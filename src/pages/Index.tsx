@@ -5,10 +5,25 @@ import DashboardTabs from "@/components/DashboardTabs";
 import FeaturesSection from "@/components/FeaturesSection";
 import TestimonialSection from "@/components/TestimonialSection";
 import FooterSection from "@/components/FooterSection";
-import React from "react";
+import ChatbaseChatbotDialog from "@/components/ChatbaseChatbotDialog";
+import React, { useEffect, useState } from "react";
 import "@/i18n";
 
 export default function Index() {
+  const [showChatbot, setShowChatbot] = useState(false);
+
+  useEffect(() => {
+    // Check if user just signed in and should see chatbot
+    const shouldShowChatbot = sessionStorage.getItem('showChatbot');
+    if (shouldShowChatbot === 'true') {
+      sessionStorage.removeItem('showChatbot');
+      // Small delay to ensure component is mounted
+      setTimeout(() => {
+        setShowChatbot(true);
+      }, 1000);
+    }
+  }, []);
+
   // Add overflow-x-hidden to prevent unwanted horizontal scroll in mobile apps
   return (
     <div
@@ -27,6 +42,10 @@ export default function Index() {
         <TestimonialSection />
       </main>
       <FooterSection />
+      <ChatbaseChatbotDialog 
+        triggerClassName="hidden"
+        autoOpen={showChatbot}
+      />
     </div>
   );
 }

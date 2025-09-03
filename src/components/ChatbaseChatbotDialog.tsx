@@ -1,13 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { MessageSquare, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
 export default function ChatbaseChatbotDialog({
-  triggerClassName
+  triggerClassName,
+  autoOpen = false
 }: {
   triggerClassName?: string;
+  autoOpen?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (autoOpen) {
+      setOpen(true);
+    }
+  }, [autoOpen]);
   return <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         
