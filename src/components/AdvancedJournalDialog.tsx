@@ -137,25 +137,9 @@ export default function AdvancedJournalDialog({
               
               <div className="grid grid-cols-2 gap-2">
                 {journalTemplates.map(template => {
-                  const Icon = template.icon;
-                  return (
-                    <Button
-                      key={template.id}
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        setSelectedTemplate(template.id);
-                        setContent(template.prompt + "\n\n");
-                      }}
-                      className={`flex items-center gap-2 h-auto p-3 ${template.color} ${
-                        selectedTemplate === template.id ? 'ring-2 ring-primary' : ''
-                      }`}
-                    >
-                      <Icon className="w-4 h-4" />
-                      <span className="text-xs">{template.title}</span>
-                    </Button>
-                  );
-                })}
+                const Icon = template.icon;
+                return;
+              })}
               </div>
             </div>
 
