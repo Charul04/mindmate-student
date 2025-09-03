@@ -9,6 +9,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Brain } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import TermsPrivacyDialog from '@/components/TermsPrivacyDialog';
 
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
@@ -17,6 +18,8 @@ export default function Auth() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [showTermsDialog, setShowTermsDialog] = useState(false);
+  const [termsDialogTab, setTermsDialogTab] = useState<"terms" | "privacy">("terms");
   
   const navigate = useNavigate();
   const { user, signIn, signUp } = useAuth();
@@ -252,8 +255,36 @@ export default function Auth() {
 
         {/* Footer */}
         <p className="text-center text-sm text-gray-600">
-          By continuing, you agree to our terms of service and privacy policy.
+          By continuing, you agree to our{" "}
+          <button
+            type="button"
+            onClick={() => {
+              setTermsDialogTab("terms");
+              setShowTermsDialog(true);
+            }}
+            className="text-indigo-600 hover:text-indigo-700 underline font-medium"
+          >
+            terms of service
+          </button>
+          {" "}and{" "}
+          <button
+            type="button"
+            onClick={() => {
+              setTermsDialogTab("privacy");
+              setShowTermsDialog(true);
+            }}
+            className="text-indigo-600 hover:text-indigo-700 underline font-medium"
+          >
+            privacy policy
+          </button>
+          .
         </p>
+        
+        <TermsPrivacyDialog
+          isOpen={showTermsDialog}
+          onClose={() => setShowTermsDialog(false)}
+          defaultTab={termsDialogTab}
+        />
       </div>
     </div>
   );
