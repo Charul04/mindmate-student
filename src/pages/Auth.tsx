@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Brain } from 'lucide-react';
+import { Loader2, Brain, Trash2 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import TermsPrivacyDialog from '@/components/TermsPrivacyDialog';
@@ -20,9 +20,12 @@ export default function Auth() {
   const [error, setError] = useState<string | null>(null);
   const [showTermsDialog, setShowTermsDialog] = useState(false);
   const [termsDialogTab, setTermsDialogTab] = useState<"terms" | "privacy">("terms");
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteEmail, setDeleteEmail] = useState('');
+  const [deletePassword, setDeletePassword] = useState('');
   
   const navigate = useNavigate();
-  const { user, signIn, signUp } = useAuth();
+  const { user, signIn, signUp, deleteAccount } = useAuth();
   const { toast } = useToast();
 
   // Redirect if already authenticated
@@ -116,6 +119,43 @@ export default function Auth() {
         setPassword('');
         setConfirmPassword('');
         setActiveTab('signin');
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      setError('An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!deleteEmail || !deletePassword) {
+      setError('Please enter email and password to delete account');
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const { error } = await deleteAccount(deleteEmail, deletePassword);
+      
+      if (error) {
+        console.error('Delete account error:', error);
+        setError(error.message);
+        toast({
+          title: "Account Deletion Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Account Deleted",
+          description: "Your account has been permanently deleted.",
+        });
+        setShowDeleteConfirm(false);
+        setDeleteEmail('');
+        setDeletePassword('');
       }
     } catch (err) {
       console.error('Unexpected error:', err);
@@ -285,6 +325,110 @@ export default function Auth() {
           onClose={() => setShowTermsDialog(false)}
           defaultTab={termsDialogTab}
         />
+
+        {/* Delete Account Section */}
+        <Card className="shadow-lg border-red-200 bg-red-50/50 backdrop-blur-sm">
+          <CardContent className="pt-6">
+            <div className="text-center space-y-3">
+              <div className="flex items-center justify-center gap-2 text-red-600">
+                <Trash2 className="w-5 h-5" />
+                <span className="font-medium">Delete Account</span>
+              </div>
+              <p className="text-sm text-red-700">
+                Need to delete your account? This action is permanent and cannot be undone.
+              </p>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowDeleteConfirm(true)}
+                className="border-red-300 text-red-600 hover:bg-red-50"
+              >
+                Delete Account
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Delete Confirmation Dialog */}
+        {showDeleteConfirm && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+            <Card className="w-full max-w-md">
+              <CardHeader>
+                <CardTitle className="text-red-600 flex items-center gap-2">
+                  <Trash2 className="w-5 h-5" />
+                  Delete Account
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Alert className="border-red-200 bg-red-50">
+                  <AlertDescription className="text-red-700">
+                    <strong>Warning:</strong> This will permanently delete your account and all associated data. This action cannot be undone.
+                  </AlertDescription>
+                </Alert>
+
+                {error && (
+                  <Alert className="border-red-200 bg-red-50">
+                    <AlertDescription className="text-red-700">{error}</AlertDescription>
+                  </Alert>
+                )}
+
+                <div className="space-y-3">
+                  <div>
+                    <Label htmlFor="delete-email">Confirm your email</Label>
+                    <Input
+                      id="delete-email"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={deleteEmail}
+                      onChange={(e) => setDeleteEmail(e.target.value)}
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="delete-password">Confirm your password</Label>
+                    <Input
+                      id="delete-password"
+                      type="password"
+                      placeholder="Enter your password"
+                      value={deletePassword}
+                      onChange={(e) => setDeletePassword(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setShowDeleteConfirm(false);
+                      setDeleteEmail('');
+                      setDeletePassword('');
+                      setError(null);
+                    }}
+                    className="flex-1"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    onClick={handleDeleteAccount}
+                    disabled={isLoading}
+                    className="flex-1"
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Deleting...
+                      </>
+                    ) : (
+                      'Delete Forever'
+                    )}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
     </div>
   );

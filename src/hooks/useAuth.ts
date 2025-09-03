@@ -53,6 +53,48 @@ export function useAuth() {
     return { error };
   };
 
+  const deleteAccount = async (email: string, password: string) => {
+    try {
+      // First sign in to verify credentials
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      
+      if (signInError) {
+        return { error: signInError };
+      }
+
+      // Get the current session to get the access token
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session?.access_token) {
+        return { error: { message: 'No valid session found' } };
+      }
+
+      // Use the REST API to delete the user
+      const response = await fetch(`https://zjkkvqxprinrkietbqda.supabase.co/auth/v1/user`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return { error: { message: errorData.message || 'Failed to delete account' } };
+      }
+
+      // Sign out after successful deletion
+      await supabase.auth.signOut();
+      
+      return { error: null };
+    } catch (error) {
+      return { error: error as any };
+    }
+  };
+
   return {
     user,
     session,
@@ -60,5 +102,6 @@ export function useAuth() {
     signUp,
     signIn,
     signOut,
+    deleteAccount,
   };
 }
