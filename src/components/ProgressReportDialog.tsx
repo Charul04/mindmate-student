@@ -187,7 +187,7 @@ export default function ProgressReportDialog({
           </div> : <Tabs defaultValue="overview" className="w-full">
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="mood">Mood</TabsTrigger>
+              <TabsTrigger value="mood">Mood </TabsTrigger>
               <TabsTrigger value="habits">Habits & Goals</TabsTrigger>
               <TabsTrigger value="focus">Focus & Tasks</TabsTrigger>
             </TabsList>
