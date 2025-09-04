@@ -22,26 +22,6 @@ export default function Index() {
         (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="Sl0q4y9ILFqIdK8szW1Gv";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
       `;
       document.body.appendChild(script);
-      
-      // Add custom CSS to move chatbot to bottom right
-      const style = document.createElement('style');
-      style.innerHTML = `
-        iframe[src*="chatbase.co"] {
-          position: fixed !important;
-          bottom: 20px !important;
-          right: 20px !important;
-          left: auto !important;
-          z-index: 1000 !important;
-        }
-        /* Move the chatbot button to bottom right */
-        .chatbase-chat-button,
-        [data-chatbase-chat-button],
-        div[style*="position: fixed"][style*="bottom"][style*="left"] {
-          left: auto !important;
-          right: 20px !important;
-        }
-      `;
-      document.head.appendChild(style);
     }
   }, [user]);
 
