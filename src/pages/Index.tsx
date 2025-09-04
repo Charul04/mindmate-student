@@ -7,12 +7,23 @@ import TestimonialSection from "@/components/TestimonialSection";
 import FooterSection from "@/components/FooterSection";
 import ChatbaseChatbotDialog from "@/components/ChatbaseChatbotDialog";
 import React, { useEffect, useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import "@/i18n";
 
 export default function Index() {
   const [showChatbot, setShowChatbot] = useState(false);
+  const { user } = useAuth();
 
-  // Removed auto-open chatbot logic
+  // Load chatbot script only for authenticated users
+  useEffect(() => {
+    if (user && !window.chatbase) {
+      const script = document.createElement('script');
+      script.innerHTML = `
+        (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="Sl0q4y9ILFqIdK8szW1Gv";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
+      `;
+      document.body.appendChild(script);
+    }
+  }, [user]);
 
   // Add overflow-x-hidden to prevent unwanted horizontal scroll in mobile apps
   return (
