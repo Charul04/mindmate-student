@@ -12,17 +12,7 @@ import "@/i18n";
 export default function Index() {
   const [showChatbot, setShowChatbot] = useState(false);
 
-  useEffect(() => {
-    // Check if user just signed in and should see chatbot
-    const shouldShowChatbot = sessionStorage.getItem('showChatbot');
-    if (shouldShowChatbot === 'true') {
-      sessionStorage.removeItem('showChatbot');
-      // Small delay to ensure component is mounted
-      setTimeout(() => {
-        setShowChatbot(true);
-      }, 1000);
-    }
-  }, []);
+  // Removed auto-open chatbot logic
 
   // Add overflow-x-hidden to prevent unwanted horizontal scroll in mobile apps
   return (
