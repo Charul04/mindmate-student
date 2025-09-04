@@ -9,12 +9,15 @@ import { useToast } from "@/hooks/use-toast";
 export default function Header() {
   const {
     user,
-    signOut
+    signOut,
+    isSigningOut
   } = useAuth();
   const {
     toast
   } = useToast();
   const handleSignOut = async () => {
+    if (isSigningOut) return; // Prevent multiple clicks
+    
     const {
       error
     } = await signOut();
@@ -48,9 +51,15 @@ export default function Header() {
                   {user.email}
                 </span>
               </div>
-              <Button variant="ghost" size="sm" onClick={handleSignOut} className="text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={handleSignOut} 
+                disabled={isSigningOut}
+                className="text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 disabled:opacity-50"
+              >
                 <LogOut className="w-4 h-4 mr-1" />
-                Sign Out
+                {isSigningOut ? "Signing out..." : "Sign Out"}
               </Button>
             </div>}
           <ThemeAndLanguageSwitcher />

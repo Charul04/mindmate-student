@@ -6,6 +6,7 @@ export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isSigningOut, setIsSigningOut] = useState(false);
 
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -49,8 +50,31 @@ export function useAuth() {
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    return { error };
+    if (isSigningOut) {
+      return { error: null }; // Already signing out, don't call again
+    }
+
+    try {
+      setIsSigningOut(true);
+      
+      // Check if there's actually a session to sign out from
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
+      
+      if (!currentSession) {
+        // No active session, just clear local state
+        setSession(null);
+        setUser(null);
+        return { error: null };
+      }
+
+      const { error } = await supabase.auth.signOut();
+      return { error };
+    } catch (error) {
+      console.error('Sign out error:', error);
+      return { error: { message: 'Failed to sign out' } };
+    } finally {
+      setIsSigningOut(false);
+    }
   };
 
   const deleteAccount = async (email: string, password: string) => {
@@ -99,6 +123,7 @@ export function useAuth() {
     user,
     session,
     loading,
+    isSigningOut,
     signUp,
     signIn,
     signOut,
