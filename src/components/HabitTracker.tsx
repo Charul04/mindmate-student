@@ -201,9 +201,9 @@ export default function HabitTracker() {
                          <input
                            type="checkbox"
                            checked={todayProgress >= habit.target_frequency}
-                           onChange={async () => {
+                           onChange={() => {
                              const newCount = todayProgress >= habit.target_frequency ? 0 : habit.target_frequency;
-                             await updateHabitEntry(habit.id!, format(new Date(), 'yyyy-MM-dd'), newCount);
+                             updateHabitEntry(habit.id!, format(new Date(), 'yyyy-MM-dd'), newCount);
                            }}
                            className="h-5 w-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
                            style={{ accentColor: habit.color }}
@@ -318,9 +318,9 @@ export default function HabitTracker() {
                              <input
                                type="checkbox"
                                checked={dayProgress >= habit.target_frequency}
-                               onChange={async () => {
+                               onChange={() => {
                                  const newCount = dayProgress >= habit.target_frequency ? 0 : habit.target_frequency;
-                                 await updateHabitEntry(habit.id!, format(selectedDate, 'yyyy-MM-dd'), newCount);
+                                 updateHabitEntry(habit.id!, format(selectedDate, 'yyyy-MM-dd'), newCount);
                                }}
                                className="h-4 w-4 rounded border-gray-300 focus:ring-2"
                                style={{ accentColor: habit.color }}
