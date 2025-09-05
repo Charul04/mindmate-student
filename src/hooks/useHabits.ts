@@ -116,6 +116,8 @@ export function useHabits() {
           entry_date: date,
           completed_count: completedCount,
           user_id: user.id,
+        }, {
+          onConflict: 'habit_id,entry_date'
         })
         .select()
         .single();
