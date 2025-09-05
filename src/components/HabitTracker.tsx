@@ -197,18 +197,18 @@ export default function HabitTracker() {
                        <span className="text-sm text-gray-600">
                          {todayProgress} / {habit.target_frequency} completed today
                        </span>
-                       <div className="flex items-center gap-2">
-                         <input
-                           type="checkbox"
-                           checked={todayProgress >= habit.target_frequency}
-                           onChange={() => {
-                             const newCount = todayProgress >= habit.target_frequency ? 0 : habit.target_frequency;
-                             updateHabitEntry(habit.id!, format(new Date(), 'yyyy-MM-dd'), newCount);
-                           }}
-                           className="h-5 w-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
-                           style={{ accentColor: habit.color }}
-                         />
-                       </div>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            checked={todayProgress >= habit.target_frequency}
+                            onChange={async () => {
+                              const newCount = todayProgress >= habit.target_frequency ? 0 : habit.target_frequency;
+                              await updateHabitEntry(habit.id!, format(new Date(), 'yyyy-MM-dd'), newCount);
+                            }}
+                            className="h-5 w-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                            style={{ accentColor: habit.color }}
+                          />
+                        </div>
                      </div>
                     
                     <Progress value={progressPercentage} className="h-2" />
@@ -318,9 +318,9 @@ export default function HabitTracker() {
                              <input
                                type="checkbox"
                                checked={dayProgress >= habit.target_frequency}
-                               onChange={() => {
+                               onChange={async () => {
                                  const newCount = dayProgress >= habit.target_frequency ? 0 : habit.target_frequency;
-                                 updateHabitEntry(habit.id!, format(selectedDate, 'yyyy-MM-dd'), newCount);
+                                 await updateHabitEntry(habit.id!, format(selectedDate, 'yyyy-MM-dd'), newCount);
                                }}
                                className="h-4 w-4 rounded border-gray-300 focus:ring-2"
                                style={{ accentColor: habit.color }}
