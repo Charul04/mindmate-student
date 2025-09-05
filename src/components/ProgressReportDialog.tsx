@@ -82,8 +82,7 @@ export default function ProgressReportDialog({
       const moodValue = moodEntry ? moodEntry.mood === 'excellent' ? 5 : moodEntry.mood === 'good' ? 4 : moodEntry.mood === 'neutral' ? 3 : moodEntry.mood === 'low' ? 2 : 1 : 0;
       return {
         date: format(day, 'MMM dd'),
-        mood: moodValue,
-        energy: moodEntry?.energy_level || 0
+        mood: moodValue
       };
     });
   };
@@ -266,17 +265,16 @@ export default function ProgressReportDialog({
                   <CardDescription>Track your mood over the past week</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <LineChart data={moodData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="date" />
-                      <YAxis domain={[0, 5]} />
-                      <Tooltip />
-                      <Legend />
-                      <Line type="monotone" dataKey="mood" stroke="#82ca9d" name="Mood (1-5)" />
-                      <Line type="monotone" dataKey="energy" stroke="#8884d8" name="Energy (1-10)" />
-                    </LineChart>
-                  </ResponsiveContainer>
+                   <ResponsiveContainer width="100%" height={300}>
+                     <LineChart data={moodData}>
+                       <CartesianGrid strokeDasharray="3 3" />
+                       <XAxis dataKey="date" />
+                       <YAxis domain={[0, 5]} />
+                       <Tooltip />
+                       <Legend />
+                       <Line type="monotone" dataKey="mood" stroke="#82ca9d" name="Mood (1-5)" />
+                     </LineChart>
+                   </ResponsiveContainer>
                 </CardContent>
               </Card>
             </TabsContent>
