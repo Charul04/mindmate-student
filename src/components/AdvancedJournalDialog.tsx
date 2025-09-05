@@ -117,7 +117,7 @@ export default function AdvancedJournalDialog({
 
           <TabsContent value="write" className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-medium">Journal Entry</h3>
+              
               <div className="flex items-center gap-2">
                 <CalendarIcon className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">
@@ -137,22 +137,9 @@ export default function AdvancedJournalDialog({
               
               <div className="grid grid-cols-2 gap-2">
                 {journalTemplates.map(template => {
-                  const Icon = template.icon;
-                  return (
-                    <Button
-                      key={template.title}
-                      variant="outline"
-                      className="h-auto p-4 text-left flex flex-col items-start gap-2"
-                      onClick={() => applyTemplate(template)}
-                    >
-                      <Icon className="w-5 h-5" />
-                      <div>
-                        <div className="font-medium">{template.title}</div>
-                        <div className="text-xs text-muted-foreground">{template.prompt}</div>
-                      </div>
-                    </Button>
-                  );
-                })}
+                const Icon = template.icon;
+                return;
+              })}
               </div>
             </div>
 
