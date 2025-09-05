@@ -21,14 +21,26 @@ export default function Index() {
       script.innerHTML = `
         (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="Sl0q4y9ILFqIdK8szW1Gv";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
       `;
+      script.id = "chatbase-init";
       document.body.appendChild(script);
-    } else if (!user && window.chatbase) {
+    } else if (!user) {
       // Clean up chatbot when user signs out
       const chatbotScript = document.getElementById("Sl0q4y9ILFqIdK8szW1Gv");
+      const initScript = document.getElementById("chatbase-init");
+      const chatbotWidget = document.querySelector('[data-chatbase-embed]');
+      
       if (chatbotScript) {
         chatbotScript.remove();
       }
-      window.chatbase = undefined;
+      if (initScript) {
+        initScript.remove();
+      }
+      if (chatbotWidget) {
+        chatbotWidget.remove();
+      }
+      if (window.chatbase) {
+        window.chatbase = undefined;
+      }
     }
   }, [user]);
 

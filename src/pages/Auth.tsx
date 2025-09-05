@@ -35,6 +35,26 @@ export default function Auth() {
     }
   }, [user, navigate]);
 
+  // Clean up chatbot when on auth page
+  useEffect(() => {
+    const chatbotScript = document.getElementById("Sl0q4y9ILFqIdK8szW1Gv");
+    const initScript = document.getElementById("chatbase-init");
+    const chatbotWidget = document.querySelector('[data-chatbase-embed]');
+    
+    if (chatbotScript) {
+      chatbotScript.remove();
+    }
+    if (initScript) {
+      initScript.remove();
+    }
+    if (chatbotWidget) {
+      chatbotWidget.remove();
+    }
+    if (window.chatbase) {
+      window.chatbase = undefined;
+    }
+  }, []);
+
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Sign in attempted', { email });
