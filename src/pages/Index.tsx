@@ -14,7 +14,7 @@ export default function Index() {
   const [showChatbot, setShowChatbot] = useState(false);
   const { user } = useAuth();
 
-  // Load chatbot script only for authenticated users
+  // Load chatbot script only for authenticated users and clean up when signed out
   useEffect(() => {
     if (user && !window.chatbase) {
       const script = document.createElement('script');
@@ -22,6 +22,13 @@ export default function Index() {
         (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="Sl0q4y9ILFqIdK8szW1Gv";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
       `;
       document.body.appendChild(script);
+    } else if (!user && window.chatbase) {
+      // Clean up chatbot when user signs out
+      const chatbotScript = document.getElementById("Sl0q4y9ILFqIdK8szW1Gv");
+      if (chatbotScript) {
+        chatbotScript.remove();
+      }
+      window.chatbase = undefined;
     }
   }, [user]);
 
@@ -43,10 +50,12 @@ export default function Index() {
         <TestimonialSection />
       </main>
       <FooterSection />
-      <ChatbaseChatbotDialog 
-        triggerClassName="hidden"
-        autoOpen={showChatbot}
-      />
+      {user && (
+        <ChatbaseChatbotDialog 
+          triggerClassName="hidden"
+          autoOpen={showChatbot}
+        />
+      )}
     </div>
   );
 }
