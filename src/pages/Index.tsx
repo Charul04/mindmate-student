@@ -24,23 +24,33 @@ export default function Index() {
       script.id = "chatbase-init";
       document.body.appendChild(script);
     } else if (!user) {
-      // Clean up chatbot when user signs out
-      const chatbotScript = document.getElementById("Sl0q4y9ILFqIdK8szW1Gv");
-      const initScript = document.getElementById("chatbase-init");
-      const chatbotWidget = document.querySelector('[data-chatbase-embed]');
+      // Aggressive cleanup when user signs out
+      const cleanupChatbot = () => {
+        const elementsToRemove = [
+          '#chatbase-bubble-window',
+          '#chatbase-message-bubbles', 
+          '.chatbase-bubble-button',
+          '#Sl0q4y9ILFqIdK8szW1Gv',
+          '#chatbase-init',
+          '[data-chatbase-embed]'
+        ];
+        
+        elementsToRemove.forEach(selector => {
+          const elements = document.querySelectorAll(selector);
+          elements.forEach(element => element.remove());
+        });
+        
+        if (window.chatbase) {
+          window.chatbase = undefined;
+        }
+      };
       
-      if (chatbotScript) {
-        chatbotScript.remove();
-      }
-      if (initScript) {
-        initScript.remove();
-      }
-      if (chatbotWidget) {
-        chatbotWidget.remove();
-      }
-      if (window.chatbase) {
-        window.chatbase = undefined;
-      }
+      cleanupChatbot();
+      // Continue cleanup to prevent re-initialization
+      const interval = setInterval(cleanupChatbot, 500);
+      
+      // Clear interval after a few seconds to avoid infinite cleanup
+      setTimeout(() => clearInterval(interval), 5000);
     }
   }, [user]);
 

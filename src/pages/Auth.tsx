@@ -35,24 +35,39 @@ export default function Auth() {
     }
   }, [user, navigate]);
 
-  // Clean up chatbot when on auth page
+  // Clean up chatbot when on auth page and prevent it from appearing
   useEffect(() => {
-    const chatbotScript = document.getElementById("Sl0q4y9ILFqIdK8szW1Gv");
-    const initScript = document.getElementById("chatbase-init");
-    const chatbotWidget = document.querySelector('[data-chatbase-embed]');
+    const cleanupChatbot = () => {
+      // Remove all chatbot related elements
+      const elementsToRemove = [
+        '#chatbase-bubble-window',
+        '#chatbase-message-bubbles', 
+        '.chatbase-bubble-button',
+        '#Sl0q4y9ILFqIdK8szW1Gv',
+        '#chatbase-init',
+        '[data-chatbase-embed]'
+      ];
+      
+      elementsToRemove.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(element => element.remove());
+      });
+      
+      // Clear window chatbase
+      if (window.chatbase) {
+        window.chatbase = undefined;
+      }
+    };
+
+    // Initial cleanup
+    cleanupChatbot();
     
-    if (chatbotScript) {
-      chatbotScript.remove();
-    }
-    if (initScript) {
-      initScript.remove();
-    }
-    if (chatbotWidget) {
-      chatbotWidget.remove();
-    }
-    if (window.chatbase) {
-      window.chatbase = undefined;
-    }
+    // Set up interval to continuously clean up chatbot
+    const interval = setInterval(cleanupChatbot, 500);
+    
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
   const handleSignIn = async (e: React.FormEvent) => {
