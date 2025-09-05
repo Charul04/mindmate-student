@@ -10,6 +10,7 @@ import { useMoodEntries } from "@/hooks/useMoodEntries";
 import { BookOpen, Calendar as CalendarIcon, Sparkles, TrendingUp, Heart, Brain } from "lucide-react";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
+import JournalEntryViewerDialog from "@/components/JournalEntryViewerDialog";
 interface Props {
   triggerClassName?: string;
 }
@@ -45,6 +46,9 @@ export default function AdvancedJournalDialog({
   const [content, setContent] = useState("");
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [showFullEntryDialog, setShowFullEntryDialog] = useState(false);
+  const [fullEntryContent, setFullEntryContent] = useState("");
+  const [fullEntryDate, setFullEntryDate] = useState("");
   const {
     journals,
     saveJournal,
@@ -187,11 +191,27 @@ export default function AdvancedJournalDialog({
                 </h3>
                 {selectedDateJournals.length > 0 ? <div className="space-y-3">
                     {selectedDateJournals.map(journal => <div key={journal.id} className="p-3 bg-gray-50 rounded-lg border">
+                        onClick={() => {
+                          setFullEntryContent(journal.content);
+                          setFullEntryDate(format(selectedDate, 'MMMM d, yyyy'));
+                          setShowFullEntryDialog(true);
+                        }}
+                        className="p-3 bg-gray-50 rounded-lg border cursor-pointer hover:bg-gray-100 transition-colors"
+                      >
                         <div className="flex items-start justify-between mb-2">
                           <p className="text-xs text-gray-500">
                             {format(new Date(journal.created_at), 'h:mm a')}
                           </p>
                           <Button variant="destructive" size="sm" onClick={() => deleteJournal(journal.id)} className="text-xs px-2 py-1 h-auto">
+                          <Button 
+                            variant="destructive" 
+                            size="sm" 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteJournal(journal.id);
+                            }} 
+                            className="text-xs px-2 py-1 h-auto"
+                          >
                             Delete
                           </Button>
                         </div>
@@ -249,6 +269,13 @@ export default function AdvancedJournalDialog({
             </div>
           </TabsContent>
         </Tabs>
+        
+        <JournalEntryViewerDialog
+          isOpen={showFullEntryDialog}
+          onClose={() => setShowFullEntryDialog(false)}
+          content={fullEntryContent}
+          date={fullEntryDate}
+        />
       </DialogContent>
     </Dialog>;
 }
