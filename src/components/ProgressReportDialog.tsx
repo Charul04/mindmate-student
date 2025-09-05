@@ -8,7 +8,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { format, startOfWeek, endOfWeek, subDays, eachDayOfInterval } from "date-fns";
 import { useTranslation } from "react-i18next";
-
 interface ProgressData {
   goals: any[];
   moods: any[];
@@ -18,16 +17,18 @@ interface ProgressData {
   tasks: any[];
   journals: any[];
 }
-
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#8dd1e1'];
-
-export default function ProgressReportDialog({ 
+export default function ProgressReportDialog({
   triggerClassName = "w-full"
-}: { 
-  triggerClassName?: string 
+}: {
+  triggerClassName?: string;
 }) {
-  const { user } = useAuth();
-  const { t } = useTranslation();
+  const {
+    user
+  } = useAuth();
+  const {
+    t
+  } = useTranslation();
   const [data, setData] = useState<ProgressData>({
     goals: [],
     moods: [],
@@ -38,30 +39,21 @@ export default function ProgressReportDialog({
     journals: []
   });
   const [loading, setLoading] = useState(false);
-
   const fetchProgressData = async () => {
     if (!user) return;
-    
     setLoading(true);
     try {
-      const [
-        goalsResult,
-        moodsResult,
-        habitsResult,
-        habitEntriesResult,
-        pomodoroResult,
-        tasksResult,
-        journalsResult
-      ] = await Promise.all([
-        supabase.from('goals').select('*').eq('user_id', user.id),
-        supabase.from('mood_entries').select('*').eq('user_id', user.id).order('entry_date', { ascending: true }),
-        supabase.from('habits').select('*').eq('user_id', user.id),
-        supabase.from('habit_entries').select('*').eq('user_id', user.id).order('entry_date', { ascending: true }),
-        supabase.from('pomodoro_sessions').select('*').eq('user_id', user.id).order('session_date', { ascending: true }),
-        supabase.from('daily_planner_tasks').select('*').eq('user_id', user.id).order('task_date', { ascending: true }),
-        supabase.from('journals').select('*').eq('user_id', user.id).order('entry_date', { ascending: true })
-      ]);
-
+      const [goalsResult, moodsResult, habitsResult, habitEntriesResult, pomodoroResult, tasksResult, journalsResult] = await Promise.all([supabase.from('goals').select('*').eq('user_id', user.id), supabase.from('mood_entries').select('*').eq('user_id', user.id).order('entry_date', {
+        ascending: true
+      }), supabase.from('habits').select('*').eq('user_id', user.id), supabase.from('habit_entries').select('*').eq('user_id', user.id).order('entry_date', {
+        ascending: true
+      }), supabase.from('pomodoro_sessions').select('*').eq('user_id', user.id).order('session_date', {
+        ascending: true
+      }), supabase.from('daily_planner_tasks').select('*').eq('user_id', user.id).order('task_date', {
+        ascending: true
+      }), supabase.from('journals').select('*').eq('user_id', user.id).order('entry_date', {
+        ascending: true
+      })]);
       setData({
         goals: goalsResult.data || [],
         moods: moodsResult.data || [],
@@ -84,16 +76,10 @@ export default function ProgressReportDialog({
       start: subDays(new Date(), 6),
       end: new Date()
     });
-
     return last7Days.map(day => {
       const dayStr = format(day, 'yyyy-MM-dd');
       const moodEntry = data.moods.find(m => m.entry_date === dayStr);
-      const moodValue = moodEntry ? 
-        (moodEntry.mood === 'excellent' ? 5 : 
-         moodEntry.mood === 'good' ? 4 : 
-         moodEntry.mood === 'neutral' ? 3 : 
-         moodEntry.mood === 'low' ? 2 : 1) : 0;
-      
+      const moodValue = moodEntry ? moodEntry.mood === 'excellent' ? 5 : moodEntry.mood === 'good' ? 4 : moodEntry.mood === 'neutral' ? 3 : moodEntry.mood === 'low' ? 2 : 1 : 0;
       return {
         date: format(day, 'MMM dd'),
         mood: moodValue,
@@ -101,28 +87,23 @@ export default function ProgressReportDialog({
       };
     });
   };
-
   const prepareHabitCompletionData = () => {
     const habitStats = data.habits.map(habit => {
       const entries = data.habitEntries.filter(e => e.habit_id === habit.id);
       const totalDays = entries.length;
       const completedDays = entries.filter(e => e.completed_count > 0).length;
-      const completionRate = totalDays > 0 ? Math.round((completedDays / totalDays) * 100) : 0;
-      
+      const completionRate = totalDays > 0 ? Math.round(completedDays / totalDays * 100) : 0;
       return {
         name: habit.name,
         completion: completionRate,
         streak: calculateStreak(entries)
       };
     });
-    
     return habitStats;
   };
-
   const calculateStreak = (entries: any[]) => {
     let streak = 0;
     const sortedEntries = [...entries].sort((a, b) => new Date(b.entry_date).getTime() - new Date(a.entry_date).getTime());
-    
     for (const entry of sortedEntries) {
       if (entry.completed_count > 0) {
         streak++;
@@ -130,21 +111,17 @@ export default function ProgressReportDialog({
         break;
       }
     }
-    
     return streak;
   };
-
   const prepareFocusTimeData = () => {
     const last7Days = eachDayOfInterval({
       start: subDays(new Date(), 6),
       end: new Date()
     });
-
     return last7Days.map(day => {
       const dayStr = format(day, 'yyyy-MM-dd');
       const sessions = data.pomodoroSessions.filter(s => s.session_date === dayStr && s.completed);
       const totalMinutes = sessions.reduce((sum, s) => sum + s.duration_minutes, 0);
-      
       return {
         date: format(day, 'MMM dd'),
         minutes: totalMinutes,
@@ -152,16 +129,14 @@ export default function ProgressReportDialog({
       };
     });
   };
-
   const prepareGoalProgressData = () => {
     return data.goals.map(goal => ({
       name: goal.title,
-      progress: goal.target_value > 0 ? Math.round((goal.current_value / goal.target_value) * 100) : 0,
+      progress: goal.target_value > 0 ? Math.round(goal.current_value / goal.target_value * 100) : 0,
       target: goal.target_value,
       current: goal.current_value
     }));
   };
-
   const calculateOverallStats = () => {
     const totalGoals = data.goals.length;
     const completedGoals = data.goals.filter(g => g.current_value >= g.target_value).length;
@@ -169,28 +144,21 @@ export default function ProgressReportDialog({
     const completedTasks = data.tasks.filter(t => t.completed).length;
     const totalFocusTime = data.pomodoroSessions.filter(s => s.completed).reduce((sum, s) => sum + s.duration_minutes, 0);
     const journalDays = data.journals.length;
-
     return {
-      goalCompletion: totalGoals > 0 ? Math.round((completedGoals / totalGoals) * 100) : 0,
-      taskCompletion: totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0,
+      goalCompletion: totalGoals > 0 ? Math.round(completedGoals / totalGoals * 100) : 0,
+      taskCompletion: totalTasks > 0 ? Math.round(completedTasks / totalTasks * 100) : 0,
       totalFocusHours: Math.round(totalFocusTime / 60),
       journalStreak: journalDays
     };
   };
-
   const stats = calculateOverallStats();
   const moodData = prepareMoodTrendData();
   const habitData = prepareHabitCompletionData();
   const focusData = prepareFocusTimeData();
   const goalData = prepareGoalProgressData();
-
-  return (
-    <Dialog>
+  return <Dialog>
       <DialogTrigger asChild>
-        <button 
-          className={triggerClassName}
-          onClick={fetchProgressData}
-        >
+        <button className={triggerClassName} onClick={fetchProgressData}>
           <div className="flex flex-col items-start h-full">
             <div className="flex items-center gap-3 mb-2">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-purple-100 to-pink-100">
@@ -214,15 +182,12 @@ export default function ProgressReportDialog({
           </DialogTitle>
         </DialogHeader>
 
-        {loading ? (
-          <div className="flex items-center justify-center h-64">
+        {loading ? <div className="flex items-center justify-center h-64">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
-          </div>
-        ) : (
-          <Tabs defaultValue="overview" className="w-full">
+          </div> : <Tabs defaultValue="overview" className="w-full">
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="mood">Mood & Energy</TabsTrigger>
+              <TabsTrigger value="mood">Mood </TabsTrigger>
               <TabsTrigger value="habits">Habits & Goals</TabsTrigger>
               <TabsTrigger value="focus">Focus & Tasks</TabsTrigger>
             </TabsList>
@@ -297,8 +262,8 @@ export default function ProgressReportDialog({
             <TabsContent value="mood" className="space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle>Mood & Energy Trends</CardTitle>
-                  <CardDescription>Track your mood and energy levels over the past week</CardDescription>
+                  <CardTitle>Mood Trends</CardTitle>
+                  <CardDescription>Track your mood over the past week</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={300}>
@@ -375,9 +340,7 @@ export default function ProgressReportDialog({
                 </CardContent>
               </Card>
             </TabsContent>
-          </Tabs>
-        )}
+          </Tabs>}
       </DialogContent>
-    </Dialog>
-  );
+    </Dialog>;
 }
