@@ -13,11 +13,23 @@ import "@/i18n";
 
 export default function Index() {
   const [showChatbot, setShowChatbot] = useState(false);
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+
+  // Show loading state while auth is initializing
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-sky-50 to-white">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto"></div>
+          <p className="mt-2 text-indigo-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   // Load chatbot script only for authenticated users and clean up when signed out
   useEffect(() => {
-    if (user && !window.chatbase) {
+    if (user && !(window as any).chatbase) {
       const script = document.createElement('script');
       script.innerHTML = `
         (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="Sl0q4y9ILFqIdK8szW1Gv";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
@@ -41,8 +53,8 @@ export default function Index() {
           elements.forEach(element => element.remove());
         });
         
-        if (window.chatbase) {
-          window.chatbase = undefined;
+        if ((window as any).chatbase) {
+          (window as any).chatbase = undefined;
         }
       };
       
