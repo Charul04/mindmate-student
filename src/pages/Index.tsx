@@ -7,6 +7,7 @@ import TestimonialSection from "@/components/TestimonialSection";
 import FooterSection from "@/components/FooterSection";
 import ChatbaseChatbotDialog from "@/components/ChatbaseChatbotDialog";
 import React, { useEffect, useState } from "react";
+import TimerIndicator from "@/components/TimerIndicator";
 import { useAuth } from "@/hooks/useAuth";
 import "@/i18n";
 
@@ -72,6 +73,7 @@ export default function Index() {
         <TestimonialSection />
       </main>
       <FooterSection />
+      <TimerIndicator />
       {user && (
         <ChatbaseChatbotDialog 
           triggerClassName="hidden"

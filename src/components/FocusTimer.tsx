@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useFocusSessions } from "@/hooks/useFocusSessions";
 import { useToast } from "@/hooks/use-toast";
+import { useBackgroundTimer } from "@/hooks/useBackgroundTimer";
 import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, eachDayOfInterval } from "date-fns";
 
 function formatTime(sec: number) {
@@ -135,82 +136,29 @@ const PlantVisualization = ({ progress, isRunning }: { progress: number; isRunni
 };
 
 export default function FocusTimer() {
-  const [focusMinutes, setFocusMinutes] = useState(25);
-  const [breakMinutes, setBreakMinutes] = useState(5);
-  const [timer, setTimer] = useState(1500); // 25 minutes
-  const [initialTime, setInitialTime] = useState(1500);
-  const [isRunning, setIsRunning] = useState(false);
-  const [mode, setMode] = useState<"work" | "break">("work");
-  const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const { sessions, saveSession, getTotalFocusTime } = useFocusSessions();
   const { toast } = useToast();
+  
+  // Use background timer hook
+  const {
+    timer,
+    initialTime,
+    isRunning,
+    mode,
+    sessionStartTime,
+    focusMinutes,
+    breakMinutes,
+    progressPercentage,
+    start,
+    pause,
+    reset,
+    switchMode,
+    updateSettings
+  } = useBackgroundTimer();
 
-  // Calculate progress percentage
-  const progressPercentage = ((initialTime - timer) / initialTime) * 100;
-
-  // Update timer when settings change
-  useEffect(() => {
-    if (!isRunning) {
-      const newTime = mode === "work" ? focusMinutes * 60 : breakMinutes * 60;
-      setTimer(newTime);
-      setInitialTime(newTime);
-    }
-  }, [focusMinutes, breakMinutes, mode, isRunning]);
-
-  function start() {
-    if (isRunning) return;
-    setIsRunning(true);
-    setSessionStartTime(new Date());
-    
-    intervalRef.current = setInterval(() => {
-      setTimer(prevTimer => {
-        if (prevTimer <= 1) {
-          clearInterval(intervalRef.current!);
-          setIsRunning(false);
-          completeSession();
-          return 0;
-        }
-        return prevTimer - 1;
-      });
-    }, 1000);
-  }
-
-  async function pause() {
-    setIsRunning(false);
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    
-    // Save partial session if there was progress
-    if (sessionStartTime && timer < initialTime) {
-      const durationMinutes = Math.ceil((initialTime - timer) / 60);
-      saveSession({
-        session_type: mode,
-        duration_minutes: durationMinutes,
-        completed: false,
-        session_date: new Date().toISOString().split('T')[0]
-      });
-    }
-  }
-
-  function reset() {
-    pause();
-    const newTime = mode === "work" ? focusMinutes * 60 : breakMinutes * 60;
-    setTimer(newTime);
-    setInitialTime(newTime);
-    setSessionStartTime(null);
-  }
-
-  function switchMode(newMode: "work" | "break") {
-    pause();
-    setMode(newMode);
-    const newTime = newMode === "work" ? focusMinutes * 60 : breakMinutes * 60;
-    setTimer(newTime);
-    setInitialTime(newTime);
-    setSessionStartTime(null);
-  }
-
-  async function completeSession() {
+  // Complete session handler
+  const completeSession = async () => {
     if (sessionStartTime) {
       const durationMinutes = Math.ceil(initialTime / 60);
       await saveSession({
@@ -227,13 +175,41 @@ export default function FocusTimer() {
       
       // Auto-switch mode after completion
       const nextMode = mode === "work" ? "break" : "work";
-      setMode(nextMode);
-      const newTime = nextMode === "work" ? focusMinutes * 60 : breakMinutes * 60;
-      setTimer(newTime);
-      setInitialTime(newTime);
-      setSessionStartTime(null);
+      switchMode(nextMode);
     }
-  }
+  };
+
+  // Handler functions that use the background timer
+  const handleStart = () => {
+    start(completeSession);
+  };
+
+  const handlePause = async () => {
+    pause();
+    
+    // Save partial session if there was progress
+    if (sessionStartTime && timer < initialTime) {
+      const durationMinutes = Math.ceil((initialTime - timer) / 60);
+      saveSession({
+        session_type: mode,
+        duration_minutes: durationMinutes,
+        completed: false,
+        session_date: new Date().toISOString().split('T')[0]
+      });
+    }
+  };
+
+  const handleReset = () => {
+    reset();
+  };
+
+  const handleSwitchMode = (newMode: "work" | "break") => {
+    switchMode(newMode);
+  };
+
+  const handleSettingsChange = (newFocusMinutes: number, newBreakMinutes: number) => {
+    updateSettings(newFocusMinutes, newBreakMinutes);
+  };
 
   // Get stats for selected date
   const selectedDateSessions = sessions.filter(
@@ -265,12 +241,15 @@ export default function FocusTimer() {
     .filter(s => s.session_type === 'work')
     .reduce((sum, s) => sum + s.duration_minutes, 0);
 
-  // Cleanup on unmount
+  // Local state for settings dialog
+  const [tempFocusMinutes, setTempFocusMinutes] = useState(focusMinutes);
+  const [tempBreakMinutes, setTempBreakMinutes] = useState(breakMinutes);
+
+  // Update temp settings when actual settings change
   useEffect(() => {
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, []);
+    setTempFocusMinutes(focusMinutes);
+    setTempBreakMinutes(breakMinutes);
+  }, [focusMinutes, breakMinutes]);
 
   return (
     <div className="w-full max-w-4xl mx-auto">
@@ -319,9 +298,9 @@ export default function FocusTimer() {
                         type="number"
                         min="1"
                         max="120"
-                        value={focusMinutes}
-                        onChange={(e) => setFocusMinutes(parseInt(e.target.value) || 25)}
-                        disabled={isRunning}
+                        value={tempFocusMinutes}
+                        onChange={(e) => setTempFocusMinutes(parseInt(e.target.value) || 25)}
+                        onBlur={() => handleSettingsChange(tempFocusMinutes, tempBreakMinutes)}
                       />
                     </div>
                     <div className="space-y-2">
@@ -331,9 +310,9 @@ export default function FocusTimer() {
                         type="number"
                         min="1"
                         max="30"
-                        value={breakMinutes}
-                        onChange={(e) => setBreakMinutes(parseInt(e.target.value) || 5)}
-                        disabled={isRunning}
+                        value={tempBreakMinutes}
+                        onChange={(e) => setTempBreakMinutes(parseInt(e.target.value) || 5)}
+                        onBlur={() => handleSettingsChange(tempFocusMinutes, tempBreakMinutes)}
                       />
                     </div>
                   </div>
@@ -345,18 +324,16 @@ export default function FocusTimer() {
             <div className="flex gap-2 mb-6">
               <Button
                 variant={mode === "work" ? "default" : "outline"}
-                onClick={() => switchMode("work")}
+                onClick={() => handleSwitchMode("work")}
                 className={mode === "work" ? "bg-indigo-600 hover:bg-indigo-700" : "border-indigo-300 text-indigo-700 hover:bg-indigo-50"}
-                disabled={isRunning}
               >
                 <Sprout className="w-4 h-4 mr-1" />
                 Study ({focusMinutes}m)
               </Button>
               <Button
                 variant={mode === "break" ? "default" : "outline"}
-                onClick={() => switchMode("break")}
+                onClick={() => handleSwitchMode("break")}
                 className={mode === "break" ? "bg-indigo-600 hover:bg-indigo-700" : "border-indigo-300 text-indigo-700 hover:bg-indigo-50"}
-                disabled={isRunning}
               >
                 <Clock className="w-4 h-4 mr-1" />
                 Break ({breakMinutes}m)
@@ -383,7 +360,7 @@ export default function FocusTimer() {
             <div className="flex gap-3">
               {!isRunning ? (
                 <Button 
-                  onClick={start} 
+                  onClick={handleStart} 
                   size="lg"
                   className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 text-lg font-medium rounded-xl shadow-lg"
                 >
@@ -392,7 +369,7 @@ export default function FocusTimer() {
                 </Button>
               ) : (
                 <Button 
-                  onClick={pause} 
+                  onClick={handlePause} 
                   size="lg"
                   variant="outline"
                   className="border-indigo-600 text-indigo-700 hover:bg-indigo-50 px-8 py-3 text-lg font-medium rounded-xl"
@@ -403,7 +380,7 @@ export default function FocusTimer() {
               )}
               
               <Button 
-                onClick={reset}
+                onClick={handleReset}
                 size="lg"
                 variant="outline"
                 className="border-indigo-300 text-indigo-600 hover:bg-indigo-50 px-6 py-3 rounded-xl"
