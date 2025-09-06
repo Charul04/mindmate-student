@@ -141,7 +141,7 @@ export default function ProgressReportDialog({
     const completedGoals = data.goals.filter(g => g.current_value >= g.target_value).length;
     const totalTasks = data.tasks.length;
     const completedTasks = data.tasks.filter(t => t.completed).length;
-    const totalFocusTime = data.pomodoroSessions.filter(s => s.completed).reduce((sum, s) => sum + s.duration_minutes, 0);
+    const totalFocusTime = data.pomodoroSessions.filter(s => s.session_type === 'work').reduce((sum, s) => sum + s.duration_minutes, 0);
     const journalDays = data.journals.length;
     return {
       goalCompletion: totalGoals > 0 ? Math.round(completedGoals / totalGoals * 100) : 0,

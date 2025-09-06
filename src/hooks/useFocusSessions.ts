@@ -85,8 +85,7 @@ export function useFocusSessions() {
     return sessions
       .filter(session => 
         session.session_date === date && 
-        session.session_type === 'work' && 
-        session.completed
+        session.session_type === 'work'
       )
       .reduce((total, session) => total + session.duration_minutes, 0);
   };
@@ -97,8 +96,7 @@ export function useFocusSessions() {
         const sessionDate = new Date(session.session_date);
         return sessionDate >= startDate && 
                sessionDate <= endDate && 
-               session.session_type === 'work' && 
-               session.completed;
+               session.session_type === 'work';
       })
       .reduce((total, session) => total + session.duration_minutes, 0);
   };
@@ -107,8 +105,7 @@ export function useFocusSessions() {
     const monthSessions = sessions.filter(session => {
       const sessionDate = new Date(session.session_date);
       return sessionDate.getFullYear() === year &&
-             sessionDate.getMonth() === month &&
-             session.completed;
+             sessionDate.getMonth() === month;
     });
 
     const workSessions = monthSessions.filter(s => s.session_type === 'work');
