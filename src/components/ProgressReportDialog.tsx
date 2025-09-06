@@ -119,7 +119,7 @@ export default function ProgressReportDialog({
     });
     return last7Days.map(day => {
       const dayStr = format(day, 'yyyy-MM-dd');
-      const sessions = data.pomodoroSessions.filter(s => s.session_date === dayStr && s.completed);
+      const sessions = data.pomodoroSessions.filter(s => s.session_date === dayStr);
       const totalMinutes = sessions.reduce((sum, s) => sum + s.duration_minutes, 0);
       return {
         date: format(day, 'MMM dd'),
