@@ -101,6 +101,7 @@ export function useAuth() {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${session.access_token}`,
+          'apikey': supabase.supabaseKey,
           'Content-Type': 'application/json',
         },
       });
