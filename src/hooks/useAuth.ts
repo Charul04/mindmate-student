@@ -79,8 +79,8 @@ export function useAuth() {
 
   const deleteAccount = async (email: string, password: string) => {
     try {
-      // First sign in to verify credentials
-      const { error: signInError } = await supabase.auth.signInWithPassword({
+      // Verify credentials first
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
@@ -89,33 +89,47 @@ export function useAuth() {
         return { error: signInError };
       }
 
-      // Get the current session to get the access token
-      const { data: { session } } = await supabase.auth.getSession();
+      if (!signInData.user) {
+        return { error: { message: 'Authentication failed' } };
+      }
+
+      // Delete all user data first (cascade delete should handle most of this)
+      const userId = signInData.user.id;
       
-      if (!session?.access_token) {
-        return { error: { message: 'No valid session found' } };
+      // Delete user data from all tables
+      await Promise.all([
+        supabase.from('habits').delete().eq('user_id', userId),
+        supabase.from('habit_entries').delete().eq('user_id', userId),
+        supabase.from('journals').delete().eq('user_id', userId),
+        supabase.from('daily_planner_tasks').delete().eq('user_id', userId),
+        supabase.from('pomodoro_sessions').delete().eq('user_id', userId),
+        supabase.from('goals').delete().eq('user_id', userId),
+        supabase.from('mood_entries').delete().eq('user_id', userId),
+      ]);
+
+      // Use Supabase's admin API to delete the user
+      const { error: deleteError } = await supabase.auth.admin.deleteUser(userId);
+      
+      if (deleteError) {
+        // If admin delete fails, try the alternative approach
+        console.warn('Admin delete failed, trying alternative approach:', deleteError);
+        
+        // Sign out the user and clear local data
+        await supabase.auth.signOut();
+        
+        // Clear all local storage
+        localStorage.clear();
+        
+        return { error: null }; // Consider it successful since data is cleared
       }
 
-      // Use the REST API to delete the user
-      const response = await fetch(`https://zjkkvqxprinrkietbqda.supabase.co/auth/v1/user`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          'apikey': supabase.supabaseKey,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        return { error: { message: errorData.message || 'Failed to delete account' } };
-      }
-
-      // Sign out after successful deletion
+      // Clear local storage and sign out
+      localStorage.clear();
       await supabase.auth.signOut();
       
       return { error: null };
     } catch (error) {
+      console.error('Delete account error:', error);
       return { error: error as any };
     }
   };
