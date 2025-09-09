@@ -79,8 +79,8 @@ export function useAuth() {
 
   const deleteAccount = async (email: string, password: string) => {
     try {
-      // First sign in to verify credentials
-      const { error: signInError } = await supabase.auth.signInWithPassword({
+      // Verify credentials first
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
@@ -89,32 +89,66 @@ export function useAuth() {
         return { error: signInError };
       }
 
-      // Get the current session to get the access token
+      if (!signInData.user) {
+        return { error: { message: 'Authentication failed' } };
+      }
+
+      // Get the current user session
       const { data: { session } } = await supabase.auth.getSession();
       
-      if (!session?.access_token) {
-        return { error: { message: 'No valid session found' } };
+      if (!session) {
+        return { error: { message: 'No active session found' } };
       }
 
-      // Use the REST API to delete the user
-      const response = await fetch(`https://zjkkvqxprinrkietbqda.supabase.co/auth/v1/user`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json',
-        },
+      // Delete all user data first
+      const userId = signInData.user.id;
+      
+      // Delete user data from all tables (this will work with RLS policies)
+      const deletePromises = [
+        supabase.from('habits').delete().eq('user_id', userId),
+        supabase.from('habit_entries').delete().eq('user_id', userId),
+        supabase.from('journals').delete().eq('user_id', userId),
+        supabase.from('daily_planner_tasks').delete().eq('user_id', userId),
+        supabase.from('pomodoro_sessions').delete().eq('user_id', userId),
+        supabase.from('goals').delete().eq('user_id', userId),
+        supabase.from('mood_entries').delete().eq('user_id', userId),
+      ];
+      
+      const deleteResults = await Promise.allSettled(deletePromises);
+      
+      // Log any errors but don't fail the deletion
+      deleteResults.forEach((result, index) => {
+        if (result.status === 'rejected') {
+          console.warn(`Failed to delete data from table ${index}:`, result.reason);
+        }
       });
 
+      // Use Supabase Edge Function to delete the user account
+      const response = await fetch(`${supabase.supabaseUrl}/functions/v1/delete-user`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'apikey': supabase.supabaseKey,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: userId
+        }),
+      });
+      
       if (!response.ok) {
-        const errorData = await response.json();
-        return { error: { message: errorData.message || 'Failed to delete account' } };
+        const errorText = await response.text();
+        console.error('Delete user API error:', errorText);
+        return { error: { message: 'Failed to delete account. Please try again.' } };
       }
 
-      // Sign out after successful deletion
+      // Clear local storage and sign out
+      localStorage.clear();
       await supabase.auth.signOut();
       
       return { error: null };
     } catch (error) {
+      console.error('Delete account error:', error);
       return { error: error as any };
     }
   };
