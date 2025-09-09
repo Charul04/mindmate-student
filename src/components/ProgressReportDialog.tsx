@@ -6,8 +6,6 @@ import { LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, X
 import { TrendingUp, Target, Heart, CheckCircle, Clock, BookOpen } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { useFocusSessions } from "@/hooks/useFocusSessions";
-import { useGoals } from "@/hooks/useGoals";
 import { format, startOfWeek, endOfWeek, subDays, eachDayOfInterval } from "date-fns";
 import { useTranslation } from "react-i18next";
 interface ProgressData {
@@ -25,10 +23,12 @@ export default function ProgressReportDialog({
 }: {
   triggerClassName?: string;
 }) {
-  const { user } = useAuth();
-  const { t } = useTranslation();
-  const { sessions: focusSessions, getTotalFocusTime, getMonthlyStats } = useFocusSessions();
-  const { goals } = useGoals();
+  const {
+    user
+  } = useAuth();
+  const {
+    t
+  } = useTranslation();
   const [data, setData] = useState<ProgressData>({
     goals: [],
     moods: [],
@@ -117,15 +117,13 @@ export default function ProgressReportDialog({
       start: subDays(new Date(), 6),
       end: new Date()
     });
-    // Use live focus sessions when available
-    const liveFocusSessions = focusSessions.length > 0 ? focusSessions : data.pomodoroSessions;
     return last7Days.map(day => {
       const dayStr = format(day, 'yyyy-MM-dd');
-      const dayFocusTime = getTotalFocusTime ? getTotalFocusTime(dayStr) : 0;
-      const sessions = liveFocusSessions.filter(s => s.session_date === dayStr);
+      const sessions = data.pomodoroSessions.filter(s => s.session_date === dayStr);
+      const totalMinutes = sessions.reduce((sum, s) => sum + s.duration_minutes, 0);
       return {
         date: format(day, 'MMM dd'),
-        minutes: dayFocusTime || sessions.reduce((sum, s) => sum + s.duration_minutes, 0),
+        minutes: totalMinutes,
         sessions: sessions.length
       };
     });
@@ -139,15 +137,11 @@ export default function ProgressReportDialog({
     }));
   };
   const calculateOverallStats = () => {
-    // Use live data from hooks when available, fallback to fetched data
-    const liveGoals = goals.length > 0 ? goals : data.goals;
-    const liveFocusSessions = focusSessions.length > 0 ? focusSessions : data.pomodoroSessions;
-    
-    const totalGoals = liveGoals.length;
-    const completedGoals = liveGoals.filter(g => g.current_value >= g.target_value).length;
+    const totalGoals = data.goals.length;
+    const completedGoals = data.goals.filter(g => g.current_value >= g.target_value).length;
     const totalTasks = data.tasks.length;
     const completedTasks = data.tasks.filter(t => t.completed).length;
-    const totalFocusTime = liveFocusSessions.filter(s => s.session_type === 'work').reduce((sum, s) => sum + s.duration_minutes, 0);
+    const totalFocusTime = data.pomodoroSessions.filter(s => s.session_type === 'work').reduce((sum, s) => sum + s.duration_minutes, 0);
     const journalDays = data.journals.length;
     return {
       goalCompletion: totalGoals > 0 ? Math.round(completedGoals / totalGoals * 100) : 0,

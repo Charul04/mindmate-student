@@ -137,7 +137,7 @@ const PlantVisualization = ({ progress, isRunning }: { progress: number; isRunni
 
 export default function FocusTimer() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const { sessions, saveSession, getTotalFocusTime, getMonthlyStats } = useFocusSessions();
+  const { sessions, saveSession, getTotalFocusTime } = useFocusSessions();
   const { toast } = useToast();
   
   // Use background timer hook
@@ -229,10 +229,17 @@ export default function FocusTimer() {
     minutes: getTotalFocusTime(format(day, 'yyyy-MM-dd'))
   }));
 
-  // Monthly stats using the hook function
-  const currentMonth = new Date().getMonth();
-  const currentYear = new Date().getFullYear();
-  const monthlyStats = getMonthlyStats(currentYear, currentMonth);
+  // Monthly stats
+  const monthStart = startOfMonth(new Date());
+  const monthEnd = endOfMonth(new Date());
+  const monthSessions = sessions.filter(session => {
+    const sessionDate = new Date(session.session_date);
+    return sessionDate >= monthStart && sessionDate <= monthEnd && session.completed;
+  });
+
+  const totalMonthlyMinutes = monthSessions
+    .filter(s => s.session_type === 'work')
+    .reduce((sum, s) => sum + s.duration_minutes, 0);
 
   // Local state for settings dialog
   const [tempFocusMinutes, setTempFocusMinutes] = useState(focusMinutes);
@@ -506,18 +513,18 @@ export default function FocusTimer() {
               <CardContent>
                 <div className="space-y-4">
                   <div className="text-center p-4 bg-purple-50 rounded-lg">
-                    <p className="text-2xl font-bold text-purple-800">{monthlyStats.totalMinutes}</p>
+                    <p className="text-2xl font-bold text-purple-800">{totalMonthlyMinutes}</p>
                     <p className="text-sm text-purple-600">total minutes</p>
                   </div>
                   <div className="text-center p-4 bg-orange-50 rounded-lg">
                     <p className="text-2xl font-bold text-orange-800">
-                      {monthlyStats.totalSessions}
+                      {monthSessions.filter(s => s.session_type === 'work').length}
                     </p>
                     <p className="text-sm text-orange-600">sessions completed</p>
                   </div>
                   <div className="text-center p-4 bg-green-50 rounded-lg">
                     <p className="text-2xl font-bold text-green-800">
-                      {monthlyStats.averageSession}
+                      {Math.round(totalMonthlyMinutes / Math.max(monthSessions.filter(s => s.session_type === 'work').length, 1))}
                     </p>
                     <p className="text-sm text-green-600">avg. session length</p>
                   </div>
@@ -543,12 +550,12 @@ export default function FocusTimer() {
                   <p className="text-sm font-medium">Growing Strong</p>
                   <p className="text-xs text-gray-600">1 hour today</p>
                 </div>
-                <div className={`text-center p-4 rounded-lg border-2 ${monthlyStats.totalMinutes >= 300 ? 'bg-indigo-50 border-indigo-200' : 'bg-gray-50 border-gray-200'}`}>
+                <div className={`text-center p-4 rounded-lg border-2 ${totalMonthlyMinutes >= 300 ? 'bg-indigo-50 border-indigo-200' : 'bg-gray-50 border-gray-200'}`}>
                   <div className="text-2xl mb-2">🌳</div>
                   <p className="text-sm font-medium">Forest Builder</p>
                   <p className="text-xs text-gray-600">5 hours this month</p>
                 </div>
-                <div className={`text-center p-4 rounded-lg border-2 ${monthlyStats.totalSessions >= 20 ? 'bg-indigo-50 border-indigo-200' : 'bg-gray-50 border-gray-200'}`}>
+                <div className={`text-center p-4 rounded-lg border-2 ${monthSessions.filter(s => s.session_type === 'work').length >= 20 ? 'bg-indigo-50 border-indigo-200' : 'bg-gray-50 border-gray-200'}`}>
                   <div className="text-2xl mb-2">🏆</div>
                   <p className="text-sm font-medium">Consistency King</p>
                   <p className="text-xs text-gray-600">20 sessions this month</p>
