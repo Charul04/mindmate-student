@@ -296,12 +296,9 @@ export default function Auth() {
         setDeleteEmail('');
         setDeletePassword('');
         
-        // Sign out after successful deletion - fallback to local if global fails
-        const { error: signOutError } = await signOut();
-        if (signOutError) {
-          await supabase.auth.signOut({ scope: 'local' });
-        }
-        navigate('/auth');
+        // Force local sign-out since the user is already deleted
+        await supabase.auth.signOut({ scope: 'local' });
+        navigate('/auth', { replace: true });
       }
     } catch (err) {
       console.error('Unexpected error:', err);
