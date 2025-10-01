@@ -6,10 +6,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Brain, Trash2 } from 'lucide-react';
+import { Loader2, Brain, Trash2, Eye, EyeOff, Info, Chrome, Apple as AppleIcon, Facebook } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import TermsPrivacyDialog from '@/components/TermsPrivacyDialog';
+import { supabase } from '@/integrations/supabase/client';
 
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
@@ -23,9 +24,12 @@ export default function Auth() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteEmail, setDeleteEmail] = useState('');
   const [deletePassword, setDeletePassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showDeletePassword, setShowDeletePassword] = useState(false);
   
   const navigate = useNavigate();
-  const { user, signIn, signUp, deleteAccount } = useAuth();
+  const { user, session, signIn, signUp } = useAuth();
   const { toast } = useToast();
 
   // Redirect if already authenticated
@@ -162,6 +166,78 @@ export default function Auth() {
     }
   };
 
+  const handleSocialLogin = async (provider: 'google' | 'apple' | 'facebook') => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/`
+        }
+      });
+      
+      if (error) {
+        console.error('Social login error:', error);
+        setError(error.message);
+        toast({
+          title: "Login Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      setError('An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGuestAccess = () => {
+    toast({
+      title: "Guest Access",
+      description: "Continuing as guest. Note: Your data won't be saved.",
+    });
+    navigate('/');
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email) {
+      setError('Please enter your email first');
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth`
+      });
+
+      if (error) {
+        setError(error.message);
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Password Reset Email Sent",
+          description: "Check your email for the password reset link.",
+        });
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      setError('An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleDeleteAccount = async () => {
     if (!deleteEmail || !deletePassword) {
       setError('Please enter email and password to delete account');
@@ -172,24 +248,57 @@ export default function Auth() {
     setError(null);
 
     try {
-      const { error } = await deleteAccount(deleteEmail, deletePassword);
+      // First, verify credentials by signing in
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: deleteEmail,
+        password: deletePassword,
+      });
+
+      if (signInError) {
+        setError('Invalid email or password');
+        toast({
+          title: "Authentication Failed",
+          description: "Invalid email or password",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      // Get current session
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
       
-      if (error) {
-        console.error('Delete account error:', error);
-        setError(error.message);
+      if (!currentSession?.user?.id) {
+        setError('No active session found');
+        setIsLoading(false);
+        return;
+      }
+
+      // Call the edge function to delete user and all data
+      const { data, error: functionError } = await supabase.functions.invoke('delete-user', {
+        body: { userId: currentSession.user.id }
+      });
+
+      if (functionError) {
+        console.error('Delete function error:', functionError);
+        setError(functionError.message || 'Failed to delete account');
         toast({
           title: "Account Deletion Failed",
-          description: error.message,
+          description: functionError.message || 'Failed to delete account',
           variant: "destructive",
         });
       } else {
         toast({
           title: "Account Deleted",
-          description: "Your account has been permanently deleted.",
+          description: "Your account and all data have been permanently deleted.",
         });
         setShowDeleteConfirm(false);
         setDeleteEmail('');
         setDeletePassword('');
+        
+        // Sign out after successful deletion
+        await supabase.auth.signOut();
+        navigate('/auth');
       }
     } catch (err) {
       console.error('Unexpected error:', err);
@@ -236,7 +345,10 @@ export default function Auth() {
               <TabsContent value="signin">
                 <form onSubmit={handleSignIn} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="signin-email">Email</Label>
+                    <div className="flex items-center gap-2">
+                      <Label htmlFor="signin-email">Email</Label>
+                      <Info className="w-3 h-3 text-muted-foreground" />
+                    </div>
                     <Input
                       id="signin-email"
                       type="email"
@@ -248,18 +360,40 @@ export default function Auth() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="signin-password">Password</Label>
-                    <Input
-                      id="signin-password"
-                      type="password"
-                      placeholder="Enter your password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Label htmlFor="signin-password">Password</Label>
+                        <Info className="w-3 h-3 text-muted-foreground" />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleForgotPassword}
+                        className="text-xs text-primary hover:underline"
+                      >
+                        Forgot password?
+                      </button>
+                    </div>
+                    <div className="relative">
+                      <Input
+                        id="signin-password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Enter your password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        className="pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      >
+                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
                   </div>
 
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  <Button type="submit" className="w-full font-bold text-base h-11 shadow-lg" disabled={isLoading}>
                     {isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -269,13 +403,64 @@ export default function Auth() {
                       'Sign In'
                     )}
                   </Button>
+
+                  <div className="relative my-6">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-3">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => handleSocialLogin('google')}
+                      disabled={isLoading}
+                      className="h-11"
+                    >
+                      <Chrome className="w-5 h-5" />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => handleSocialLogin('apple')}
+                      disabled={isLoading}
+                      className="h-11"
+                    >
+                      <AppleIcon className="w-5 h-5" />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => handleSocialLogin('facebook')}
+                      disabled={isLoading}
+                      className="h-11"
+                    >
+                      <Facebook className="w-5 h-5" />
+                    </Button>
+                  </div>
+
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={handleGuestAccess}
+                    className="w-full"
+                  >
+                    Continue as Guest
+                  </Button>
                 </form>
               </TabsContent>
 
               <TabsContent value="signup">
                 <form onSubmit={handleSignUp} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="signup-email">Email</Label>
+                    <div className="flex items-center gap-2">
+                      <Label htmlFor="signup-email">Email</Label>
+                      <Info className="w-3 h-3 text-muted-foreground" />
+                    </div>
                     <Input
                       id="signup-email"
                       type="email"
@@ -287,31 +472,54 @@ export default function Auth() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="signup-password">Password</Label>
-                    <Input
-                      id="signup-password"
-                      type="password"
-                      placeholder="Create a password (min 6 characters)"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      minLength={6}
-                    />
+                    <div className="flex items-center gap-2">
+                      <Label htmlFor="signup-password">Password</Label>
+                      <Info className="w-3 h-3 text-muted-foreground" />
+                    </div>
+                    <div className="relative">
+                      <Input
+                        id="signup-password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Create a password (min 6 characters)"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        minLength={6}
+                        className="pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      >
+                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="signup-confirm">Confirm Password</Label>
-                    <Input
-                      id="signup-confirm"
-                      type="password"
-                      placeholder="Confirm your password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      required
-                    />
+                    <div className="relative">
+                      <Input
+                        id="signup-confirm"
+                        type={showConfirmPassword ? "text" : "password"}
+                        placeholder="Confirm your password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        required
+                        className="pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      >
+                        {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
                   </div>
 
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  <Button type="submit" className="w-full font-bold text-base h-11 shadow-lg" disabled={isLoading}>
                     {isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -320,6 +528,54 @@ export default function Auth() {
                     ) : (
                       'Create Account'
                     )}
+                  </Button>
+
+                  <div className="relative my-6">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-3">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => handleSocialLogin('google')}
+                      disabled={isLoading}
+                      className="h-11"
+                    >
+                      <Chrome className="w-5 h-5" />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => handleSocialLogin('apple')}
+                      disabled={isLoading}
+                      className="h-11"
+                    >
+                      <AppleIcon className="w-5 h-5" />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => handleSocialLogin('facebook')}
+                      disabled={isLoading}
+                      className="h-11"
+                    >
+                      <Facebook className="w-5 h-5" />
+                    </Button>
+                  </div>
+
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={handleGuestAccess}
+                    className="w-full"
+                  >
+                    Continue as Guest
                   </Button>
                 </form>
               </TabsContent>
@@ -420,13 +676,23 @@ export default function Auth() {
                   
                   <div>
                     <Label htmlFor="delete-password">Confirm your password</Label>
-                    <Input
-                      id="delete-password"
-                      type="password"
-                      placeholder="Enter your password"
-                      value={deletePassword}
-                      onChange={(e) => setDeletePassword(e.target.value)}
-                    />
+                    <div className="relative">
+                      <Input
+                        id="delete-password"
+                        type={showDeletePassword ? "text" : "password"}
+                        placeholder="Enter your password"
+                        value={deletePassword}
+                        onChange={(e) => setDeletePassword(e.target.value)}
+                        className="pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowDeletePassword(!showDeletePassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      >
+                        {showDeletePassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
                   </div>
                 </div>
 
@@ -447,7 +713,7 @@ export default function Auth() {
                     variant="destructive"
                     onClick={handleDeleteAccount}
                     disabled={isLoading}
-                    className="flex-1"
+                    className="flex-1 font-bold"
                   >
                     {isLoading ? (
                       <>
@@ -455,7 +721,10 @@ export default function Auth() {
                         Deleting...
                       </>
                     ) : (
-                      'Delete Forever'
+                      <>
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Delete Forever
+                      </>
                     )}
                   </Button>
                 </div>
