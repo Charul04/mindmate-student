@@ -91,10 +91,19 @@ export default function Auth() {
       
       if (error) {
         console.error('Sign in error:', error);
-        setError(error.message);
+        
+        // Provide user-friendly error messages
+        let errorMessage = error.message;
+        if (error.message === 'Invalid login credentials') {
+          errorMessage = 'Account does not exist or password is incorrect';
+        } else if (error.message === 'Email not confirmed') {
+          errorMessage = 'Please check your email and confirm your account before signing in';
+        }
+        
+        setError(errorMessage);
         toast({
           title: "Sign In Failed",
-          description: error.message,
+          description: errorMessage,
           variant: "destructive",
         });
       } else {
@@ -205,7 +214,12 @@ export default function Auth() {
 
   const handleForgotPassword = async () => {
     if (!email) {
-      setError('Please enter your email first');
+      setError('Please enter your email address in the email field above');
+      toast({
+        title: "Email Required",
+        description: "Please enter your email address first",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -214,7 +228,7 @@ export default function Auth() {
 
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth`
+        redirectTo: `${window.location.origin}/auth?type=recovery`
       });
 
       if (error) {
@@ -226,8 +240,8 @@ export default function Auth() {
         });
       } else {
         toast({
-          title: "Password Reset Email Sent",
-          description: "Check your email for the password reset link.",
+          title: "Password Reset Email Sent! ✓",
+          description: "Check your email inbox (and spam folder) for the password reset link. The link expires in 60 minutes.",
         });
       }
     } catch (err) {
