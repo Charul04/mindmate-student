@@ -446,21 +446,11 @@ export default function Auth() {
                       <span className="w-full border-t" />
                     </div>
                     <div className="relative flex justify-center text-xs uppercase">
-                      <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+                      <span className="bg-background px-2 text-muted-foreground">OR </span>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-3">
-                    <Button type="button" variant="outline" onClick={() => handleSocialLogin('google')} disabled={isLoading} className="h-11">
-                      <Chrome className="w-5 h-5" />
-                    </Button>
-                    <Button type="button" variant="outline" onClick={() => handleSocialLogin('apple')} disabled={isLoading} className="h-11">
-                      <AppleIcon className="w-5 h-5" />
-                    </Button>
-                    <Button type="button" variant="outline" onClick={() => handleSocialLogin('facebook')} disabled={isLoading} className="h-11">
-                      <Facebook className="w-5 h-5" />
-                    </Button>
-                  </div>
+                  
 
                   <Button type="button" variant="ghost" onClick={handleGuestAccess} className="w-full">
                     Continue as Guest
