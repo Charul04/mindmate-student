@@ -29,7 +29,7 @@ export default function Auth() {
   const [showDeletePassword, setShowDeletePassword] = useState(false);
   
   const navigate = useNavigate();
-  const { user, session, signIn, signUp } = useAuth();
+  const { user, session, signIn, signUp, signOut } = useAuth();
   const { toast } = useToast();
 
   // Redirect if already authenticated
@@ -296,8 +296,11 @@ export default function Auth() {
         setDeleteEmail('');
         setDeletePassword('');
         
-        // Sign out after successful deletion
-        await supabase.auth.signOut();
+        // Sign out after successful deletion - fallback to local if global fails
+        const { error: signOutError } = await signOut();
+        if (signOutError) {
+          await supabase.auth.signOut({ scope: 'local' });
+        }
         navigate('/auth');
       }
     } catch (err) {
