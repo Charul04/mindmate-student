@@ -26,6 +26,11 @@ export default function Auth() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showDeletePassword, setShowDeletePassword] = useState(false);
+  const [isRecoveryMode, setIsRecoveryMode] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
   const navigate = useNavigate();
   const {
     user,
@@ -38,12 +43,20 @@ export default function Auth() {
     toast
   } = useToast();
 
+  // Check for password recovery mode
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('type') === 'recovery') {
+      setIsRecoveryMode(true);
+    }
+  }, []);
+
   // Redirect if already authenticated
   useEffect(() => {
-    if (user) {
+    if (user && !isRecoveryMode) {
       navigate('/');
     }
-  }, [user, navigate]);
+  }, [user, navigate, isRecoveryMode]);
 
   // Clean up chatbot when on auth page and prevent it from appearing
   useEffect(() => {
@@ -220,6 +233,7 @@ export default function Auth() {
         redirectTo: `${window.location.origin}/auth?type=recovery`
       });
       if (error) {
+        console.error('Password reset error:', error);
         setError(error.message);
         toast({
           title: "Error",
@@ -227,10 +241,66 @@ export default function Auth() {
           variant: "destructive"
         });
       } else {
+        console.log('Password reset email sent successfully');
         toast({
           title: "Password Reset Email Sent! ✓",
           description: "Check your email inbox (and spam folder) for the password reset link. The link expires in 60 minutes."
         });
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      setError('An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handlePasswordUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!newPassword || !confirmNewPassword) {
+      setError('Please fill in all fields');
+      return;
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setError('Password must be at least 6 characters long');
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword
+      });
+
+      if (error) {
+        console.error('Password update error:', error);
+        setError(error.message);
+        toast({
+          title: "Password Update Failed",
+          description: error.message,
+          variant: "destructive"
+        });
+      } else {
+        console.log('Password updated successfully');
+        toast({
+          title: "Password Updated! ✓",
+          description: "Your password has been successfully updated. You can now sign in with your new password."
+        });
+        setIsRecoveryMode(false);
+        setNewPassword('');
+        setConfirmNewPassword('');
+        // Clear URL parameters
+        window.history.replaceState({}, '', '/auth');
+        setActiveTab('signin');
       }
     } catch (err) {
       console.error('Unexpected error:', err);
@@ -327,12 +397,93 @@ export default function Auth() {
             <h1 className="text-2xl font-bold text-gray-900">MindMate</h1>
           </div>
           <p className="text-gray-600">
-            {activeTab === 'signin' ? 'Welcome back!' : 'Start your wellness journey'}
+            {isRecoveryMode ? 'Reset your password' : activeTab === 'signin' ? 'Welcome back!' : 'Start your wellness journey'}
           </p>
         </div>
 
-        {/* Auth Card */}
-        <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+        {/* Password Reset Card */}
+        {isRecoveryMode ? (
+          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-center">Reset Your Password</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {error && <Alert className="mb-4 border-red-200 bg-red-50">
+                <AlertDescription className="text-red-700">{error}</AlertDescription>
+              </Alert>}
+
+              <form onSubmit={handlePasswordUpdate} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="new-password">New Password</Label>
+                  <div className="relative">
+                    <Input 
+                      id="new-password" 
+                      type={showNewPassword ? "text" : "password"} 
+                      placeholder="Enter new password (min 6 characters)" 
+                      value={newPassword} 
+                      onChange={e => setNewPassword(e.target.value)} 
+                      required 
+                      minLength={6}
+                      className="pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    >
+                      {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="confirm-new-password">Confirm New Password</Label>
+                  <div className="relative">
+                    <Input 
+                      id="confirm-new-password" 
+                      type={showConfirmNewPassword ? "text" : "password"} 
+                      placeholder="Confirm new password" 
+                      value={confirmNewPassword} 
+                      onChange={e => setConfirmNewPassword(e.target.value)} 
+                      required
+                      className="pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmNewPassword(!showConfirmNewPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    >
+                      {showConfirmNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <Button type="submit" className="w-full font-bold text-base h-11 shadow-lg" disabled={isLoading}>
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Updating Password...
+                    </>
+                  ) : 'Update Password'}
+                </Button>
+
+                <Button 
+                  type="button" 
+                  variant="ghost" 
+                  onClick={() => {
+                    setIsRecoveryMode(false);
+                    window.history.replaceState({}, '', '/auth');
+                  }}
+                  className="w-full"
+                >
+                  Back to Sign In
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        ) : (
+          /* Auth Card */
+          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
           <CardHeader className="pb-4">
             <CardTitle className="text-center">
               {activeTab === 'signin' ? 'Sign In' : 'Create Account'}
@@ -460,6 +611,7 @@ export default function Auth() {
             </Tabs>
           </CardContent>
         </Card>
+        )}
 
         {/* Footer */}
         <p className="text-center text-sm text-gray-600">
