@@ -163,14 +163,14 @@ export default function Auth() {
       } else {
         console.log('Sign up successful');
         toast({
-          title: "Account Created!",
-          description: "Please check your email for a confirmation link."
+          title: "Your account is created",
+          description: "Welcome to MindMate!"
         });
-        // Clear form
-        setEmail('');
-        setPassword('');
-        setConfirmPassword('');
-        setActiveTab('signin');
+        // Auto sign in after successful signup
+        const { error: signInError } = await signIn(email, password);
+        if (!signInError) {
+          navigate('/');
+        }
       }
     } catch (err) {
       console.error('Unexpected error:', err);
