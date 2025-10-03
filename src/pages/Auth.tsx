@@ -403,12 +403,23 @@ export default function Auth() {
         password: deletePassword
       });
       if (signInError) {
-        setError('Invalid email or password');
-        toast({
-          title: "Authentication Failed",
-          description: "Invalid email or password",
-          variant: "destructive"
-        });
+        // Check if account doesn't exist
+        if (signInError.message === 'Invalid login credentials') {
+          toast({
+            title: "Account Does Not Exist",
+            description: "The account you're trying to delete does not exist.",
+            variant: "destructive"
+          });
+        } else {
+          toast({
+            title: "Authentication Failed",
+            description: "Invalid email or password",
+            variant: "destructive"
+          });
+        }
+        setShowDeleteConfirm(false);
+        setDeleteEmail('');
+        setDeletePassword('');
         setIsLoading(false);
         return;
       }
@@ -420,7 +431,14 @@ export default function Auth() {
         }
       } = await supabase.auth.getSession();
       if (!currentSession?.user?.id) {
-        setError('No active session found');
+        toast({
+          title: "Account Does Not Exist",
+          description: "No active session found.",
+          variant: "destructive"
+        });
+        setShowDeleteConfirm(false);
+        setDeleteEmail('');
+        setDeletePassword('');
         setIsLoading(false);
         return;
       }
@@ -436,7 +454,6 @@ export default function Auth() {
       });
       if (functionError) {
         console.error('Delete function error:', functionError);
-        setError(functionError.message || 'Failed to delete account');
         toast({
           title: "Account Deletion Failed",
           description: functionError.message || 'Failed to delete account',
@@ -447,21 +464,23 @@ export default function Auth() {
           title: "Account Deleted",
           description: "Your account and all data have been permanently deleted."
         });
-        setShowDeleteConfirm(false);
-        setDeleteEmail('');
-        setDeletePassword('');
-
-        // Force local sign-out since the user is already deleted
-        await supabase.auth.signOut({
-          scope: 'local'
-        });
-        navigate('/auth', {
-          replace: true
-        });
+        
+        // Clear local state without calling signOut API
+        localStorage.clear();
+        sessionStorage.clear();
       }
+      
+      // Close dialog and clear form
+      setShowDeleteConfirm(false);
+      setDeleteEmail('');
+      setDeletePassword('');
     } catch (err) {
       console.error('Unexpected error:', err);
-      setError('An unexpected error occurred');
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred",
+        variant: "destructive"
+      });
     } finally {
       setIsLoading(false);
     }

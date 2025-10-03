@@ -110,8 +110,10 @@ export function useAuth() {
         return { error: { message: errorData.message || 'Failed to delete account' } };
       }
 
-      // Sign out after successful deletion
-      await supabase.auth.signOut();
+      // Don't call signOut - user is already deleted
+      // Just clear local state
+      setSession(null);
+      setUser(null);
       
       return { error: null };
     } catch (error) {
