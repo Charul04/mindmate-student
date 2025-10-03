@@ -41,8 +41,10 @@ export default function Auth() {
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
   const [showForgotPasswordDialog, setShowForgotPasswordDialog] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
+  const [resetOldPassword, setResetOldPassword] = useState('');
   const [resetNewPassword, setResetNewPassword] = useState('');
   const [resetConfirmPassword, setResetConfirmPassword] = useState('');
+  const [showResetOldPassword, setShowResetOldPassword] = useState(false);
   const [showResetNewPassword, setShowResetNewPassword] = useState(false);
   const [showResetConfirmPassword, setShowResetConfirmPassword] = useState(false);
   const navigate = useNavigate();
@@ -234,6 +236,7 @@ export default function Auth() {
 
   const passwordResetSchema = z.object({
     email: z.string().trim().email({ message: "Invalid email address" }).max(255),
+    oldPassword: z.string().min(1, { message: "Current password is required" }),
     newPassword: z.string().min(6, { message: "Password must be at least 6 characters" }).max(100),
     confirmPassword: z.string()
   }).refine((data) => data.newPassword === data.confirmPassword, {
@@ -250,6 +253,7 @@ export default function Auth() {
     try {
       passwordResetSchema.parse({
         email: resetEmail,
+        oldPassword: resetOldPassword,
         newPassword: resetNewPassword,
         confirmPassword: resetConfirmPassword
       });
@@ -269,60 +273,54 @@ export default function Auth() {
     setIsLoading(true);
 
     try {
-      // First, verify the user exists by attempting to sign in with a dummy password
-      // This is just to check if the email exists
-      const { data: { user: existingUser }, error: checkError } = await supabase.auth.getUser();
-      
-      // Sign in the user first to get a valid session
+      // First, verify credentials by signing in with old password
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email: resetEmail,
-        password: resetNewPassword // This will fail if wrong password, which is expected
+        password: resetOldPassword
       });
 
-      // If sign in fails, that's okay - we'll try to update anyway
-      // The important part is updating the password for an authenticated session
-      
-      // For security, we should really verify the user's identity first
-      // Since we can't do that without email verification, we'll show a warning
-      toast({
-        title: "Security Notice",
-        description: "For security reasons, password reset typically requires email verification. Please ensure you have access to this email account.",
-        variant: "default"
-      });
+      if (signInError) {
+        if (signInError.message === 'Invalid login credentials') {
+          toast({
+            title: "Account Does Not Exist",
+            description: "Invalid email or current password.",
+            variant: "destructive"
+          });
+        } else {
+          toast({
+            title: "Authentication Failed",
+            description: signInError.message,
+            variant: "destructive"
+          });
+        }
+        setIsLoading(false);
+        return;
+      }
 
-      // Update password using admin approach - note this requires the user to be signed in
-      // In a real app, this would need proper authentication
+      // Now update to new password
       const { error: updateError } = await supabase.auth.updateUser({
         password: resetNewPassword
       });
 
       if (updateError) {
-        // If direct update fails, try password reset with email
-        const { error: resetError } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-          redirectTo: `${window.location.origin}/auth?type=recovery`
-        });
-        
-        if (resetError) {
-          throw resetError;
-        }
-        
         toast({
-          title: "Verification Email Sent",
-          description: "Please check your email to complete the password reset process.",
+          title: "Password Update Failed",
+          description: updateError.message,
+          variant: "destructive"
         });
       } else {
         toast({
           title: "Password Updated Successfully",
           description: "Your password has been changed.",
         });
+        
+        setShowForgotPasswordDialog(false);
+        setResetEmail('');
+        setResetOldPassword('');
+        setResetNewPassword('');
+        setResetConfirmPassword('');
       }
-
-      setShowForgotPasswordDialog(false);
-      setResetEmail('');
-      setResetNewPassword('');
-      setResetConfirmPassword('');
     } catch (err: any) {
-      setError(err.message || 'Failed to reset password');
       toast({
         title: "Error",
         description: err.message || 'Failed to reset password',
@@ -737,7 +735,7 @@ export default function Auth() {
             <DialogHeader>
               <DialogTitle>Reset Password</DialogTitle>
               <DialogDescription>
-                Enter your email and choose a new password
+                Enter your email, current password, and choose a new password
               </DialogDescription>
             </DialogHeader>
             
@@ -758,6 +756,28 @@ export default function Auth() {
                   onChange={(e) => setResetEmail(e.target.value)}
                   required
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="reset-old-password">Current Password</Label>
+                <div className="relative">
+                  <Input
+                    id="reset-old-password"
+                    type={showResetOldPassword ? "text" : "password"}
+                    placeholder="Enter your current password"
+                    value={resetOldPassword}
+                    onChange={(e) => setResetOldPassword(e.target.value)}
+                    required
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowResetOldPassword(!showResetOldPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  >
+                    {showResetOldPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
 
               <div className="space-y-2">
@@ -812,6 +832,7 @@ export default function Auth() {
                   onClick={() => {
                     setShowForgotPasswordDialog(false);
                     setResetEmail('');
+                    setResetOldPassword('');
                     setResetNewPassword('');
                     setResetConfirmPassword('');
                     setError(null);
