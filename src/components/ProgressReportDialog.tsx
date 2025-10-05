@@ -133,12 +133,29 @@ export default function ProgressReportDialog({
   const prepareGoalProgressData = () => {
     // Use live goals data from hook, fallback to fetched data
     const liveGoals = goals.length > 0 ? goals : data.goals;
-    return liveGoals.map(goal => ({
-      name: goal.title,
-      progress: goal.target_value > 0 ? Math.round(goal.current_value / goal.target_value * 100) : 0,
-      target: goal.target_value,
-      current: goal.current_value
-    }));
+    return liveGoals.map(goal => {
+      let progress = 0;
+      
+      // If goal is marked as completed, show 100%
+      if (goal.status === 'completed') {
+        progress = 100;
+      } 
+      // If target_value exists and is greater than 0, calculate progress
+      else if (goal.target_value && goal.target_value > 0) {
+        progress = Math.round((goal.current_value / goal.target_value) * 100);
+      }
+      // If current_value exists without target, show current value as progress
+      else if (goal.current_value > 0) {
+        progress = goal.current_value;
+      }
+      
+      return {
+        name: goal.title,
+        progress,
+        target: goal.target_value,
+        current: goal.current_value
+      };
+    });
   };
   const calculateOverallStats = () => {
     // Use live data from hooks when available, fallback to fetched data
