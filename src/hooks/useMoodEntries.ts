@@ -45,8 +45,8 @@ export function useMoodEntries() {
       
       if (!user) {
         toast({
-          title: "Authentication Required",
-          description: "Please log in to save mood entries",
+          title: "Guest Mode",
+          description: "You're in guest mode. Please sign in to save mood entries.",
           variant: "destructive",
         });
         return false;

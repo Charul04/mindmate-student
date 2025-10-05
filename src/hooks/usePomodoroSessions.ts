@@ -44,8 +44,8 @@ export function usePomodoroSessions() {
       
       if (!user) {
         toast({
-          title: "Authentication Required",
-          description: "Please log in to save pomodoro sessions",
+          title: "Guest Mode",
+          description: "You're in guest mode. Please sign in to save Pomodoro sessions.",
           variant: "destructive",
         });
         return false;

@@ -68,8 +68,8 @@ export function useHabits() {
       
       if (!user) {
         toast({
-          title: "Authentication Required",
-          description: "Please log in to add habits",
+          title: "Guest Mode",
+          description: "You're in guest mode. Please sign in to save habits.",
           variant: "destructive",
         });
         return false;
@@ -107,7 +107,14 @@ export function useHabits() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       
-      if (!user) return false;
+      if (!user) {
+        toast({
+          title: "Guest Mode",
+          description: "You're in guest mode. Please sign in to track habits.",
+          variant: "destructive",
+        });
+        return false;
+      }
 
       const { data, error } = await supabase
         .from('habit_entries')

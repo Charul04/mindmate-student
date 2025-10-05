@@ -47,8 +47,8 @@ export function useGoals() {
       
       if (!user) {
         toast({
-          title: "Authentication Required",
-          description: "Please log in to add goals",
+          title: "Guest Mode",
+          description: "You're in guest mode. Please sign in to save goals.",
           variant: "destructive",
         });
         return false;
@@ -84,6 +84,17 @@ export function useGoals() {
 
   const updateGoal = async (id: string, updates: Partial<Goal>) => {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast({
+          title: "Guest Mode",
+          description: "You're in guest mode. Please sign in to update goals.",
+          variant: "destructive",
+        });
+        return false;
+      }
+
       const { data, error } = await supabase
         .from('goals')
         .update(updates)

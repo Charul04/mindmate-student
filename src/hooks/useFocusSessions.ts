@@ -44,8 +44,8 @@ export function useFocusSessions() {
       
       if (!user) {
         toast({
-          title: "Authentication Required",
-          description: "Please log in to save focus sessions",
+          title: "Guest Mode",
+          description: "You're in guest mode. Please sign in to save focus sessions.",
           variant: "destructive",
         });
         return false;

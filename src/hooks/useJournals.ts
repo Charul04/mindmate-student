@@ -50,8 +50,8 @@ export function useJournals() {
       
       if (!user) {
         toast({
-          title: "Authentication Required",
-          description: "Please log in to save journals",
+          title: "Guest Mode",
+          description: "You're in guest mode. Please sign in to save journal entries.",
           variant: "destructive",
         });
         return false;

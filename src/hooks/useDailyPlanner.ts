@@ -44,8 +44,8 @@ export function useDailyPlanner() {
       
       if (!user) {
         toast({
-          title: "Authentication Required",
-          description: "Please log in to add tasks",
+          title: "Guest Mode",
+          description: "You're in guest mode. Please sign in to add tasks.",
           variant: "destructive",
         });
         return false;
