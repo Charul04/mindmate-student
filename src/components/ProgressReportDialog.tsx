@@ -147,12 +147,12 @@ export default function ProgressReportDialog({
     const completedGoals = liveGoals.filter(g => g.current_value >= g.target_value).length;
     const totalTasks = data.tasks.length;
     const completedTasks = data.tasks.filter(t => t.completed).length;
-    const totalFocusTime = liveFocusSessions.filter(s => s.session_type === 'work').reduce((sum, s) => sum + s.duration_minutes, 0);
+    const totalFocusMinutes = liveFocusSessions.filter(s => s.session_type === 'work').reduce((sum, s) => sum + s.duration_minutes, 0);
     const journalDays = data.journals.length;
     return {
       goalCompletion: totalGoals > 0 ? Math.round(completedGoals / totalGoals * 100) : 0,
       taskCompletion: totalTasks > 0 ? Math.round(completedTasks / totalTasks * 100) : 0,
-      totalFocusHours: Math.round(totalFocusTime / 60),
+      totalFocusMinutes,
       journalStreak: journalDays
     };
   };
@@ -223,12 +223,16 @@ export default function ProgressReportDialog({
                 </Card>
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-sm">Focus Hours</CardTitle>
+                    <CardTitle className="text-sm">Focus Hr/Min</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center gap-2">
                       <Clock className="h-4 w-4 text-purple-600" />
-                      <span className="text-2xl font-bold">{stats.totalFocusHours}</span>
+                      <span className="text-2xl font-bold">
+                        {stats.totalFocusMinutes >= 60 
+                          ? `${Math.floor(stats.totalFocusMinutes / 60)}h ${stats.totalFocusMinutes % 60}m`
+                          : `${stats.totalFocusMinutes}m`}
+                      </span>
                     </div>
                   </CardContent>
                 </Card>
