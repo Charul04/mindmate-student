@@ -103,11 +103,11 @@ export default function Auth() {
     }
   }, [toast]);
 
-  // Redirect if already authenticated
+  // Auto-redirect for authenticated users is intentionally disabled to allow
+  // account management (like deletion) to occur on this page without navigation.
+  // Successful sign-in/sign-up flows handle navigation explicitly.
   useEffect(() => {
-    if (user && !isRecoveryMode) {
-      navigate('/');
-    }
+    // No automatic redirect here
   }, [user, navigate, isRecoveryMode]);
 
   // Clean up chatbot when on auth page and prevent it from appearing
