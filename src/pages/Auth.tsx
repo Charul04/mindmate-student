@@ -12,13 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import TermsPrivacyDialog from '@/components/TermsPrivacyDialog';
 import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('signin');
@@ -71,12 +65,15 @@ export default function Auth() {
     const verifyPasswordReset = async (token: string) => {
       setIsVerifying(true);
       try {
-        const { data, error } = await supabase.functions.invoke('verify-password-reset', {
-          body: { token }
+        const {
+          data,
+          error
+        } = await supabase.functions.invoke('verify-password-reset', {
+          body: {
+            token
+          }
         });
-
         if (error) throw error;
-
         toast({
           title: "Password Updated Successfully! ✓",
           description: "Your password has been changed. You can now sign in with your new password."
@@ -95,7 +92,6 @@ export default function Auth() {
         setIsVerifying(false);
       }
     };
-
     const params = new URLSearchParams(window.location.search);
     const verifyToken = params.get('verify');
     if (verifyToken) {
@@ -219,7 +215,9 @@ export default function Auth() {
           description: "Welcome to MindMate!"
         });
         // Auto sign in after successful signup
-        const { error: signInError } = await signIn(email, password);
+        const {
+          error: signInError
+        } = await signIn(email, password);
         if (!signInError) {
           navigate('/');
         }
@@ -269,19 +267,20 @@ export default function Auth() {
   const handleForgotPassword = () => {
     setShowForgotPasswordDialog(true);
   };
-
   const passwordResetSchema = z.object({
-    email: z.string().trim().email({ message: "Invalid email address" }).max(255),
-    newPassword: z.string().min(6, { message: "Password must be at least 6 characters" }).max(100),
+    email: z.string().trim().email({
+      message: "Invalid email address"
+    }).max(255),
+    newPassword: z.string().min(6, {
+      message: "Password must be at least 6 characters"
+    }).max(100),
     confirmPassword: z.string()
-  }).refine((data) => data.newPassword === data.confirmPassword, {
+  }).refine(data => data.newPassword === data.confirmPassword, {
     message: "Passwords do not match",
-    path: ["confirmPassword"],
+    path: ["confirmPassword"]
   });
-
   const handlePasswordReset = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     setError(null);
 
     // Validate inputs
@@ -303,24 +302,22 @@ export default function Auth() {
       }
       return;
     }
-
     setIsLoading(true);
-
     try {
-      const { data, error } = await supabase.functions.invoke('request-password-reset', {
+      const {
+        data,
+        error
+      } = await supabase.functions.invoke('request-password-reset', {
         body: {
           email: resetEmail,
           newPassword: resetNewPassword
         }
       });
-
       if (error) throw error;
-
       toast({
         title: "Verification Email Sent! ✓",
-        description: "Check your email for a verification link to activate your new password.",
+        description: "Check your email for a verification link to activate your new password."
       });
-      
       setShowForgotPasswordDialog(false);
       setResetEmail('');
       setResetNewPassword('');
@@ -335,33 +332,28 @@ export default function Auth() {
       setIsLoading(false);
     }
   };
-
   const handlePasswordUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!newPassword || !confirmNewPassword) {
       setError('Please fill in all fields');
       return;
     }
-
     if (newPassword !== confirmNewPassword) {
       setError('Passwords do not match');
       return;
     }
-
     if (newPassword.length < 6) {
       setError('Password must be at least 6 characters long');
       return;
     }
-
     setIsLoading(true);
     setError(null);
-
     try {
-      const { error } = await supabase.auth.updateUser({
+      const {
+        error
+      } = await supabase.auth.updateUser({
         password: newPassword
       });
-
       if (error) {
         console.error('Password update error:', error);
         setError(error.message);
@@ -467,11 +459,11 @@ export default function Auth() {
           title: "Account Deleted",
           description: "Your account and all data have been permanently deleted."
         });
-        
+
         // Clear local state without calling signOut API
         localStorage.clear();
         sessionStorage.clear();
-        
+
         // Keep dialog open to show success message and prevent redirect
         setDeleteEmail('');
         setDeletePassword('');
@@ -501,8 +493,7 @@ export default function Auth() {
         </div>
 
         {/* Password Reset Card */}
-        {isRecoveryMode ? (
-          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+        {isRecoveryMode ? <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
             <CardHeader className="pb-4">
               <CardTitle className="text-center">Reset Your Password</CardTitle>
             </CardHeader>
@@ -515,21 +506,8 @@ export default function Auth() {
                 <div className="space-y-2">
                   <Label htmlFor="new-password">New Password</Label>
                   <div className="relative">
-                    <Input 
-                      id="new-password" 
-                      type={showNewPassword ? "text" : "password"} 
-                      placeholder="Enter new password (min 6 characters)" 
-                      value={newPassword} 
-                      onChange={e => setNewPassword(e.target.value)} 
-                      required 
-                      minLength={6}
-                      className="pr-10"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowNewPassword(!showNewPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    >
+                    <Input id="new-password" type={showNewPassword ? "text" : "password"} placeholder="Enter new password (min 6 characters)" value={newPassword} onChange={e => setNewPassword(e.target.value)} required minLength={6} className="pr-10" />
+                    <button type="button" onClick={() => setShowNewPassword(!showNewPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                       {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
@@ -538,51 +516,30 @@ export default function Auth() {
                 <div className="space-y-2">
                   <Label htmlFor="confirm-new-password">Confirm New Password</Label>
                   <div className="relative">
-                    <Input 
-                      id="confirm-new-password" 
-                      type={showConfirmNewPassword ? "text" : "password"} 
-                      placeholder="Confirm new password" 
-                      value={confirmNewPassword} 
-                      onChange={e => setConfirmNewPassword(e.target.value)} 
-                      required
-                      className="pr-10"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmNewPassword(!showConfirmNewPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    >
+                    <Input id="confirm-new-password" type={showConfirmNewPassword ? "text" : "password"} placeholder="Confirm new password" value={confirmNewPassword} onChange={e => setConfirmNewPassword(e.target.value)} required className="pr-10" />
+                    <button type="button" onClick={() => setShowConfirmNewPassword(!showConfirmNewPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                       {showConfirmNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
                 </div>
 
                 <Button type="submit" className="w-full font-bold text-base h-11 shadow-lg" disabled={isLoading}>
-                  {isLoading ? (
-                    <>
+                  {isLoading ? <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Updating Password...
-                    </>
-                  ) : 'Update Password'}
+                    </> : 'Update Password'}
                 </Button>
 
-                <Button 
-                  type="button" 
-                  variant="ghost" 
-                  onClick={() => {
-                    setIsRecoveryMode(false);
-                    window.history.replaceState({}, '', '/auth');
-                  }}
-                  className="w-full"
-                >
+                <Button type="button" variant="ghost" onClick={() => {
+              setIsRecoveryMode(false);
+              window.history.replaceState({}, '', '/auth');
+            }} className="w-full">
                   Back to Sign In
                 </Button>
               </form>
             </CardContent>
-          </Card>
-        ) : (
-          /* Auth Card */
-          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+          </Card> : (/* Auth Card */
+      <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
           <CardHeader className="pb-4">
             <CardTitle className="text-center">
               {activeTab === 'signin' ? 'Sign In' : 'Create Account'}
@@ -638,16 +595,12 @@ export default function Auth() {
                     <div className="absolute inset-0 flex items-center">
                       <span className="w-full border-t" />
                     </div>
-                    <div className="relative flex justify-center text-xs uppercase">
-                      <span className="bg-background px-2 text-muted-foreground">OR </span>
-                    </div>
+                    
                   </div>
 
                   
 
-                  <Button type="button" variant="ghost" onClick={handleGuestAccess} className="w-full">
-                    Continue as Guest
-                  </Button>
+                  
                 </form>
               </TabsContent>
 
@@ -709,8 +662,7 @@ export default function Auth() {
               </TabsContent>
             </Tabs>
           </CardContent>
-        </Card>
-        )}
+        </Card>)}
 
         {/* Footer */}
         <p className="text-center text-sm text-gray-600">
@@ -743,43 +695,21 @@ export default function Auth() {
               </DialogDescription>
             </DialogHeader>
             
-            {error && (
-              <Alert className="border-red-200 bg-red-50">
+            {error && <Alert className="border-red-200 bg-red-50">
                 <AlertDescription className="text-red-700">{error}</AlertDescription>
-              </Alert>
-            )}
+              </Alert>}
 
             <form onSubmit={handlePasswordReset} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="reset-email">Email</Label>
-                <Input
-                  id="reset-email"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={resetEmail}
-                  onChange={(e) => setResetEmail(e.target.value)}
-                  required
-                />
+                <Input id="reset-email" type="email" placeholder="Enter your email" value={resetEmail} onChange={e => setResetEmail(e.target.value)} required />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="reset-new-password">New Password</Label>
                 <div className="relative">
-                  <Input
-                    id="reset-new-password"
-                    type={showResetNewPassword ? "text" : "password"}
-                    placeholder="Enter new password (min 6 characters)"
-                    value={resetNewPassword}
-                    onChange={(e) => setResetNewPassword(e.target.value)}
-                    required
-                    minLength={6}
-                    className="pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowResetNewPassword(!showResetNewPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  >
+                  <Input id="reset-new-password" type={showResetNewPassword ? "text" : "password"} placeholder="Enter new password (min 6 characters)" value={resetNewPassword} onChange={e => setResetNewPassword(e.target.value)} required minLength={6} className="pr-10" />
+                  <button type="button" onClick={() => setShowResetNewPassword(!showResetNewPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                     {showResetNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
@@ -788,53 +718,28 @@ export default function Auth() {
               <div className="space-y-2">
                 <Label htmlFor="reset-confirm-password">Confirm New Password</Label>
                 <div className="relative">
-                  <Input
-                    id="reset-confirm-password"
-                    type={showResetConfirmPassword ? "text" : "password"}
-                    placeholder="Confirm new password"
-                    value={resetConfirmPassword}
-                    onChange={(e) => setResetConfirmPassword(e.target.value)}
-                    required
-                    className="pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowResetConfirmPassword(!showResetConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  >
+                  <Input id="reset-confirm-password" type={showResetConfirmPassword ? "text" : "password"} placeholder="Confirm new password" value={resetConfirmPassword} onChange={e => setResetConfirmPassword(e.target.value)} required className="pr-10" />
+                  <button type="button" onClick={() => setShowResetConfirmPassword(!showResetConfirmPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                     {showResetConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
 
               <div className="flex gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    setShowForgotPasswordDialog(false);
-                    setResetEmail('');
-                    setResetNewPassword('');
-                    setResetConfirmPassword('');
-                    setError(null);
-                  }}
-                  className="flex-1"
-                >
+                <Button type="button" variant="outline" onClick={() => {
+                setShowForgotPasswordDialog(false);
+                setResetEmail('');
+                setResetNewPassword('');
+                setResetConfirmPassword('');
+                setError(null);
+              }} className="flex-1">
                   Cancel
                 </Button>
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className="flex-1"
-                >
-                  {isLoading ? (
-                    <>
+                <Button type="submit" disabled={isLoading} className="flex-1">
+                  {isLoading ? <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Sending...
-                    </>
-                  ) : (
-                    'Send Verification Email'
-                  )}
+                    </> : 'Send Verification Email'}
                 </Button>
               </div>
             </form>
