@@ -471,12 +471,11 @@ export default function Auth() {
         // Clear local state without calling signOut API
         localStorage.clear();
         sessionStorage.clear();
+        
+        // Keep dialog open to show success message and prevent redirect
+        setDeleteEmail('');
+        setDeletePassword('');
       }
-      
-      // Close dialog and clear form
-      setShowDeleteConfirm(false);
-      setDeleteEmail('');
-      setDeletePassword('');
     } catch (err) {
       console.error('Unexpected error:', err);
       toast({
