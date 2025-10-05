@@ -131,7 +131,9 @@ export default function ProgressReportDialog({
     });
   };
   const prepareGoalProgressData = () => {
-    return data.goals.map(goal => ({
+    // Use live goals data from hook, fallback to fetched data
+    const liveGoals = goals.length > 0 ? goals : data.goals;
+    return liveGoals.map(goal => ({
       name: goal.title,
       progress: goal.target_value > 0 ? Math.round(goal.current_value / goal.target_value * 100) : 0,
       target: goal.target_value,
