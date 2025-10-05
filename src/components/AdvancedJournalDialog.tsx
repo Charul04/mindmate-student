@@ -81,7 +81,6 @@ export default function AdvancedJournalDialog({
     setSelectedTemplate(template.id);
     setContent(template.prompt + "\n\n");
   };
-
   const openEntryViewer = (entry: any) => {
     setViewingEntry(entry);
     setShowEntryViewer(true);
@@ -145,19 +144,9 @@ export default function AdvancedJournalDialog({
               
               <div className="grid grid-cols-2 gap-2">
                 {journalTemplates.map(template => {
-                  const Icon = template.icon;
-                  return (
-                    <Button
-                      key={template.id}
-                      variant="outline"
-                      className="p-4 h-auto flex flex-col gap-2 items-center"
-                      onClick={() => applyTemplate(template)}
-                    >
-                      <Icon className="w-6 h-6" />
-                      <span className="text-sm font-medium">{template.title}</span>
-                    </Button>
-                  );
-                })}
+                const Icon = template.icon;
+                return;
+              })}
               </div>
             </div>
 
@@ -199,15 +188,10 @@ export default function AdvancedJournalDialog({
                           <p className="text-xs text-gray-500">
                             {format(new Date(journal.created_at), 'h:mm a')}
                           </p>
-                          <Button 
-                            variant="destructive" 
-                            size="sm" 
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              deleteJournal(journal.id);
-                            }} 
-                            className="text-xs px-2 py-1 h-auto"
-                          >
+                          <Button variant="destructive" size="sm" onClick={e => {
+                      e.stopPropagation();
+                      deleteJournal(journal.id);
+                    }} className="text-xs px-2 py-1 h-auto">
                             Delete
                           </Button>
                         </div>
@@ -266,12 +250,7 @@ export default function AdvancedJournalDialog({
           </TabsContent>
         </Tabs>
         
-        <JournalEntryViewer
-          entry={viewingEntry}
-          open={showEntryViewer}
-          onClose={() => setShowEntryViewer(false)}
-          onDelete={deleteJournal}
-        />
+        <JournalEntryViewer entry={viewingEntry} open={showEntryViewer} onClose={() => setShowEntryViewer(false)} onDelete={deleteJournal} />
       </DialogContent>
     </Dialog>;
 }
