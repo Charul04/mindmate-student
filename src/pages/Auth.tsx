@@ -13,6 +13,7 @@ import TermsPrivacyDialog from '@/components/TermsPrivacyDialog';
 import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Turnstile } from '@marsidev/react-turnstile';
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('signin');
@@ -39,7 +40,7 @@ export default function Auth() {
   const [resetConfirmPassword, setResetConfirmPassword] = useState('');
   const [showResetNewPassword, setShowResetNewPassword] = useState(false);
   const [showResetConfirmPassword, setShowResetConfirmPassword] = useState(false);
-  const [isVerifying, setIsVerifying] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string>('');
   const navigate = useNavigate();
   const {
     user,
@@ -60,44 +61,6 @@ export default function Auth() {
     }
   }, []);
 
-  // Check for verification token
-  useEffect(() => {
-    const verifyPasswordReset = async (token: string) => {
-      setIsVerifying(true);
-      try {
-        const {
-          data,
-          error
-        } = await supabase.functions.invoke('verify-password-reset', {
-          body: {
-            token
-          }
-        });
-        if (error) throw error;
-        toast({
-          title: "Password Updated Successfully! ✓",
-          description: "Your password has been changed. You can now sign in with your new password."
-        });
-
-        // Clear URL parameters
-        window.history.replaceState({}, '', '/auth');
-        setActiveTab('signin');
-      } catch (err: any) {
-        toast({
-          title: "Verification Failed",
-          description: err.message || "Invalid or expired verification link",
-          variant: "destructive"
-        });
-      } finally {
-        setIsVerifying(false);
-      }
-    };
-    const params = new URLSearchParams(window.location.search);
-    const verifyToken = params.get('verify');
-    if (verifyToken) {
-      verifyPasswordReset(verifyToken);
-    }
-  }, [toast]);
 
   // Auto-redirect for authenticated users is intentionally disabled to allow
   // account management (like deletion) to occur on this page without navigation.
@@ -274,7 +237,10 @@ export default function Auth() {
     newPassword: z.string().min(6, {
       message: "Password must be at least 6 characters"
     }).max(100),
-    confirmPassword: z.string()
+    confirmPassword: z.string(),
+    captchaToken: z.string().min(1, {
+      message: "Please complete the CAPTCHA verification"
+    })
   }).refine(data => data.newPassword === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"]
@@ -288,7 +254,8 @@ export default function Auth() {
       passwordResetSchema.parse({
         email: resetEmail,
         newPassword: resetNewPassword,
-        confirmPassword: resetConfirmPassword
+        confirmPassword: resetConfirmPassword,
+        captchaToken
       });
     } catch (validationError) {
       if (validationError instanceof z.ZodError) {
@@ -310,22 +277,25 @@ export default function Auth() {
       } = await supabase.functions.invoke('request-password-reset', {
         body: {
           email: resetEmail,
-          newPassword: resetNewPassword
+          newPassword: resetNewPassword,
+          captchaToken
         }
       });
       if (error) throw error;
       toast({
-        title: "Verification Email Sent! ✓",
-        description: "Check your email for a verification link to activate your new password."
+        title: "Password Reset Successful! ✓",
+        description: "Your password has been changed. You can now sign in with your new password."
       });
       setShowForgotPasswordDialog(false);
       setResetEmail('');
       setResetNewPassword('');
       setResetConfirmPassword('');
+      setCaptchaToken('');
+      setActiveTab('signin');
     } catch (err: any) {
       toast({
         title: "Error",
-        description: err.message || 'Failed to process password reset request',
+        description: err.message || 'Failed to reset password',
         variant: "destructive"
       });
     } finally {
@@ -691,7 +661,7 @@ export default function Auth() {
             <DialogHeader>
               <DialogTitle>Reset Password</DialogTitle>
               <DialogDescription>
-                Enter your email and new password. We'll send you a verification link to activate the new password.
+                Enter your email and new password, then complete the verification to reset your password immediately.
               </DialogDescription>
             </DialogHeader>
             
@@ -725,6 +695,23 @@ export default function Auth() {
                 </div>
               </div>
 
+              <div className="space-y-2">
+                <Label>Verification</Label>
+                <Turnstile
+                  siteKey="0x4AAAAAAAzmVxMv01xQxvfR"
+                  onSuccess={(token) => setCaptchaToken(token)}
+                  onError={() => {
+                    setCaptchaToken('');
+                    toast({
+                      title: "CAPTCHA Error",
+                      description: "Please try again",
+                      variant: "destructive"
+                    });
+                  }}
+                  onExpire={() => setCaptchaToken('')}
+                />
+              </div>
+
               <div className="flex gap-2">
                 <Button type="button" variant="outline" onClick={() => {
                 setShowForgotPasswordDialog(false);
@@ -735,11 +722,11 @@ export default function Auth() {
               }} className="flex-1">
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isLoading} className="flex-1">
+                <Button type="submit" disabled={isLoading || !captchaToken} className="flex-1">
                   {isLoading ? <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Sending...
-                    </> : 'Send Verification Email'}
+                      Resetting...
+                    </> : 'Reset Password'}
                 </Button>
               </div>
             </form>

@@ -145,7 +145,7 @@ export default function AdvancedJournalDialog({
               <div className="grid grid-cols-2 gap-2">
                 {journalTemplates.map(template => {
                 const Icon = template.icon;
-                return;
+                return null;
               })}
               </div>
             </div>
