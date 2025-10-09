@@ -13,7 +13,6 @@ import TermsPrivacyDialog from '@/components/TermsPrivacyDialog';
 import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('signin');
@@ -53,7 +52,6 @@ export default function Auth() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const type = params.get('type');
-
     if (type === 'recovery') {
       setIsRecoveryMode(true);
     } else if (type === 'signup') {
@@ -67,7 +65,6 @@ export default function Auth() {
       setActiveTab('signin');
     }
   }, [toast]);
-
 
   // Handle automatic redirect after email verification
   useEffect(() => {
@@ -252,23 +249,21 @@ export default function Auth() {
   const handleForgotPassword = () => {
     setShowForgotPasswordDialog(true);
   };
-
   const handleRequestPasswordReset = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
-
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-        redirectTo: `${window.location.origin}/auth?type=recovery`,
+      const {
+        error
+      } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+        redirectTo: `${window.location.origin}/auth?type=recovery`
       });
-
       if (error) throw error;
-
       setResetEmailSent(true);
       toast({
         title: "Reset Email Sent",
-        description: "Check your email for a password reset link.",
+        description: "Check your email for a password reset link."
       });
     } catch (err: any) {
       setError(err.message || 'Failed to send reset email');
@@ -281,7 +276,6 @@ export default function Auth() {
       setIsLoading(false);
     }
   };
-
   const handlePasswordUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newPassword || !confirmNewPassword) {
@@ -521,9 +515,7 @@ export default function Auth() {
                         <Label htmlFor="signin-password">Password</Label>
                         <Info className="w-3 h-3 text-muted-foreground" />
                       </div>
-                      <button type="button" onClick={handleForgotPassword} className="text-xs text-primary hover:underline">
-                        Forgot password?
-                      </button>
+                      
                     </div>
                     <div className="relative">
                       <Input id="signin-password" type={showPassword ? "text" : "password"} placeholder="Enter your password" value={password} onChange={e => setPassword(e.target.value)} required className="pr-10" />
@@ -635,22 +627,19 @@ export default function Auth() {
         <TermsPrivacyDialog isOpen={showTermsDialog} onClose={() => setShowTermsDialog(false)} defaultTab={termsDialogTab} />
 
         {/* Forgot Password Dialog */}
-        <Dialog open={showForgotPasswordDialog} onOpenChange={(open) => {
-          setShowForgotPasswordDialog(open);
-          if (!open) {
-            setResetEmail('');
-            setResetEmailSent(false);
-            setError(null);
-          }
-        }}>
+        <Dialog open={showForgotPasswordDialog} onOpenChange={open => {
+        setShowForgotPasswordDialog(open);
+        if (!open) {
+          setResetEmail('');
+          setResetEmailSent(false);
+          setError(null);
+        }
+      }}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
               <DialogTitle>Reset Password</DialogTitle>
               <DialogDescription>
-                {resetEmailSent
-                  ? "Check your email for a password reset link."
-                  : "Enter your email address and we'll send you a link to reset your password."
-                }
+                {resetEmailSent ? "Check your email for a password reset link." : "Enter your email address and we'll send you a link to reset your password."}
               </DialogDescription>
             </DialogHeader>
 
@@ -658,8 +647,7 @@ export default function Auth() {
                 <AlertDescription className="text-red-700">{error}</AlertDescription>
               </Alert>}
 
-            {resetEmailSent ? (
-              <div className="space-y-4">
+            {resetEmailSent ? <div className="space-y-4">
                 <Alert className="border-green-200 bg-green-50">
                   <AlertDescription className="text-green-700">
                     A password reset link has been sent to <strong>{resetEmail}</strong>.
@@ -667,62 +655,35 @@ export default function Auth() {
                   </AlertDescription>
                 </Alert>
 
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setShowForgotPasswordDialog(false);
-                    setResetEmail('');
-                    setResetEmailSent(false);
-                  }}
-                  className="w-full"
-                >
+                <Button variant="outline" onClick={() => {
+              setShowForgotPasswordDialog(false);
+              setResetEmail('');
+              setResetEmailSent(false);
+            }} className="w-full">
                   Close
                 </Button>
-              </div>
-            ) : (
-              <form onSubmit={handleRequestPasswordReset} className="space-y-4">
+              </div> : <form onSubmit={handleRequestPasswordReset} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="reset-email">Email Address</Label>
-                  <Input
-                    id="reset-email"
-                    type="email"
-                    placeholder="Enter your email address"
-                    value={resetEmail}
-                    onChange={e => setResetEmail(e.target.value)}
-                    required
-                  />
+                  <Input id="reset-email" type="email" placeholder="Enter your email address" value={resetEmail} onChange={e => setResetEmail(e.target.value)} required />
                 </div>
 
                 <div className="flex gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      setShowForgotPasswordDialog(false);
-                      setResetEmail('');
-                      setError(null);
-                    }}
-                    className="flex-1"
-                  >
+                  <Button type="button" variant="outline" onClick={() => {
+                setShowForgotPasswordDialog(false);
+                setResetEmail('');
+                setError(null);
+              }} className="flex-1">
                     Cancel
                   </Button>
-                  <Button
-                    type="submit"
-                    disabled={isLoading}
-                    className="flex-1"
-                  >
-                    {isLoading ? (
-                      <>
+                  <Button type="submit" disabled={isLoading} className="flex-1">
+                    {isLoading ? <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Sending...
-                      </>
-                    ) : (
-                      'Send Reset Link'
-                    )}
+                      </> : 'Send Reset Link'}
                   </Button>
                 </div>
-              </form>
-            )}
+              </form>}
           </DialogContent>
         </Dialog>
 
