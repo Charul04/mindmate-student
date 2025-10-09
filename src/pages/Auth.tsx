@@ -13,7 +13,7 @@ import TermsPrivacyDialog from '@/components/TermsPrivacyDialog';
 import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Turnstile } from '@marsidev/react-turnstile';
+
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('signin');
@@ -36,11 +36,7 @@ export default function Auth() {
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
   const [showForgotPasswordDialog, setShowForgotPasswordDialog] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
-  const [resetNewPassword, setResetNewPassword] = useState('');
-  const [resetConfirmPassword, setResetConfirmPassword] = useState('');
-  const [showResetNewPassword, setShowResetNewPassword] = useState(false);
-  const [showResetConfirmPassword, setShowResetConfirmPassword] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState<string>('');
+  const [resetEmailSent, setResetEmailSent] = useState(false);
   const navigate = useNavigate();
   const {
     user,
@@ -256,78 +252,36 @@ export default function Auth() {
   const handleForgotPassword = () => {
     setShowForgotPasswordDialog(true);
   };
-  const passwordResetSchema = z.object({
-    email: z.string().trim().email({
-      message: "Invalid email address"
-    }).max(255),
-    newPassword: z.string().min(6, {
-      message: "Password must be at least 6 characters"
-    }).max(100),
-    confirmPassword: z.string(),
-    captchaToken: z.string().min(1, {
-      message: "Please complete the CAPTCHA verification"
-    })
-  }).refine(data => data.newPassword === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"]
-  });
-  const handlePasswordReset = async (e: React.FormEvent) => {
+
+  const handleRequestPasswordReset = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
-    // Validate inputs
-    try {
-      passwordResetSchema.parse({
-        email: resetEmail,
-        newPassword: resetNewPassword,
-        confirmPassword: resetConfirmPassword,
-        captchaToken
-      });
-    } catch (validationError) {
-      if (validationError instanceof z.ZodError) {
-        const firstError = validationError.issues[0];
-        setError(firstError.message);
-        toast({
-          title: "Validation Error",
-          description: firstError.message,
-          variant: "destructive"
-        });
-      }
-      return;
-    }
     setIsLoading(true);
+
     try {
-      const {
-        data,
-        error
-      } = await supabase.functions.invoke('request-password-reset', {
-        body: {
-          email: resetEmail,
-          newPassword: resetNewPassword,
-          captchaToken
-        }
+      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+        redirectTo: `${window.location.origin}/auth?type=recovery`,
       });
+
       if (error) throw error;
+
+      setResetEmailSent(true);
       toast({
-        title: "Password Reset Successful! ✓",
-        description: "Your password has been changed. You can now sign in with your new password."
+        title: "Reset Email Sent",
+        description: "Check your email for a password reset link.",
       });
-      setShowForgotPasswordDialog(false);
-      setResetEmail('');
-      setResetNewPassword('');
-      setResetConfirmPassword('');
-      setCaptchaToken('');
-      setActiveTab('signin');
     } catch (err: any) {
+      setError(err.message || 'Failed to send reset email');
       toast({
         title: "Error",
-        description: err.message || 'Failed to reset password',
+        description: err.message || 'Failed to send reset email',
         variant: "destructive"
       });
     } finally {
       setIsLoading(false);
     }
   };
+
   const handlePasswordUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newPassword || !confirmNewPassword) {
@@ -362,14 +316,13 @@ export default function Auth() {
         console.log('Password updated successfully');
         toast({
           title: "Password Updated! ✓",
-          description: "Your password has been successfully updated. You can now sign in with your new password."
+          description: "Your password has been successfully updated. Redirecting to home page..."
         });
         setIsRecoveryMode(false);
         setNewPassword('');
         setConfirmNewPassword('');
-        // Clear URL parameters
-        window.history.replaceState({}, '', '/auth');
-        setActiveTab('signin');
+        // Redirect to home page
+        navigate('/');
       }
     } catch (err) {
       console.error('Unexpected error:', err);
@@ -686,9 +639,7 @@ export default function Auth() {
           setShowForgotPasswordDialog(open);
           if (!open) {
             setResetEmail('');
-            setResetNewPassword('');
-            setResetConfirmPassword('');
-            setCaptchaToken('');
+            setResetEmailSent(false);
             setError(null);
           }
         }}>
@@ -696,7 +647,10 @@ export default function Auth() {
             <DialogHeader>
               <DialogTitle>Reset Password</DialogTitle>
               <DialogDescription>
-                Enter your email address and new password. Complete the CAPTCHA to reset your password instantly.
+                {resetEmailSent
+                  ? "Check your email for a password reset link."
+                  : "Enter your email address and we'll send you a link to reset your password."
+                }
               </DialogDescription>
             </DialogHeader>
 
@@ -704,112 +658,71 @@ export default function Auth() {
                 <AlertDescription className="text-red-700">{error}</AlertDescription>
               </Alert>}
 
-            <form onSubmit={handlePasswordReset} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="reset-email">Email Address</Label>
-                <Input
-                  id="reset-email"
-                  type="email"
-                  placeholder="Enter your email address"
-                  value={resetEmail}
-                  onChange={e => setResetEmail(e.target.value)}
-                  required
-                />
-              </div>
+            {resetEmailSent ? (
+              <div className="space-y-4">
+                <Alert className="border-green-200 bg-green-50">
+                  <AlertDescription className="text-green-700">
+                    A password reset link has been sent to <strong>{resetEmail}</strong>.
+                    Please check your inbox and spam folder. The link will expire in 1 hour.
+                  </AlertDescription>
+                </Alert>
 
-              <div className="space-y-2">
-                <Label htmlFor="reset-new-password">New Password</Label>
-                <div className="relative">
-                  <Input
-                    id="reset-new-password"
-                    type={showResetNewPassword ? "text" : "password"}
-                    placeholder="Enter new password"
-                    value={resetNewPassword}
-                    onChange={e => setResetNewPassword(e.target.value)}
-                    required
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                    onClick={() => setShowResetNewPassword(!showResetNewPassword)}
-                  >
-                    {showResetNewPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="reset-confirm-password">Confirm Password</Label>
-                <div className="relative">
-                  <Input
-                    id="reset-confirm-password"
-                    type={showResetConfirmPassword ? "text" : "password"}
-                    placeholder="Confirm new password"
-                    value={resetConfirmPassword}
-                    onChange={e => setResetConfirmPassword(e.target.value)}
-                    required
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                    onClick={() => setShowResetConfirmPassword(!showResetConfirmPassword)}
-                  >
-                    {showResetConfirmPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-
-              <div className="flex justify-center">
-                <Turnstile
-                  siteKey="0x4AAAAAAAzUAVn6S2aNPkYC"
-                  onSuccess={(token) => setCaptchaToken(token)}
-                />
-              </div>
-
-              <div className="flex gap-2">
                 <Button
-                  type="button"
                   variant="outline"
                   onClick={() => {
                     setShowForgotPasswordDialog(false);
                     setResetEmail('');
-                    setResetNewPassword('');
-                    setResetConfirmPassword('');
-                    setCaptchaToken('');
-                    setError(null);
+                    setResetEmailSent(false);
                   }}
-                  className="flex-1"
+                  className="w-full"
                 >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={isLoading || !captchaToken}
-                  className="flex-1"
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Resetting...
-                    </>
-                  ) : (
-                    'Reset Password'
-                  )}
+                  Close
                 </Button>
               </div>
-            </form>
+            ) : (
+              <form onSubmit={handleRequestPasswordReset} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="reset-email">Email Address</Label>
+                  <Input
+                    id="reset-email"
+                    type="email"
+                    placeholder="Enter your email address"
+                    value={resetEmail}
+                    onChange={e => setResetEmail(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setShowForgotPasswordDialog(false);
+                      setResetEmail('');
+                      setError(null);
+                    }}
+                    className="flex-1"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    className="flex-1"
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      'Send Reset Link'
+                    )}
+                  </Button>
+                </div>
+              </form>
+            )}
           </DialogContent>
         </Dialog>
 
