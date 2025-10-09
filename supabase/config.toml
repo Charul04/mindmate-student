@@ -1,5 +1,9 @@
 project_id = "zjkkvqxprinrkietbqda"
 
+[auth]
+enable_signup = true
+enable_confirmations = true
+
 [functions.delete-user]
 verify_jwt = true
 
