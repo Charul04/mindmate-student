@@ -686,7 +686,9 @@ export default function Auth() {
           setShowForgotPasswordDialog(open);
           if (!open) {
             setResetEmail('');
-            setResetEmailSent(false);
+            setResetNewPassword('');
+            setResetConfirmPassword('');
+            setCaptchaToken('');
             setError(null);
           }
         }}>
@@ -694,10 +696,7 @@ export default function Auth() {
             <DialogHeader>
               <DialogTitle>Reset Password</DialogTitle>
               <DialogDescription>
-                {resetEmailSent
-                  ? "We've sent you a password reset link. Check your email to continue."
-                  : "Enter your email address and we'll send you a link to reset your password."
-                }
+                Enter your email address and new password. Complete the CAPTCHA to reset your password instantly.
               </DialogDescription>
             </DialogHeader>
 
@@ -705,71 +704,112 @@ export default function Auth() {
                 <AlertDescription className="text-red-700">{error}</AlertDescription>
               </Alert>}
 
-            {resetEmailSent ? (
-              <div className="space-y-4">
-                <Alert className="border-green-200 bg-green-50">
-                  <AlertDescription className="text-green-700">
-                    A password reset link has been sent to <strong>{resetEmail}</strong>.
-                    Please check your inbox and spam folder. The link will expire in 1 hour.
-                  </AlertDescription>
-                </Alert>
+            <form onSubmit={handlePasswordReset} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="reset-email">Email Address</Label>
+                <Input
+                  id="reset-email"
+                  type="email"
+                  placeholder="Enter your email address"
+                  value={resetEmail}
+                  onChange={e => setResetEmail(e.target.value)}
+                  required
+                />
+              </div>
 
+              <div className="space-y-2">
+                <Label htmlFor="reset-new-password">New Password</Label>
+                <div className="relative">
+                  <Input
+                    id="reset-new-password"
+                    type={showResetNewPassword ? "text" : "password"}
+                    placeholder="Enter new password"
+                    value={resetNewPassword}
+                    onChange={e => setResetNewPassword(e.target.value)}
+                    required
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowResetNewPassword(!showResetNewPassword)}
+                  >
+                    {showResetNewPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="reset-confirm-password">Confirm Password</Label>
+                <div className="relative">
+                  <Input
+                    id="reset-confirm-password"
+                    type={showResetConfirmPassword ? "text" : "password"}
+                    placeholder="Confirm new password"
+                    value={resetConfirmPassword}
+                    onChange={e => setResetConfirmPassword(e.target.value)}
+                    required
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowResetConfirmPassword(!showResetConfirmPassword)}
+                  >
+                    {showResetConfirmPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="flex justify-center">
+                <Turnstile
+                  siteKey="0x4AAAAAAAzUAVn6S2aNPkYC"
+                  onSuccess={(token) => setCaptchaToken(token)}
+                />
+              </div>
+
+              <div className="flex gap-2">
                 <Button
+                  type="button"
                   variant="outline"
                   onClick={() => {
                     setShowForgotPasswordDialog(false);
                     setResetEmail('');
-                    setResetEmailSent(false);
+                    setResetNewPassword('');
+                    setResetConfirmPassword('');
+                    setCaptchaToken('');
+                    setError(null);
                   }}
-                  className="w-full"
+                  className="flex-1"
                 >
-                  Close
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isLoading || !captchaToken}
+                  className="flex-1"
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Resetting...
+                    </>
+                  ) : (
+                    'Reset Password'
+                  )}
                 </Button>
               </div>
-            ) : (
-              <form onSubmit={handleRequestPasswordReset} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="reset-email">Email Address</Label>
-                  <Input
-                    id="reset-email"
-                    type="email"
-                    placeholder="Enter your email address"
-                    value={resetEmail}
-                    onChange={e => setResetEmail(e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div className="flex gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      setShowForgotPasswordDialog(false);
-                      setResetEmail('');
-                      setError(null);
-                    }}
-                    className="flex-1"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    disabled={isLoading}
-                    className="flex-1"
-                  >
-                    {isLoading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Sending...
-                      </>
-                    ) : (
-                      'Send Reset Link'
-                    )}
-                  </Button>
-                </div>
-              </form>
-            )}
+            </form>
           </DialogContent>
         </Dialog>
 
