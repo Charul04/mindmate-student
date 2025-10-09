@@ -53,21 +53,40 @@ export default function Auth() {
     toast
   } = useToast();
 
-  // Check for password recovery mode
+  // Check for password recovery mode and email verification
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('type') === 'recovery') {
+    const type = params.get('type');
+
+    if (type === 'recovery') {
       setIsRecoveryMode(true);
+    } else if (type === 'signup') {
+      // User clicked email verification link
+      toast({
+        title: "Email Verified",
+        description: "Your email has been verified successfully. You can now sign in."
+      });
+      // Clear URL parameters
+      window.history.replaceState({}, '', '/auth');
+      setActiveTab('signin');
     }
-  }, []);
+  }, [toast]);
 
 
-  // Auto-redirect for authenticated users is intentionally disabled to allow
-  // account management (like deletion) to occur on this page without navigation.
-  // Successful sign-in/sign-up flows handle navigation explicitly.
+  // Handle automatic redirect after email verification
   useEffect(() => {
-    // No automatic redirect here
-  }, [user, navigate, isRecoveryMode]);
+    const params = new URLSearchParams(window.location.search);
+    const type = params.get('type');
+
+    // Redirect to home page if user is authenticated and came from email verification
+    if (user && session && type === 'signup' && !isRecoveryMode) {
+      toast({
+        title: "Welcome to MindMate!",
+        description: "Your email has been verified successfully."
+      });
+      navigate('/');
+    }
+  }, [user, session, navigate, isRecoveryMode, toast]);
 
   // Clean up chatbot when on auth page and prevent it from appearing
   useEffect(() => {
@@ -161,6 +180,7 @@ export default function Auth() {
     setError(null);
     try {
       const {
+        data,
         error
       } = await signUp(email, password);
       if (error) {
@@ -172,16 +192,22 @@ export default function Auth() {
           variant: "destructive"
         });
       } else {
-        console.log('Sign up successful');
-        toast({
-          title: "Your account is created",
-          description: "Welcome to MindMate!"
-        });
-        // Auto sign in after successful signup
-        const {
-          error: signInError
-        } = await signIn(email, password);
-        if (!signInError) {
+        console.log('Sign up successful', data);
+
+        // Check if email confirmation is required
+        if (data?.user && !data.session) {
+          toast({
+            title: "Verify Your Email",
+            description: "Please check your email and click the verification link to activate your account.",
+            duration: 10000
+          });
+          setActiveTab('signin');
+        } else {
+          // Email confirmation is disabled, user is automatically signed in
+          toast({
+            title: "Your account is created",
+            description: "Welcome to MindMate!"
+          });
           navigate('/');
         }
       }
